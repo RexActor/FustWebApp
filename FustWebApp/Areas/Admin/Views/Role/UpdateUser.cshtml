@@ -1,0 +1,33 @@
+﻿@model IdentityUser
+
+@{
+
+	ViewData["Title"] = "Update User";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<form method="post">
+	<div class="container">
+		<input hidden name="id" value="@Model.Id" />
+		<div class="row">
+			<div class="col-md-2">
+				<label for="email" class="form-label">Email</label>
+			</div>
+			<div class="col-auto">
+				<input name="email" type="email" value="@Model.Email" placeholder="email@example.com" />
+			</div>
+		</div>		
+
+		<div class="row">
+			<div class="col-md-2">
+				<label for="password" class="form-label">Password</label>
+			</div>
+			<div class="col-auto">
+				<input type="password" name="password" placeholder="Please enter password" autocomplete="off"  />
+			</div>
+		</div>
+
+		<button type="submit" class="btn btn-primary">Save</button>
+		<a asp-action="Index" class="btn btn-secondary">Back</a>
+	</div>
+</form>

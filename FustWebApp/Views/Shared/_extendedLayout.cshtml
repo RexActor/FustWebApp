@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> userManager
+
+@*
+
+
+For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+	int rolesCount = 0;
+	if (User != null)
+	{
+		var _user = await userManager.GetUserAsync(User);
+		if (_user != null)
+		{
+			var userRoles = await userManager.GetRolesAsync(_user);
+			rolesCount = userRoles.Count();
+		}
+	}
+}
+
+
+@if (SignInManager.IsSignedIn(User) && rolesCount > 0)
+{
+
+	<li class="nav-item">
+		<a class="nav-link text-dark" asp-area="Admin" asp-controller="Load" asp-action="Index">Loads</a>
+	</li>
+	@if (User.IsInRole("Admin"))
+	{
+		{
+			<li class="nav-item">
+				<a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
+			</li>
+		}
+
+	}
+}

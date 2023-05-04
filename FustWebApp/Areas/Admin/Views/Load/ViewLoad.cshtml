@@ -1,0 +1,161 @@
+﻿@model FustWebApp.Models.Domain.Loads
+@{
+	ViewData["Title"] = $"View Load for {@Model.LoadTrailerNumber}";
+
+	Layout = "~/Views/Shared/_LoadLayout.cshtml";
+}
+
+<div class="d-flex flex-row flex-row-reverse mb-3">
+	<div class="mx-2">
+		<a class="btn btn-success" href="../ReceiveLoad/@Model.LoadId">Receive Load</a>
+	</div>
+	<div class="mx-2">
+		@if (!User.IsInRole("Operations"))
+		{
+			<a class="btn btn-danger" href="../EditLoad/@Model.LoadId">Edit Load</a>
+		}
+	</div>
+</div>
+
+<div class="container mb-4">
+	<div class="row ">
+		<div class="col-md-6">
+			<div class="row mb-3">
+				@Html.LabelFor(model=>model.LoadId, htmlAttributes:new {@class="col-form-label col-4"})
+				<div class="col-auto">
+					<input value="@Model.LoadId" class="form-control" readonly>
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				@Html.LabelFor(model=>model.LoadSupplier, htmlAttributes:new {@class="col-form-label col-4"})
+				<div class="col-auto">
+					<input value="@Model.LoadSupplier" class="form-control" readonly>
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				@Html.LabelFor(model=>model.LoadGroup, htmlAttributes:new {@class="col-form-label col-4"})
+				<div class="col-auto">
+					<input value="@Model.LoadGroup" class="form-control" readonly>
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				@Html.LabelFor(model=>model.LoadType,  htmlAttributes:new {@class="col-form-label col-4"})
+				<div class="col-auto">
+					<input value="@Model.LoadType" class="form-control" readonly>
+					@Html.ValidationMessageFor(model=>model.LoadType, "", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				@Html.LabelFor(model=>model.PONumber,  htmlAttributes:new {@class="col-form-label col-4 "})
+				<div class="col-auto">
+					<input value="@Model.PONumber" class="form-control" readonly>
+					*only for Inbound Loads
+					@Html.ValidationMessageFor(model=>model.PONumber, "", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				@Html.LabelFor(model=>model.CreatedDate,"Created Date & Time", htmlAttributes:new {@class="col-form-label col-4"})
+				<div class="col-auto">
+					<input value="@Model.CreatedDate" class="form-control" readonly> Created by @Model.CreatedBy
+				</div>
+			</div>
+
+		</div>
+		<div class="col-md-6">
+			<div class="row mb-3">
+				@Html.LabelFor(model=>model.LoadDate,   htmlAttributes:new {@class="col-form-label col-4"})
+				<div class="col-auto">
+					@Html.HiddenFor(model=>model.LoadDate)
+					<input value="@Model.LoadDate.Date.ToShortDateString()" class="form-control" type="text" readonly>
+					@Html.ValidationMessageFor(model=>model.PONumber, "", new { @class = "text-danger" })
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				@Html.LabelFor(model=>model.LoadOrigin, htmlAttributes:new {@class="col-form-label col-4"})
+				<div class="col-auto">
+					<input type="text" value="@Model.LoadOrigin" class="form-control" readonly>
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				@Html.LabelFor(model=>model.LoadComment, htmlAttributes:new {@class="col-form-label col-4"})
+				<div class="col-auto">
+					<textarea type="text" class="form-control" readonly style="height: 130px;display:block">@Model.LoadComment</textarea>
+				</div>
+			</div>
+
+			@if (Model.LoadUpdatedDate > Model.CreatedDate)
+			{
+				<div class="row mb-3">
+					@Html.LabelFor(model=>model.LoadUpdatedDate,"Last Update On", htmlAttributes:new {@class="col-form-label col-4"})
+					<div class="col-auto">
+						<input value="@Model.LoadUpdatedDate" class="form-control" readonly> Updated by @Model.UpdatedBy
+					</div>
+				</div>
+			}
+
+			@if (Model.ReceivedDate > Model.CreatedDate)
+			{
+				<div class="row mb-3">
+					@Html.LabelFor(model=>model.ReceivedDate,"Load Received On", htmlAttributes:new {@class="col-form-label col-4"})
+					<div class="col-auto">
+						<input value="@Model.ReceivedDate" class="form-control" readonly> Received by @Model.ReceivedBy
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+</div>
+
+
+<table class="table text-sm-center">
+	<thead class="table-dark sticky-top">
+		<tr>
+			<th hidden>Fust Item Id</th>
+			<th>Fust Type:</th>
+			<th>Fust Name</th>
+			<th>Expected Quantity:</th>
+			<th>Received Quantity:</th>
+			<th>Difference</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach (var item in Model.LoadFustItems)
+		{
+			var difference = item.ReceivedQty - item.ExpectedQuantity;
+			var status = string.Empty;
+			if (difference != 0)
+			{
+				status = "negative";
+			}
+			else
+			{
+				status = "positive";
+			}
+			<tr class="status" data-status=@status>
+				<td hidden>@item.LoadFustId</td>
+				<td>@item.FustType.FustTypeName</td>
+				<td>@item.FustName</td>
+				<td>@item.ExpectedQuantity</td>
+				<td> @item.ReceivedQty</td>
+				<td>
+					@if (difference != 0)
+					{
+						<span style="color:red;font-weight:bold;">	@difference</span>
+					}
+					else
+					{
+						<span style="color:green;font-weight:bold;">	@difference</span>
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

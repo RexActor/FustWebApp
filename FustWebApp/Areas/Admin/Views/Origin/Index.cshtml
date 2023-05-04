@@ -1,0 +1,33 @@
+﻿@model List<FustWebApp.Models.Domain.Origin>
+@{
+
+	ViewData["Title"] = "Origins";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<a href="Origin/Add" class="btn btn-primary">Add Origin</a>
+
+@if (@ViewBag.Message != null)
+{
+	<div class="@ViewBag.Style  text-sm-center mb-1 py-1"><h4>@ViewBag.Message</h4></div>
+}
+
+<div class="container w-25 d-flex">
+	<table class="table table-hover mt-3">
+		<thead class="table-dark justify-content-center">
+			<tr>
+				<th>Origin Name</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>@item.OriginName</td>
+					<td><a href="Origin/View/@item.Id" class="btn btn-outline-primary">View</a></td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

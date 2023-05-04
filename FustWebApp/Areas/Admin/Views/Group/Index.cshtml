@@ -1,0 +1,34 @@
+﻿@model List<FustWebApp.Models.Domain.Group>
+@{
+
+	ViewData["Title"] = "Groups";
+
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<a href="Group/Add" class="btn btn-primary mb-2">Add Group</a>
+@if (@ViewBag.Message != null)
+{
+	<div class="@ViewBag.Style  text-sm-center mb-1 py-1"><h4>@ViewBag.Message</h4></div>
+}
+<table class="table table-hover mt-3">
+	<thead class="table-dark justify-content-center">
+		<tr>
+			<th>Group</th>
+			<th>Comment</th>
+			<th></th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@item.GroupName</td>
+				<td>@item.GroupComment</td>
+				<td><a class="btn btn-info" href="Group/View/@item.Id">Edit</a></td>
+			</tr>
+		}
+	</tbody>
+</table>
+

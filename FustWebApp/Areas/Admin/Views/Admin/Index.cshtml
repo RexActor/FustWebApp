@@ -1,0 +1,89 @@
+﻿@using FustWebApp.Models
+@{
+	ViewData["Title"] = "Fust Stockholding onsite";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<input class="mb-2" id="loadSearch" onkeyup="filterTable()" placeholder="Search Loads" type="text" />
+<table class="table" id="Table">
+	<thead class="table-dark sticky-top">
+		<tr>
+			<th>Fust Type</th>
+			<th>Fust Item</th>
+			<th>Balance</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in ViewBag.StockHoldingList as IEnumerable<StockholdingViewModel>)
+		{
+			var status = string.Empty;
+
+			if (item.StockHoldingQty > 0)
+			{
+				status = "positive";
+			}
+			else if (item.StockHoldingQty == 0)
+			{
+				status = "zero";
+			}
+			else
+			{
+				status = "negative";
+			}
+
+			<tr class="status" data-status="@status">
+				<td>@item.StockHoldingFustItems.FustType.FustTypeName</td>
+				<td>@item.StockHoldingFustItems.FustName</td>
+				<td>@item.StockHoldingQty</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+@section Scripts{
+
+
+	<script type="text/javascript">
+
+		function filterTable() {
+
+			var input, filter, table, tr, td, i, txtValue, inputVariable;
+			inputVariable = "loadSearch";
+			input = document.getElementById(inputVariable);
+			filter = input.value.toUpperCase();
+			table = document.getElementById("Table");
+			tr = table.getElementsByTagName("tr");
+
+			for (i = 0; i < tr.length; i++) {
+
+				td = tr[i].getElementsByTagName("td")[0];
+				td2 = tr[i].getElementsByTagName("td")[1];
+				td3 = tr[i].getElementsByTagName("td")[2];
+
+
+
+				if (td && td2 && td3) {
+					txtValue = td.textContent || td.innerText;
+					txtValue2 = td2.textContent || td2.innerText;
+					txtValue3 = td3.textContent || td3.innerText;
+
+
+					if ((txtValue.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue2.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue3.toUpperCase().indexOf(filter) > -1)) {
+						tr[i].style.display = "";
+					}
+					else {
+						tr[i].style.display = "none";
+					}
+				}
+
+
+			}
+
+		}
+
+
+
+	</script>
+}

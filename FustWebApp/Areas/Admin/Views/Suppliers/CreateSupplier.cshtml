@@ -1,0 +1,81 @@
+﻿@model FustWebApp.Models.Domain.Supplier
+@using FustWebApp.Models;
+
+
+@{
+	ViewData["Title"] = "Create Supplier";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	var fustTypeCheckboxes = (List<CheckBoxModel>)ViewBag.FustTypeCheckboxes;
+	var groupCheckboxes = (List<CheckBoxModel>)ViewBag.GroupsCheckBoxes;
+
+}
+@if (@ViewBag.Message != null)
+{
+	<div class="@ViewBag.Style  text-sm-center mb-1 py-1"><h4>@ViewBag.Message</h4></div>
+}
+
+@using (@Html.BeginForm("Add", "Suppliers", HttpMethod.Post))
+{
+	@Html.AntiForgeryToken()
+
+	<div class="container">
+		@Html.ValidationSummary(true,"",new{@class = "text-danger"})
+
+
+		<div class="row mb-3">
+			@Html.LabelFor(model=>model.SupplierName,htmlAttributes:new{@class ="col-form-label col-sm-2" })
+			<div class="col-auto">
+				@Html.EditorFor(model => model.SupplierName, new { htmlAttributes = new { @class = "form-control",@required ="required", @placeholder="Enter Supplier's Name" } })
+				@Html.ValidationMessageFor(model => model.SupplierName, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			@Html.LabelFor(model=>model.SupplierOrigin,htmlAttributes:new{@class ="col-form-label col-sm-2"})
+			<div class="col-auto">
+				@Html.DropDownListFor(model => model.SupplierOrigin,new SelectList(ViewBag.Origins),"Please Select",new { @class = "form-select"} )
+				@Html.ValidationMessageFor(model => model.SupplierOrigin, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			@Html.LabelFor(model=>model.SupplierAddress,htmlAttributes:new{@class ="col-form-label col-sm-2"})
+			<div class="col-sm-5">
+				@Html.EditorFor(model => model.SupplierAddress, new { htmlAttributes = new { @class = "form-control col-sm-5", @placeholder="Enter Supplier's Address" } })
+				@Html.ValidationMessageFor(model => model.SupplierAddress, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="row mb-3 align-items-center">
+			@Html.LabelFor(model=>model.SupplierGroup,htmlAttributes:new{@class ="col-form-label col-sm-2"})
+			<div class="col-auto">
+				@for (int i = 0; i < groupCheckboxes.Count; i++)
+				{
+					<input class="form-check-input" name="GroupChecked" type="checkbox" value="@groupCheckboxes[i].CheckBoxName" /> @groupCheckboxes[i].CheckBoxName
+					<br />
+					@Html.ValidationMessageFor(model => model.SupplierGroup, "", new { @class = "text-danger" })
+				}
+			</div>
+		</div>
+
+		<div class="row mb-3 align-items-center">
+			@Html.LabelFor(model=>model.FustTypeList,htmlAttributes:new{@class ="col-form-label col-sm-2"} )
+			<div class="col-auto">
+				@for (int i = 0; i < fustTypeCheckboxes.Count(); i++)
+				{
+					<input class="form-check-input" name="FustTypeChecked" type="checkbox" value="@fustTypeCheckboxes[i].CheckBoxName" /> @fustTypeCheckboxes[i].CheckBoxName
+					<br />
+					@Html.ValidationMessageFor(model => model.FustTypeList, "", new { @class = "text-danger" })
+				}
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<input type="submit" value="Save" name="Save" class="btn btn-primary" />
+			</div>
+		</div>
+	</div>
+
+}
+

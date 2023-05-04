@@ -1,0 +1,137 @@
+﻿@model FustWebApp.Models.LoadViewModel
+@using FustWebApp.Models.Domain
+
+@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+	ViewData["Title"] = "Create Load for " + Model.LoadSupplier;
+	var fustItemObjectList = new Fust();
+	Layout = "~/Views/Shared/_LoadLayout.cshtml";
+}
+
+@using (Html.BeginForm("CreateLoad", "Load", HttpMethod.Post))
+{
+	@Html.AntiForgeryToken()
+	;
+	<div class="container  ">
+		<div class="row mb-3">
+			@Html.HiddenFor(model=>model.LoadSupplier)
+			<div class="row mb-3">
+				<div class="col-md-4 h-25 ">
+					<div class="row mb-3">
+						@Html.LabelFor(model=>model.LoadSupplier,  htmlAttributes:new {@class="col-form-label col-4"})
+						@Html.HiddenFor(model=>model.LoadSupplier)
+						<div class="col-auto">
+							@Html.EditorFor(model=>model.LoadSupplier, new { htmlAttributes = new { @class = "form-control",@readonly="readonly",@required ="required", @placeholder="Enter Trailer Number" } })
+							@Html.ValidationMessageFor(model=>model.LoadSupplier, "", new { @class = "text-danger" })
+						</div>
+					</div>
+
+					<div class="row mb-3">
+						@Html.LabelFor(model=>model.LoadOrigin,  htmlAttributes:new {@class="col-form-label col-4"})
+						<div class="col-auto">
+							@Html.EditorFor(model=>model.LoadOrigin, new { htmlAttributes = new { @class = "form-control",@readonly="readonly", @required ="required", @placeholder="Enter Trailer Number" } })
+							@Html.ValidationMessageFor(model=>model.LoadOrigin, "", new { @class = "text-danger" })
+						</div>
+					</div>
+
+					<div class="row mb-3">
+						@Html.LabelFor(model=>model.LoadTrailerNumber,  htmlAttributes:new {@class="col-form-label col-4"})
+						<div class="col-auto">
+							@Html.EditorFor(model=>model.LoadTrailerNumber, new { htmlAttributes = new { @class = "form-control",@required ="required", @placeholder="Enter Trailer Number" } })
+							@Html.ValidationMessageFor(model=>model.LoadTrailerNumber, "", new { @class = "text-danger" })
+						</div>
+					</div>
+
+					<div class="row mb-3">
+						@Html.LabelFor(model=>model.LoadDate,  htmlAttributes:new {@class="col-form-label col-4"})
+						<div class="col-auto">
+							@Html.EditorFor(model=>model.LoadDate,"12/04/2023", new { htmlAttributes = new { @class = "form-control",@required ="required",@type="date"} })
+							@Html.ValidationMessageFor(model=>model.LoadDate, "", new { @class = "text-danger" })
+						</div>
+					</div>
+
+					<div class="row mb-3">
+						@Html.LabelFor(model=>model.LoadType,  htmlAttributes:new {@class="col-form-label col-4"})
+						<div class="col-auto">
+							@Html.DropDownListFor(model=>model.LoadType,new SelectList(ViewBag.LoadType),"Please Select",new { @class = "form-select" })
+							@Html.ValidationMessageFor(model=>model.LoadType, "", new { @class = "text-danger" })
+						</div>
+					</div>
+
+					<div class="row mb-3">
+						@Html.LabelFor(model=>model.PONumber,  htmlAttributes:new {@class="col-form-label col-4"})
+						<div class="col-auto">
+							@Html.EditorFor(model=>model.PONumber, new { htmlAttributes = new { @class = "form-control",@required ="required", @placeholder="Enter Trailer Number" } })
+							*only for Inbound Loads
+							@Html.ValidationMessageFor(model=>model.PONumber, "", new { @class = "text-danger" })
+						</div>
+					</div>
+
+					<div class="row mb-3">
+						@Html.LabelFor(model=>model.LoadGroup,  htmlAttributes:new {@class="col-form-label col-4"})
+						<div class="col-auto">
+							@if (ViewBag.Groups.Count > 1)
+							{
+								@Html.DropDownListFor(model=>model.LoadGroup,new SelectList(ViewBag.Groups),"Please Select",new { @class = "form-select" })
+							}
+							else
+							{
+								@Html.DropDownListFor(model=>model.LoadGroup,new SelectList(ViewBag.Groups),new { @class = "form-select" })
+							}
+
+							@Html.ValidationMessageFor(model=>model.LoadGroup, "", new { @class = "text-danger" })
+						</div>
+					</div>
+
+					<div class="row mb-3 h-50 align-items-top">
+						@Html.LabelFor(model=>model.LoadComment,  htmlAttributes:new {@class="col-form-label col-4 mt-5"})
+						<div class="col-auto h-100">
+							@Html.EditorFor(model=>model.LoadComment , new { htmlAttributes = new { @class = "form-control",@required ="required", @placeholder="Enter Comment",@style = "height: 130px;" } })
+						</div>
+					</div>
+
+					<div class="row mb-3 align-items-top">
+						<input class="btn btn-primary col-4" type="submit" value="Add Load" name="Save">
+					</div>
+				</div>
+
+				<div class="col-md-8 h-auto">
+					<table class="table w-50">
+						@for (int y = 0; y < Model.LoadFustItems.Count; y++)
+						{
+							if (y != 0)
+							{
+								if (Model.LoadFustItems[y].FustType.FustTypeName != Model.LoadFustItems[y - 1].FustType.FustTypeName)
+								{
+									<tr class="">
+										<td class="bg-light text-sm-center" colspan="3">@Model.LoadFustItems[y].FustType.FustTypeName</td>
+									</tr>
+								}
+							}
+							else
+							{
+								<tr class="">
+									<td class="bg-light text-sm-center" colspan="3">@Model.LoadFustItems[y].FustType.FustTypeName</td>
+								</tr>
+							}
+
+							<tr class="w-25">
+								<td class=" text-sm-start w-25">
+									@Html.HiddenFor(model=>model.LoadFustItems[y].FustType.FustTypeName)
+									@Html.HiddenFor(model=>model.LoadFustItems[y].FustName)
+									<label>@Model.LoadFustItems[y].FustName</label>
+								</td>
+								<td class="align-content-lg-start w-25">
+									@Html.EditorFor(model=>model.LoadFustItems[y].ExpectedQuantity,new { htmlAttributes = new { @class = "form-control",@required ="required", @placeholder="0",type="Number" } })
+								</td>
+							</tr>
+						}
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+}

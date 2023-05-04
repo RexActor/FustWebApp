@@ -1,0 +1,40 @@
+﻿@model FustWebApp.Models.Domain.Group
+
+@{
+
+	ViewData["Title"] = "Add Group";
+	
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+
+
+@using (@Html.BeginForm("Add", "Group", HttpMethod.Post))
+{
+	@Html.AntiForgeryToken()
+	<div class="container">
+		@Html.ValidationSummary(true,"",new{@class = "text-danger"})
+		<div class="row mb-2">
+			@Html.LabelFor(model=>model.GroupName,htmlAttributes:new{@class ="col-form-label col-sm-2" })
+			<div class="col-auto">
+				@Html.EditorFor(model => model.GroupName, new { htmlAttributes = new { @class = "form-control",@required ="required",@placeholder="Enter Group Name" } })
+				@Html.ValidationMessageFor(model => model.GroupName, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="row mb-2">
+			@Html.LabelFor(model=>model.GroupComment,htmlAttributes:new{@class ="col-form-label col-sm-2"})
+			<div class="col-auto">
+				@Html.EditorFor(model => model.GroupComment, new { htmlAttributes = new { @class = "form-control" ,@placeholder="Enter Comment if required" } })				
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<input type="submit" value="Save" name="Save" class="btn btn-primary" />
+			</div>
+		</div>
+	</div>
+}
+
+

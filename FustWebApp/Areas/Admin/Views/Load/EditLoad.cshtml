@@ -1,0 +1,157 @@
+﻿@model FustWebApp.Models.Domain.Loads
+@{
+	ViewData["Title"] = $"Edit Load {@Model.LoadTrailerNumber}";
+
+	Layout = "~/Views/Shared/_LoadLayout.cshtml";
+}
+
+@using (Html.BeginForm("EditLoad", "Load", HttpMethod.Post))
+{
+	@Html.HiddenFor(model=>model.LoadTrailerNumber)
+	<div class="d-flex flex-row flex-row-reverse mb-3">
+		<div class="mx-2">
+			<a class="btn btn-success" href="../ReceiveLoad/@Model.LoadId">Receive Load</a>
+		</div>
+		<div class="mx-2">
+			<input type="submit" class="btn btn-warning" value="Save Load">
+		</div>
+	</div>
+
+	<div class="container mb-4">
+		<div class="row ">
+			<div class="col-md-6">
+				<div class="row mb-3">
+					@Html.LabelFor(model=>model.LoadId, htmlAttributes:new {@class="col-form-label col-4"})
+					<div class="col-auto">
+						@Html.HiddenFor(model=>model.LoadId)
+						<input value="@Model.LoadId" class="form-control" readonly>
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					@Html.LabelFor(model=>model.LoadSupplier, htmlAttributes:new {@class="col-form-label col-4"})
+					<div class="col-auto">
+						@Html.HiddenFor(model=>model.LoadSupplier)
+						<input value="@Model.LoadSupplier" class="form-control" readonly>
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					@Html.LabelFor(model=>model.LoadGroup, htmlAttributes:new {@class="col-form-label col-4"})
+					<div class="col-auto">
+						@Html.HiddenFor(model=>model.LoadGroup)
+						<input value="@Model.LoadGroup" class="form-control" readonly>
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					@Html.LabelFor(model=>model.LoadType,  htmlAttributes:new {@class="col-form-label col-4"})
+					<div class="col-auto">
+						@Html.HiddenFor(model=>model.LoadType)
+						<input value="@Model.LoadType" class="form-control placeholder-glow" readonly>
+						@Html.ValidationMessageFor(model=>model.LoadType, "", new { @class = "text-danger" })
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					@Html.LabelFor(model=>model.PONumber,   htmlAttributes:new {@class="col-form-label col-4"})
+					<div class="col-auto">
+						@Html.EditorFor(model=>model.PONumber, new { htmlAttributes = new { @class = "form-control",@required ="required", @placeholder="Enter Trailer Number"} })
+						*only for Inbound Loads
+						@Html.ValidationMessageFor(model=>model.PONumber, "", new { @class = "text-danger" })
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					@Html.LabelFor(model=>model.CreatedDate,"Created Date & Time", htmlAttributes:new {@class="col-form-label col-4"})
+					<div class="col-auto">
+						@Html.HiddenFor(model=>model.CreatedDate)
+						<input value="@Model.CreatedDate" class="form-control" readonly>Created by @Model.CreatedBy
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<div class="row mb-3">
+					@Html.LabelFor(model=>model.LoadDate,   htmlAttributes:new {@class="col-form-label col-4"})
+					<div class="col-auto">
+						@Html.TextBoxFor(model=>model.LoadDate,"{0:yyyy-MM-dd}",new { @class = "form-control",@type = "date"})
+						@Html.ValidationMessageFor(model=>model.PONumber, "", new { @class = "text-danger" })
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					@Html.LabelFor(model=>model.LoadOrigin, htmlAttributes:new {@class="col-form-label col-4"})
+					<div class="col-auto">
+						@Html.HiddenFor(model=>model.LoadOrigin)
+						<input type="text" value="@Model.LoadOrigin" class="form-control" readonly>
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					@Html.LabelFor(model=>model.LoadComment, htmlAttributes:new {@class="col-form-label col-4"})
+					<div class="col-auto">
+						@Html.TextAreaFor(model=>model.LoadComment , new { htmlAttributes = new { @class = "form-control",@required ="required", @placeholder="Enter Comment",@style = "height: 130px;background-color:rgba(195, 223, 169,5)" } })
+					</div>
+				</div>
+
+				@if (Model.LoadUpdatedDate > Model.CreatedDate)
+				{
+					<div class="row mb-3">
+						@Html.LabelFor(model=>model.LoadUpdatedDate,"Last Update On", htmlAttributes:new {@class="col-form-label col-4"})
+						<div class="col-auto">
+							<input value="@Model.LoadUpdatedDate" class="form-control" readonly> Updated by @Model.UpdatedBy
+						</div>
+					</div>
+				}
+
+				@if (Model.ReceivedDate > Model.CreatedDate)
+				{
+					<div class="row mb-3">
+						@Html.LabelFor(model=>model.ReceivedDate,"Load Received On", htmlAttributes:new {@class="col-form-label col-4"})
+						<div class="col-auto">
+							<input value="@Model.ReceivedDate" class="form-control" readonly> Received by @Model.ReceivedBy
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+
+	<table class="table text-sm-center w-50">
+		<thead class="table-dark">
+			<tr>
+				<th hidden>Fust Item Id</th>
+				<th>Fust Type:</th>
+				<th>Fust Name</th>
+				<th>Expected Quantity:</th>
+				<th>Received Quantity:</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			@for (int i = 0; i < Model.LoadFustItems.Count; i++)
+			{
+				<tr>
+					@Html.HiddenFor(model=>model.LoadFustItems[i].Loads)
+					@Html.HiddenFor(model=>model.LoadFustItems[i].LoadFustId)
+					<td hidden>@Model.LoadFustItems[i].LoadFustId</td>
+					<td>
+						@Html.HiddenFor(model=>model.LoadFustItems[i].FustType.FustTypeName)
+						@Model.LoadFustItems[i].FustType.FustTypeName
+					</td>
+					<td>
+						@Html.HiddenFor(model=>model.LoadFustItems[i].FustName)
+						@Model.LoadFustItems[i].FustName
+					</td>
+					<td width="200">
+						@Html.EditorFor(model=>model.LoadFustItems[i].ExpectedQuantity,new { htmlAttributes = new { @class = "form-control", @placeholder="0",type="Number" } })
+					</td>
+					<td width="200">
+						@Html.EditorFor(model=>model.LoadFustItems[i].ReceivedQty,new { htmlAttributes = new { @class = "form-control", @placeholder="0",type="Number" } })
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}

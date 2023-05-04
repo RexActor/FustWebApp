@@ -1,0 +1,28 @@
+﻿
+@{
+	ViewData["Title"] = "Create User";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<form method="post">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2">
+				<label for="email" class="form-label">Email</label>
+			</div>
+			<div class="col-auto">
+				<input name="email" type="email" placeholder="email@example.com" />
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-2">
+				<label for="password" class="form-label">Password</label>
+			</div>
+			<div class="col-auto">
+				<input type="password" name="password" placeholder="Please enter password" />
+			</div>
+		</div>
+
+		<button type="submit" class="btn btn-primary mt-3">Save</button>
+	</div>
+</form>

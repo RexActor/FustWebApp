@@ -1,0 +1,69 @@
+﻿@model FustWebApp.Models.LoadViewModel
+
+@using FustWebApp.Models.Domain
+@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+	ViewData["Title"] = "Create Load";
+	Layout = "~/Views/Shared/_LoadLayout.cshtml";
+}
+
+<div class="container border-top border-bottom border-1 ">
+	<div class="row">
+
+		<div class="col-md-4 mt-3">
+			<div class="row">
+				@using (Html.BeginForm("AddLoad", "Load", HttpMethod.Post))
+				{
+
+					@Html.AntiForgeryToken()
+
+
+
+					<div class="row mb-3">
+						@Html.LabelFor(model=>model.LoadSupplier,  htmlAttributes:new {@class="col-form-label col-4"})
+						<div class="col-auto">
+							@Html.DropDownListFor(model=>model.LoadSupplier,new SelectList(ViewBag.Suppliers),"Please Select",new { @class = "form-select" })
+							@Html.ValidationMessageFor(model=>model.LoadSupplier, "", new { @class = "text-danger" })
+						</div>
+					</div>
+
+					<div class="row mb-3 justify-content-center">
+						<input class="btn btn-primary col-4" type="submit" value="Add Load" name="Next">
+					</div>
+
+
+
+				}
+			</div>
+		</div>
+		<div class="col-md-8">
+
+			<div class="container ">
+
+				<ol class="list-group list-group-numbered">
+					<li class="list-group-item list-group-item-warning mt-3 mb-1">Please select supplier from drop down list</li>
+					<li class="list-group-item list-group-item-warning mt-1 mb-1">Once Supplier chosen press <button class="btn btn-primary btn-sm" disabled>Add Load</button></li>
+					<li class="list-group-item list-group-item-warning mt-1 mb-3">
+						You will be able to populate for this load more informatin such as:
+						<ul>
+							<li>Trailer Number</li>
+							<li>Load Date</li>
+							<li>Load Type {Inbound/Outbound}</li>
+							<li>PO number {Only for Inbound}</li>
+							<li>Load Group</li>
+							<li>Load Comment</li>
+							<li>Populate Expected Quantities for each fust item assigned to Supplier</li>
+
+						</ul>
+					</li>
+				</ol>
+
+			</div>
+
+		</div>
+
+	</div>
+</div>

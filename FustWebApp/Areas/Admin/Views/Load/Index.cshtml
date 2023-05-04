@@ -1,0 +1,143 @@
+﻿@model List<FustWebApp.Models.Domain.Loads>
+
+
+@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+	ViewData["Title"] = "Load List";
+	Layout = "~/Views/Shared/_LoadLayout.cshtml";
+	var loadType = string.Empty;
+}
+
+
+
+<div class="container mw-100">
+	<table id="loadTable" class="table table-hover">
+		<thead class=" sticky-top" style="font-size:16px">
+			<tr class="table-dark text-sm-center">
+				<th >
+					Load ID
+
+				</th>
+				<th>Load Type</th>
+				<th>Date</th>
+				<th>Supplier</th>
+				<th>Origin</th>
+				<th>Group</th>
+				<th>PO Number</th>
+				<th>Trailer Number</th>
+				<th>Comment</th>
+				<th>Created Date</th>
+				<th></th>
+			</tr>
+
+		</thead>
+		<tbody>
+			@if (Model.Count == 0)
+			{
+				<tr class="text-muted text-sm-center">
+					<td colspan="11" class="fs-5"><h3>No Loads to Display</h3></td>
+				</tr>
+			}
+
+			@foreach (var item in @Model)
+			{
+				if (loadType != item.LoadType)
+				{
+					<tr class="table-light text-sm-center">
+						<td colspan="11" class="fs-5">@item.LoadType</td>
+					</tr>
+					loadType = item.LoadType;
+				}
+
+				<tr class="">
+					<td class="text-sm-center">@item.LoadId</td>
+					<td class="text-sm-center">@item.LoadType</td>
+					<td class="text-sm-center">@item.LoadDate.Date.ToShortDateString()</td>
+					<td class="text-sm-center">@item.LoadSupplier</td>
+					<td class="text-sm-center">@item.LoadOrigin</td>
+					<td class="text-sm-center">@item.LoadGroup</td>
+					<td class="text-sm-center">@item.PONumber</td>
+					<td class="text-sm-center">@item.LoadTrailerNumber</td>
+					<td class="text-sm-center text-truncate" style="max-width:200px;">@item.LoadComment</td>
+					<td class="text-sm-center">@item.CreatedDate</td>
+					<td>
+						<a class="btn btn-primary mb-2" href="Load/ViewLoad/@item.LoadId" style="font-size:0.8rem;">View</a>
+						@if (!User.IsInRole("Operations"))
+						{
+							<a class="btn btn-danger mb-2" href="Load/EditLoad/@item.LoadId" style="font-size:0.8rem">Edit</a>
+						}
+						<a class="btn btn-success mb-2" href="Load/ReceiveLoad/@item.LoadId" style="font-size:0.8rem">Receive</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+@section Scripts{
+
+
+	<script type="text/javascript">
+
+		function filterLoadTable(column) {
+
+			var input, filter, table, tr, td, i, txtValue, inputVariable;
+			inputVariable = "loadSearch";
+			input = document.getElementById(inputVariable);
+			filter = input.value.toUpperCase();
+			table = document.getElementById("loadTable");
+			tr = table.getElementsByTagName("tr");
+
+			for (i = 0; i < tr.length; i++) {
+
+				td = tr[i].getElementsByTagName("td")[0];
+				td2 = tr[i].getElementsByTagName("td")[1];
+				td3 = tr[i].getElementsByTagName("td")[2];
+				td4 = tr[i].getElementsByTagName("td")[3];
+				td5 = tr[i].getElementsByTagName("td")[4];
+				td6 = tr[i].getElementsByTagName("td")[5];
+				td7 = tr[i].getElementsByTagName("td")[6];
+				td8 = tr[i].getElementsByTagName("td")[7];
+				td9 = tr[i].getElementsByTagName("td")[8];
+				td10 = tr[i].getElementsByTagName("td")[9];
+
+				if (td && td2 && td3 && td4 && td5 && td6 && td7 && td8 && td9 && td10) {
+					txtValue = td.textContent || td.innerText;
+					txtValue2 = td2.textContent || td2.innerText;
+					txtValue3 = td3.textContent || td3.innerText;
+					txtValue4 = td4.textContent || td4.innerText;
+					txtValue5 = td5.textContent || td5.innerText;
+					txtValue6 = td6.textContent || td6.innerText;
+					txtValue7 = td7.textContent || td7.innerText;
+					txtValue8 = td8.textContent || td8.innerText;
+					txtValue9 = td9.textContent || td9.innerText;
+					txtValue10 = td10.textContent || td10.innerText;
+
+					if ((txtValue.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue2.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue3.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue4.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue5.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue6.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue7.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue8.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue9.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue10.toUpperCase().indexOf(filter) > -1)) {
+						tr[i].style.display = "";
+					}
+					else {
+						tr[i].style.display = "none";
+					}
+				}
+
+
+			}
+
+		}
+
+
+
+	</script>
+}

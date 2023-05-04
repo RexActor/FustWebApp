@@ -1,0 +1,182 @@
+﻿@using FustWebApp.Models
+@using FustWebApp.Models.Domain
+@{
+	ViewData["Title"] = "Home Page";
+
+	var loadList = ViewBag.InboundList as IEnumerable<Loads>;
+}
+
+<div class="container mw-100">
+	<div class="row">
+		<div class="col-md-2">
+			<div class="row text-sm-center mt-2">
+				<H3><span style="font-weight:bold;">Stockholding</span></H3>
+				<table class="table">
+					<thead class="table-dark  sticky-top">
+						<tr>
+							<th>Fust Type</th>
+							<th>Fust Item</th>
+							<th>Balance</th>
+						</tr>
+					</thead>
+					<tbody style="font-size:90%">
+						@foreach (var item in ViewBag.StockHoldingList as IEnumerable<StockholdingViewModel>)
+						{
+							var status = string.Empty;
+
+							if (item.StockHoldingQty > 0)
+							{
+								status = "positive";
+							}
+							else if (item.StockHoldingQty == 0)
+							{
+								status = "zero";
+							}
+							else
+							{
+								status = "negative";
+							}
+
+
+							<tr class="status" data-status="@status">
+								<td>@item.StockHoldingFustItems.FustType.FustTypeName</td>
+								<td>@item.StockHoldingFustItems.FustName</td>
+								<td>@item.StockHoldingQty</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+		<div class="col-md-10 w-75 ms-5">
+			<div class="row text-sm-center mt-2">
+				<h3 class="w-100 text-lg-center" style="font-weight:bold;">Todays Loads</h3>
+				<table class="table table-hover">
+					<thead class="table-dark text-sm-center font-monospace h6 sticky-top">
+						<tr>
+							<th>Load Type</th>
+							<th>Supplier</th>
+							<th>Group </th>
+							<th>Origin</th>
+							<th>PO Number</th>
+							<th>Trailer Number</th>
+							<th>Date</th>
+						</tr>
+					</thead>
+
+					<tbody class="text-sm-center">
+						@if (loadList.Where(item => item.LoadDate == DateTime.Now.Date).Count() == 0)
+						{
+							<tr>
+								<td class="text-muted" colspan="7"><h3>No Loads to display</h3></td>
+							</tr>
+						}
+						else
+						{
+							@foreach (var load in loadList)
+							{
+								if (load.LoadDate.Date == DateTime.Now.Date)
+								{
+									<tr>
+										<td>@load.LoadType</td>
+										<td>@load.LoadSupplier</td>
+										<td>@load.LoadGroup</td>
+										<td>@load.LoadOrigin</td>
+										<td>@load.PONumber</td>
+										<td>@load.LoadTrailerNumber</td>
+										<td>@load.LoadDate.ToShortDateString()</td>
+									</tr>
+								}
+							}
+						}
+					</tbody>
+				</table>
+			</div>
+
+			<div class="row text-sm-center mt-2">
+				<h3 class="w-100 text-lg-center mb-3 mt-3" style=" font-weight:bold;">Yesterdays Loads</h3>
+				<table class="table table-hover">
+					<thead class="table-dark text-sm-center font-monospace h6 sticky-top">
+						<tr>
+							<th>Load Type</th>
+							<th>Supplier</th>
+							<th>Group </th>
+							<th>Origin</th>
+							<th>PO Number</th>
+							<th>Trailer Number</th>
+							<th>Date</th>
+						</tr>
+					</thead>
+					<tbody class="text-sm-center">
+						@if (loadList.Where(item => item.LoadDate == DateTime.Now.Date.AddDays(-1)).Count() == 0)
+						{
+							<tr>
+								<td class="text-muted" colspan="7"><h3>No Loads to display</h3></td>
+							</tr>
+						}
+						else
+						{
+
+							@foreach (var load in loadList)
+							{
+								if (load.LoadDate.Date == DateTime.Now.Date.AddDays(-1))
+								{
+									<tr>
+										<td>@load.LoadType</td>
+										<td>@load.LoadSupplier</td>
+										<td>@load.LoadGroup</td>
+										<td>@load.LoadOrigin</td>
+										<td>@load.PONumber</td>
+										<td>@load.LoadTrailerNumber</td>
+										<td>@load.LoadDate.ToShortDateString()</td>
+									</tr>
+								}
+							}
+						}
+					</tbody>
+				</table>
+			</div>
+
+			<div class="row text-sm-center mt-2">
+				<h3 class="w-100 text-lg-center mb-3 mt-3" style=" font-weight:bold;">All Loads</h3>
+				<table class="table table-hover">
+					<thead class="table-dark text-sm-center font-monospace h6 sticky-top">
+						<tr>
+							<th>Load Type</th>
+							<th>Supplier</th>
+							<th>Group </th>
+							<th>Origin</th>
+							<th>PO Number</th>
+							<th>Trailer Number</th>
+							<th>Date</th>
+						</tr>
+					</thead>
+					<tbody class="text-sm-center">
+						@if (loadList.Count() == 0)
+						{
+							<tr>
+								<td class="text-muted" colspan="7"><h3>No Loads to display</h3></td>
+							</tr>
+						}
+						else
+						{
+							@foreach (var load in loadList)
+							{
+								<tr>
+									<td>@load.LoadType</td>
+									<td>@load.LoadSupplier</td>
+									<td>@load.LoadGroup</td>
+									<td>@load.LoadOrigin</td>
+									<td>@load.PONumber</td>
+									<td>@load.LoadTrailerNumber</td>
+									<td>@load.LoadDate.ToShortDateString()</td>
+								</tr>
+							}
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,10 @@
+﻿.status[data-status="positive"] {
+    background-color: rgba(170, 225, 170,0.3)
+}
+
+.status[data-status="negative"] {
+    background-color: rgba(249, 152, 152,0.3)
+}
+.status[data-status="zero"] {
+    background-color: rgba(244, 221, 199,0.2)
+}

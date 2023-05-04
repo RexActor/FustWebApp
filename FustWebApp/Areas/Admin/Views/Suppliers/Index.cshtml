@@ -1,0 +1,98 @@
+﻿@model List<FustWebApp.Models.Domain.Supplier>
+
+
+
+@{
+	ViewData["Title"] = "Suppliers";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<p>@TempData["Test"]</p>
+
+@if (@ViewBag.Message != null)
+{
+	<div class="@ViewBag.Style  text-sm-center mb-1 py-1"><h4>@ViewBag.Message</h4></div>
+}
+
+<input class="mb-2" id="searchInput" onkeyup="filterTable()" placeholder="Search Items" type="text" />
+<table class="table table-hover mt-0" id="Table">
+	<thead class="table-dark justify-content-center">
+		<tr>
+			<th>Supplier Name </th>
+			<th>Origin</th>
+			<th>Group</th>
+			<th>Fust Type</th>
+			<th>Address</th>
+			<th></th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@item.SupplierName</td>
+				<td>@item.SupplierOrigin</td>
+				<td>@item.SupplierGroup</td>
+				<td>@item.FustTypeList.Replace(",",", ")</td>
+				<td>@item.SupplierAddress</td>
+				<td>
+					<a class="btn btn-info" href="Suppliers/View/@item.Id">View</a>
+					<a class="btn btn-danger" href="Suppliers/View/@item.Id?editSupplier=true">Edit</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+@section Scripts{
+
+
+	<script type="text/javascript">
+
+		function filterTable() {
+
+			var input, filter, table, tr, td, i, txtValue, inputVariable;
+			inputVariable = "searchInput";
+			input = document.getElementById(inputVariable);
+			filter = input.value.toUpperCase();
+			table = document.getElementById("Table");
+			tr = table.getElementsByTagName("tr");
+
+			for (i = 0; i < tr.length; i++) {
+
+				td = tr[i].getElementsByTagName("td")[0];
+				td2 = tr[i].getElementsByTagName("td")[1];
+				td3 = tr[i].getElementsByTagName("td")[2];
+				td4 = tr[i].getElementsByTagName("td")[3];
+				td5 = tr[i].getElementsByTagName("td")[4];
+
+
+				if (td && td2 && td3 && td4 && td5) {
+					txtValue = td.textContent || td.innerText;
+					txtValue2 = td2.textContent || td2.innerText;
+					txtValue3 = td3.textContent || td3.innerText;
+					txtValue4 = td5.textContent || td4.innerText;
+					txtValue5 = td5.textContent || td5.innerText;
+
+					if ((txtValue.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue2.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue3.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue4.toUpperCase().indexOf(filter) > -1) ||
+						(txtValue5.toUpperCase().indexOf(filter) > -1)) {
+						tr[i].style.display = "";
+					}
+					else {
+						tr[i].style.display = "none";
+					}
+				}
+
+
+			}
+
+		}
+
+
+
+	</script>
+}
