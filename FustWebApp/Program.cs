@@ -30,6 +30,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 

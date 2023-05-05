@@ -10,11 +10,11 @@ namespace FustWebApp.Controllers
 	[Authorize]
 
 	[Area("Admin")]
-	[Route("Admin")]
+	
 	[Authorize(Roles = "Admin")]
 	public class AdminController : Controller
 	{
-		private readonly ApplicationDbContext applicationDbContext;
+		public readonly ApplicationDbContext applicationDbContext;
 
 		public AdminController(ApplicationDbContext applicationDbContext)
 		{
@@ -27,7 +27,7 @@ namespace FustWebApp.Controllers
 		/// <returns>Returns StockHolding Viewmodel into page</returns>
 
 		[HttpGet]
-		public async Task<IActionResult> Index()
+		public async Task<ViewResult> Index()
 		{
 			List<StockholdingViewModel> stockHoldingList = new List<StockholdingViewModel>();
 			await applicationDbContext.StockHolding.Include(item => item.StockHoldingFustItems).ThenInclude(item => item.FustType).ForEachAsync(item =>
