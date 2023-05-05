@@ -4,6 +4,7 @@
 	ViewData["Title"] = "Home Page";
 
 	var loadList = ViewBag.InboundList as IEnumerable<Loads>;
+	TimeSpan daysAhead = new TimeSpan(0);
 }
 
 <div class="container mw-100">
@@ -52,7 +53,13 @@
 		<div class="col-md-10 w-75 ms-5">
 			<div class="row text-sm-center mt-2">
 				<h3 class="w-100 text-lg-center" style="font-weight:bold;">Todays Loads</h3>
-				<table class="table table-hover">
+				<select class="form-select mb-2" style="width:150px;" id="loadselection" onchange="displayLoad()">
+					<option value=0 selected>Todays</option>
+					<option value=-1>Yesterdays</option>
+					<option value=1>Tomorrows</option>
+				</select>
+				<p id="updateThis">Time is:</p>
+				<table class="table table-hover" id="loads">
 					<thead class="table-dark text-sm-center font-monospace h6 sticky-top">
 						<tr>
 							<th>Load Type</th>
@@ -66,7 +73,7 @@
 					</thead>
 
 					<tbody class="text-sm-center">
-						@if (loadList.Where(item => item.LoadDate == DateTime.Now.Date).Count() == 0)
+						@if (loadList.Where(item => item.LoadDate == DateTime.Now.Date.AddDays(0)).Count() == 0)
 						{
 							<tr>
 								<td class="text-muted" colspan="7"><h3>No Loads to display</h3></td>
@@ -76,23 +83,23 @@
 						{
 							@foreach (var load in loadList)
 							{
-								if (load.LoadDate.Date == DateTime.Now.Date)
-								{
-									<tr>
-										<td>@load.LoadType</td>
-										<td>@load.LoadSupplier</td>
-										<td>@load.LoadGroup</td>
-										<td>@load.LoadOrigin</td>
-										<td>@load.PONumber</td>
-										<td>@load.LoadTrailerNumber</td>
-										<td>@load.LoadDate.ToShortDateString()</td>
-									</tr>
-								}
+
+								<tr>
+									<td>@load.LoadType</td>
+									<td>@load.LoadSupplier</td>
+									<td>@load.LoadGroup</td>
+									<td>@load.LoadOrigin</td>
+									<td>@load.PONumber</td>
+									<td>@load.LoadTrailerNumber</td>
+									<td>@load.LoadDate.ToShortDateString()</td>
+								</tr>
+
 							}
 						}
 					</tbody>
 				</table>
 			</div>
+
 
 			<div class="row text-sm-center mt-2">
 				<h3 class="w-100 text-lg-center mb-3 mt-3" style=" font-weight:bold;">Yesterdays Loads</h3>
@@ -177,6 +184,54 @@
 					</tbody>
 				</table>
 			</div>
+
 		</div>
 	</div>
 </div>
+
+@section Scripts{
+
+	<script type="text/javascript">
+
+
+		let ut = document.getElementById("updateThis");
+		function displayLoad() {
+			var i, txtValue, input, table, tr, td, filter;
+			let dt = new Date();
+			input = document.getElementById("loadselection").value;
+			dt.setDate(dt.getDate() + parseInt(input));
+			filter = dt.toLocaleDateString();
+			ut.innerText = filter;
+
+
+
+			table = document.getElementById("loads");
+			tr = table.getElementsByTagName("tr");
+			for (i = 0; i < tr.length; i++) {
+				td = tr[i].getElementsByTagName("td")[6];
+
+				if (td) {
+					txtValue = td.textContent || td.innerText;
+
+					var result = txtValue.localeCompare(filter);
+
+					if (result == 0) {
+						tr[i].syle.display = "";
+					}
+					else {
+
+						tr[i].style.display = "none";
+					}
+
+				}
+			}
+
+		}
+
+
+	</script>
+
+
+
+
+}

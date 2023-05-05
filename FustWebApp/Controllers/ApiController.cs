@@ -37,24 +37,25 @@ namespace FustWebApp.Controllers
 		}
 
 
-		[HttpGet("{loadId:int}")]
-		public IEnumerable<Loads> GetLoad(int loadId)
+
+		public IEnumerable<Loads> GetLoads()
 		{
 			List<Loads> load = new List<Loads>();
 
-			if (loadId != null)
-			{
 
-				load.Add(applicationDbContext.Loads.Where(item => item.LoadId == loadId).Include(item => item.LoadFustItems).ThenInclude(item => item.FustType).FirstOrDefault());
-			}
-			else
-			{
-				applicationDbContext.Loads.ForEachAsync(item =>
-				{
-					load.Add(item);
-				});
-			}
+
+			load = applicationDbContext.Loads.Include(item => item.LoadFustItems).ThenInclude(item => item.FustType).ToList();
+
 			return load;
 		}
+
+		public IEnumerable<StockHolding> GetStockHolding()
+		{
+			List<StockHolding> stockHolding = new List<StockHolding>();
+			stockHolding = applicationDbContext.StockHolding.Include(item => item.StockHoldingFustItems).ThenInclude(item => item.FustType).Include(item => item.StockHoldingSupplier).ToList();
+
+			return stockHolding;
+		}
+
 	}
 }
