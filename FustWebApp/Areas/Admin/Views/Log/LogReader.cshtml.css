@@ -1,0 +1,25 @@
+﻿.status[data-status="Create"] {
+    background-color: rgba(170, 225, 170,0.2)
+}
+
+.status[data-status="Delete"] {
+    background-color: rgba(249, 152, 152,0.2)
+}
+.status[data-status="Update"] {
+    background-color: rgba(252, 232, 126,0.2)
+}
+
+.fontStatus[data-status="Create"] {
+    font-weight: bold;
+    color: rgb(6, 136, 6);
+}
+
+.fontStatus[data-status="Delete"] {
+    color: rgb(246, 45, 45);
+    font-weight:bold;
+}
+
+.fontStatus[data-status="Update"] {
+    font-weight: bold;
+    color: rgb(88, 130, 251)
+}

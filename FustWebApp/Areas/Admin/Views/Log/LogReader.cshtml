@@ -1,0 +1,127 @@
+﻿@model List<FustWebApp.Models.Domain.Audit>
+@inject FustWebApp.Data.ApplicationDbContext applicationDbContext
+
+@using Newtonsoft.Json
+
+@{
+	ViewData["Title"] = "Logs";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	List<string> userList = new List<string>();
+	Model.Select(item => item.UserId).Distinct().ToList().ForEach(item =>
+	{
+		userList.Add(item);
+	});
+	string type = string.Empty;
+	string status = string.Empty;
+}
+
+<table width="100%" class="table table-hover text-sm-center table-bordered">
+	<thead class="table-dark sticky-top">
+		<tr>
+			<th>Date & Time</th>
+			<th>User Name</th>
+			<th>Status</th>
+			<th>Table</th>
+			<th>Primary Key</th>
+			<th>Columns</th>
+			<th>Old Values</th>
+			<th>New Values</th>
+		</tr>
+	</thead>
+	@foreach (var row in Model.OrderByDescending(item => item.DateTime).ThenBy(item => item.Type))
+	{
+		if (row.Type == "Create")
+		{
+			status = "Create";
+		}
+		else if (row.Type == "Delete")
+		{
+			status = "Delete";
+		}
+		else if (row.Type == "Update")
+		{
+			status = "Update";
+		}
+
+		if (type != row.Type)
+		{
+			<tr class="status" data-status=@status>
+				<td colspan="8" class="fw-bolder">@row.Type</td>
+			</tr>
+			type = row.Type;
+		}
+
+		<tr>
+			<td class="text-sm-center">
+				@row.DateTime.ToShortDateString()
+				<br />
+				@row.DateTime.ToShortTimeString()
+			</td>
+			<td class="text-sm-center "><span class="text-wrap"> @applicationDbContext.Users.FindAsync(row.UserId)</span></td>
+			<td class="text-sm-center fontStatus" data-status=@status>@row.Type</td>
+			<td class="text-sm-center">@row.TableName</td>
+			<td class="text-sm-center">@row.PrimaryKey.Replace("\"","").Replace("{","").Replace("}","")</td>
+			<td class="text-sm-center">
+				@foreach (var affectedColumn in row.AffectedColumns.Split(','))
+				{
+					@affectedColumn.Replace("[","").Replace("]","").Replace("\"","")
+					<br />
+				}
+			</td>
+			<td class="text-sm-center">
+				<table width="100%">
+					@if (row.OldValues.Split(',').Count() > 1)
+					{
+						@foreach (var oldValues in row.OldValues.Split(','))
+						{
+							<tr>
+								@foreach (var subOldValue in oldValues.Split(":"))
+								{
+									<td class="text-sm-start" width="50%">
+										<span class="d-inline-block text-truncate" style="max-width: 200px;">
+											@subOldValue.Replace("{","").Replace("}","").Replace("\"","").Replace(":"," : ")
+										</span>
+									</td>
+								}
+							</tr>
+						}
+					}
+					else
+					{
+						<tr>
+							<td class="text-sm-center" width="50%">No entries</td>
+						</tr>
+					}
+				</table>
+			</td>
+			<td class="text-sm-center">
+				<table width="100%">
+					@if (row.NewValues.Split(',').Count() > 1)
+					{
+						@foreach (var newValues in row.NewValues.Split(','))
+						{
+							<tr>
+								@foreach (var subNewValue in newValues.Split(":"))
+								{
+									<td class="text-sm-start" width="50%">
+										<span class="d-inline-block text-truncate" style="max-width: 200px;">
+											@subNewValue.Replace("{","").Replace("}","").Replace("\"","").Replace(":"," : ")
+										</span>
+									</td>
+								}
+							</tr>
+						}
+					}
+					else
+					{
+						<tr>
+							<td class="text-sm-center" width="50%">No entries</td>
+						</tr>
+					}
+				</table>
+			</td>
+		</tr>
+	}
+</table>
+
+
