@@ -81,6 +81,24 @@ namespace FustWebApp.Areas.Admin.Controllers
 						};
 
 						await applicationDbContext.Fusts.AddAsync(fustToSave);
+
+
+						await applicationDbContext.StockHolding.Select(item => item.StockHoldingSupplier).Distinct().ForEachAsync(item =>
+						{
+							var stockItemToAdd = new StockHolding()
+							{
+								StockholdingDate = DateTime.Now,
+								StockHoldingFustItems = fustToSave,
+								StockHoldingQty = 0,
+								StockHoldingSupplier = item,
+								
+							
+							};
+							applicationDbContext.StockHolding.Add(stockItemToAdd);
+
+						});
+
+
 						await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
 						TempData["result"] = "Success";
 						TempData["action"] = "Fust Item Added";
