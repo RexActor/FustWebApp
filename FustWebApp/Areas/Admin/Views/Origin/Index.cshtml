@@ -5,15 +5,16 @@
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<a href="Origin/Add" class="btn btn-primary">Add Origin</a>
+
 
 @if (@ViewBag.Message != null)
 {
 	<div class="@ViewBag.Style  text-sm-center mb-1 py-1"><h4>@ViewBag.Message</h4></div>
 }
+<a href="Origin/Add" class="btn btn-primary">Add Origin</a>
 
-<div class="container w-25 d-flex">
-	<table class="table table-hover mt-3">
+
+	<table class="table table-hover mt-3 shadow">
 		<thead class="table-dark justify-content-center">
 			<tr>
 				<th>Origin Name</th>
@@ -30,4 +31,3 @@
 			}
 		</tbody>
 	</table>
-</div>
