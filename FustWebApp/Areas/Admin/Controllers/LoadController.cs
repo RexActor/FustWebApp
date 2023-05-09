@@ -13,7 +13,6 @@ using System.Security.Claims;
 namespace FustWebApp.Areas.Admin.Controllers
 {
 	[Authorize]
-
 	[Area("Admin")]
 	public class LoadController : Controller
 	{

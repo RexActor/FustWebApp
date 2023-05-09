@@ -1,4 +1,6 @@
 ﻿@model FustWebApp.Models.Domain.Loads
+@inject FustWebApp.Data.ApplicationDbContext applicationDbContext;
+
 @{
 	ViewData["Title"] = $"View Load for {@Model.LoadTrailerNumber}";
 
@@ -6,18 +8,32 @@
 }
 
 <div class="d-flex flex-row flex-row-reverse mb-3">
+
 	@if (User.IsInRole("Admin") || User.IsInRole("Fust") || User.IsInRole("Operations"))
 	{
 		<div class="mx-2">
-			<a class="btn btn-success" href="../ReceiveLoad/@Model.LoadId">Receive Load</a>
+			<a class="btn btn-sm btn-success" href="../ReceiveLoad/@Model.LoadId">Receive Load</a>
 		</div>
 	}
-	<div class="mx-2">
-		@if (User.IsInRole("Admin") || User.IsInRole("Fust"))
-		{
-			<a class="btn btn-danger" href="../EditLoad/@Model.LoadId">Edit Load</a>
-		}
-	</div>
+
+
+	@if (User.IsInRole("Admin") || User.IsInRole("Fust"))
+	{
+		<div class="mx-2">
+			<a class="btn btn-sm btn-danger" href="../EditLoad/@Model.LoadId">Edit Load</a>
+		</div>
+	}
+
+	@if (User.IsInRole("Admin") || User.IsInRole("Fust"))
+
+	{
+		var supplierId = applicationDbContext.Suppliers.Where(item => item.SupplierName == Model.LoadSupplier).Select(item => item.Id).FirstOrDefault();
+
+		<div class="mx-2">
+			<a class="btn btn-sm btn-info" asp-area="Admin"  asp-controller="Suppliers" asp-action="View" asp-route-Id="@supplierId">View Supplier</a>
+
+		</div>
+	}
 </div>
 
 <div class="container mb-4">

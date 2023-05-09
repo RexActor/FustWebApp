@@ -25,9 +25,13 @@
 
 
 <div class=" d-flex flex-row flex-row-reverse mx-3">
-	@if (!editSupplier)
+	@if (User.IsInRole("Admin"))
 	{
-		<a class="btn btn-danger" href="@Model.Id?editSupplier=true">Edit</a>
+		@if (!editSupplier)
+		{
+			<a class="btn btn-danger" href="@Model.Id?editSupplier=true">Edit</a>
+		}
+
 	}
 </div>
 
@@ -170,7 +174,7 @@
 @if (ViewBag.SupplierLoads != null && editSupplier == false)
 {
 	<div class="container mt-5 mb-3 align-items-xxl-center w-50 text-sm-center">
-		<h2>@Model.SupplierName Inbound & Outbound list</h2>
+		<h2>@Model.SupplierName Load list</h2>
 	</div>
 	<table class="table">
 		<thead class="table-dark text-sm-center  sticky-top">
@@ -211,7 +215,9 @@
 		</tbody>
 	</table>
 }
-
+<div class="container mt-5 mb-3 align-items-xxl-center w-50 text-sm-center">
+	<h2>@Model.SupplierName Stockholding</h2>
+</div>
 <table class="table">
 	<thead class="table-dark sticky-top">
 		<tr>

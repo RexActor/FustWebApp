@@ -17,7 +17,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 {
 	[Authorize]
 	[Area("Admin")]
-	[Authorize(Roles = "Admin")]
+	
 	public class SuppliersController : Controller
 	{
 
@@ -64,6 +64,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 		}
 
 		[HttpGet]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> CreateSupplier()
 		{
 			int fustTypes = 0;
@@ -102,6 +103,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Add(Supplier addSupplierRequest, string Save, List<string> FustTypeChecked, List<string> GroupChecked)
 		{
 			using (AuditScope.Create("Create:Supplier", () => addSupplierRequest))
@@ -155,9 +157,11 @@ namespace FustWebApp.Areas.Admin.Controllers
 			}
 		}
 
+		[Authorize(Roles = "Fust,Admin")]
 		[HttpGet]
 		public async Task<IActionResult> View(Guid Id, string editSupplier)
 		{
+		
 
 			List<Loads> supplierLoadList = new List<Loads>();
 			var supplier = await applicationDbContext.Suppliers.FirstOrDefaultAsync(x => x.Id == Id);
@@ -166,6 +170,19 @@ namespace FustWebApp.Areas.Admin.Controllers
 			{
 				supplierLoadList.Add(load);
 			});
+
+
+			if (editSupplier != null && !User.IsInRole("Admin"))
+			{
+				return RedirectToRoute(
+					new
+					{
+						Controller = "Suppliers",
+						Action = "View",
+						Id = supplier.Id,
+					});
+			}
+
 
 			if (supplier != null)
 			{
@@ -240,9 +257,11 @@ namespace FustWebApp.Areas.Admin.Controllers
 		}
 
 		[HttpPost]
-
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Edit(Supplier updateSupplierViewModel, string Save, string Delete, List<string> FustTypeChecked, List<string> GroupChecked)
 		{
+			
+
 			if (Delete != null)
 			{
 				var supplierToRemvoe = new Supplier()
@@ -255,7 +274,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 					applicationDbContext.Suppliers.Attach(supplierToRemvoe);
 
 					applicationDbContext.Suppliers.Remove(supplierToRemvoe);
-					
+
 					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
 					TempData["result"] = "Success";
 					TempData["action"] = "Supplier Deletion";
