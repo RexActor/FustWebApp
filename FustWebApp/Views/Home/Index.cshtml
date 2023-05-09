@@ -51,14 +51,12 @@
 
 		</div>
 		<div class="col-md-10 w-75 ms-5">
+
 			<div class="row text-sm-center mt-2">
-				<h3 class="w-100 text-lg-center" style="font-weight:bold;">Todays Loads</h3>
-				<select class="form-select mb-2" style="width:150px;" id="loadselection" onchange="displayLoad()">
-					<option value=0 selected>Todays</option>
-					<option value=-1>Yesterdays</option>
-					<option value=1>Tomorrows</option>
-				</select>
-				<p id="updateThis">Time is:</p>
+				<h3 class="w-100 text-lg-center mb-3 mt-3" style=" font-weight:bold;">Loads</h3>
+				<div class="d-flex flex-row-reverse">
+					<input class="form-control mb-2" type="date" id="date" name="date" style="width:200px;" onchange="filterTalbe('date')" />
+				</div>
 				<table class="table table-hover" id="loads">
 					<thead class="table-dark text-sm-center font-monospace h6 sticky-top">
 						<tr>
@@ -69,94 +67,7 @@
 							<th>PO Number</th>
 							<th>Trailer Number</th>
 							<th>Date</th>
-						</tr>
-					</thead>
-
-					<tbody class="text-sm-center">
-						@if (loadList.Where(item => item.LoadDate == DateTime.Now.Date.AddDays(0)).Count() == 0)
-						{
-							<tr>
-								<td class="text-muted" colspan="7"><h3>No Loads to display</h3></td>
-							</tr>
-						}
-						else
-						{
-							@foreach (var load in loadList)
-							{
-
-								<tr>
-									<td>@load.LoadType</td>
-									<td>@load.LoadSupplier</td>
-									<td>@load.LoadGroup</td>
-									<td>@load.LoadOrigin</td>
-									<td>@load.PONumber</td>
-									<td>@load.LoadTrailerNumber</td>
-									<td>@load.LoadDate.ToShortDateString()</td>
-								</tr>
-
-							}
-						}
-					</tbody>
-				</table>
-			</div>
-
-
-			<div class="row text-sm-center mt-2">
-				<h3 class="w-100 text-lg-center mb-3 mt-3" style=" font-weight:bold;">Yesterdays Loads</h3>
-				<table class="table table-hover">
-					<thead class="table-dark text-sm-center font-monospace h6 sticky-top">
-						<tr>
-							<th>Load Type</th>
-							<th>Supplier</th>
-							<th>Group </th>
-							<th>Origin</th>
-							<th>PO Number</th>
-							<th>Trailer Number</th>
-							<th>Date</th>
-						</tr>
-					</thead>
-					<tbody class="text-sm-center">
-						@if (loadList.Where(item => item.LoadDate == DateTime.Now.Date.AddDays(-1)).Count() == 0)
-						{
-							<tr>
-								<td class="text-muted" colspan="7"><h3>No Loads to display</h3></td>
-							</tr>
-						}
-						else
-						{
-
-							@foreach (var load in loadList)
-							{
-								if (load.LoadDate.Date == DateTime.Now.Date.AddDays(-1))
-								{
-									<tr>
-										<td>@load.LoadType</td>
-										<td>@load.LoadSupplier</td>
-										<td>@load.LoadGroup</td>
-										<td>@load.LoadOrigin</td>
-										<td>@load.PONumber</td>
-										<td>@load.LoadTrailerNumber</td>
-										<td>@load.LoadDate.ToShortDateString()</td>
-									</tr>
-								}
-							}
-						}
-					</tbody>
-				</table>
-			</div>
-
-			<div class="row text-sm-center mt-2">
-				<h3 class="w-100 text-lg-center mb-3 mt-3" style=" font-weight:bold;">All Loads</h3>
-				<table class="table table-hover">
-					<thead class="table-dark text-sm-center font-monospace h6 sticky-top">
-						<tr>
-							<th>Load Type</th>
-							<th>Supplier</th>
-							<th>Group </th>
-							<th>Origin</th>
-							<th>PO Number</th>
-							<th>Trailer Number</th>
-							<th>Date</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody class="text-sm-center">
@@ -177,7 +88,8 @@
 									<td>@load.LoadOrigin</td>
 									<td>@load.PONumber</td>
 									<td>@load.LoadTrailerNumber</td>
-									<td>@load.LoadDate.ToShortDateString()</td>
+									<td id="test">@load.LoadDate.ToShortDateString()</td>
+									<td><a href="Admin/Load/ViewLoad/@load.LoadId" class="btn btn-sm btn-primary">View</a></td>
 								</tr>
 							}
 						}
@@ -193,45 +105,45 @@
 
 	<script type="text/javascript">
 
+		function filterTalbe(x) {
+			var formField = document.getElementById(x);
+			var zValue = formField.value;
+			var allTrue = false;
+			if (zValue === '') {
+				var allTrue = true;
+			}
+			else {
+				var searchTerm = dateFixer_(zValue);
+			}
 
-		let ut = document.getElementById("updateThis");
-		function displayLoad() {
-			var i, txtValue, input, table, tr, td, filter;
-			let dt = new Date();
-			input = document.getElementById("loadselection").value;
-			dt.setDate(dt.getDate() + parseInt(input));
-			filter = dt.toLocaleDateString();
-			ut.innerText = filter;
 
-
-
-			table = document.getElementById("loads");
-			tr = table.getElementsByTagName("tr");
-			for (i = 0; i < tr.length; i++) {
-				td = tr[i].getElementsByTagName("td")[6];
-
+			var table = document.getElementById("loads");
+			var tr = table.getElementsByTagName("tr");
+			for (var i = 0; i < tr.length; i++) {
+				var td = tr[i].getElementsByTagName("td")[6];
 				if (td) {
-					txtValue = td.textContent || td.innerText;
-
-					var result = txtValue.localeCompare(filter);
-
-					if (result == 0) {
-						tr[i].syle.display = "";
+					var txtValue = td.textContent || td.innerText;
+					if (txtValue.toString().indexOf(searchTerm) > -1 || allTrue) {
+						tr[i].style.display = "";
 					}
 					else {
-
 						tr[i].style.display = "none";
 					}
-
 				}
 			}
 
+
+		}
+
+		function dateFixer_(dateAsYYYYMMDD) {
+			const aYear = dateAsYYYYMMDD.slice(0, 4);
+			const aMonth = dateAsYYYYMMDD.slice(5, 7);
+			const aDay = dateAsYYYYMMDD.slice(8, 10);
+			return `${aDay}/${aMonth}/${aYear}`;
 		}
 
 
 	</script>
-
-
 
 
 }

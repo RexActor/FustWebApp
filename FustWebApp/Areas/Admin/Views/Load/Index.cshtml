@@ -16,7 +16,7 @@
 	<table id="loadTable" class="table table-hover">
 		<thead class=" sticky-top" style="font-size:16px">
 			<tr class="table-dark text-sm-center">
-				<th >
+				<th>
 					Load ID
 
 				</th>
@@ -63,12 +63,18 @@
 					<td class="text-sm-center text-truncate" style="max-width:200px;">@item.LoadComment</td>
 					<td class="text-sm-center">@item.CreatedDate</td>
 					<td>
+
+
+
 						<a class="btn btn-primary mb-2" href="Load/ViewLoad/@item.LoadId" style="font-size:0.8rem;">View</a>
-						@if (!User.IsInRole("Operations"))
+						@if (User.IsInRole("Fust") || User.IsInRole("Admin"))
 						{
 							<a class="btn btn-danger mb-2" href="Load/EditLoad/@item.LoadId" style="font-size:0.8rem">Edit</a>
 						}
-						<a class="btn btn-success mb-2" href="Load/ReceiveLoad/@item.LoadId" style="font-size:0.8rem">Receive</a>
+						@if (User.IsInRole("Operations") || User.IsInRole("Admin") || User.IsInRole("Fust"))
+						{
+							<a class="btn btn-success mb-2" href="Load/ReceiveLoad/@item.LoadId" style="font-size:0.8rem">Receive</a>
+						}
 					</td>
 				</tr>
 			}

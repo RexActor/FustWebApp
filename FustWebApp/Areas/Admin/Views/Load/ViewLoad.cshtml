@@ -6,11 +6,14 @@
 }
 
 <div class="d-flex flex-row flex-row-reverse mb-3">
+	@if (User.IsInRole("Admin") || User.IsInRole("Fust") || User.IsInRole("Operations"))
+	{
+		<div class="mx-2">
+			<a class="btn btn-success" href="../ReceiveLoad/@Model.LoadId">Receive Load</a>
+		</div>
+	}
 	<div class="mx-2">
-		<a class="btn btn-success" href="../ReceiveLoad/@Model.LoadId">Receive Load</a>
-	</div>
-	<div class="mx-2">
-		@if (!User.IsInRole("Operations"))
+		@if (User.IsInRole("Admin") || User.IsInRole("Fust"))
 		{
 			<a class="btn btn-danger" href="../EditLoad/@Model.LoadId">Edit Load</a>
 		}
