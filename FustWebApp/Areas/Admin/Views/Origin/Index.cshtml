@@ -11,7 +11,7 @@
 {
 	<div class="@ViewBag.Style  text-sm-center mb-1 py-1"><h4>@ViewBag.Message</h4></div>
 }
-<a href="Origin/Add" class="btn btn-primary">Add Origin</a>
+<a href="Origin/Add" class="btn btn-primary shadow">Add Origin</a>
 
 
 	<table class="table table-hover mt-3 shadow">
@@ -26,7 +26,7 @@
 			{
 				<tr>
 					<td>@item.OriginName</td>
-					<td><a href="Origin/View/@item.Id" class="btn btn-outline-primary">View</a></td>
+					<td><a href="Origin/View/@item.Id" class="btn btn-sm btn-outline-primary">View</a></td>
 				</tr>
 			}
 		</tbody>

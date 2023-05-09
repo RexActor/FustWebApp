@@ -66,14 +66,14 @@
 
 
 
-						<a class="btn btn-primary mb-2" href="Load/ViewLoad/@item.LoadId" style="font-size:0.8rem;">View</a>
+						<a class="btn btn-outline-primary mb-2 shadow" href="Load/ViewLoad/@item.LoadId" style="font-size:0.8rem;">View</a>
 						@if (User.IsInRole("Fust") || User.IsInRole("Admin"))
 						{
-							<a class="btn btn-danger mb-2" href="Load/EditLoad/@item.LoadId" style="font-size:0.8rem">Edit</a>
+							<a class="btn btn-outline-danger mb-2 shadow" href="Load/EditLoad/@item.LoadId" style="font-size:0.8rem">Edit</a>
 						}
 						@if (User.IsInRole("Operations") || User.IsInRole("Admin") || User.IsInRole("Fust"))
 						{
-							<a class="btn btn-success mb-2" href="Load/ReceiveLoad/@item.LoadId" style="font-size:0.8rem">Receive</a>
+							<a class="btn btn-outline-success mb-2 shadow" href="Load/ReceiveLoad/@item.LoadId" style="font-size:0.8rem">Receive</a>
 						}
 					</td>
 				</tr>

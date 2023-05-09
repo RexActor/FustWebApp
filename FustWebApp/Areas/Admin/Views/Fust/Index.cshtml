@@ -18,7 +18,7 @@
 
 		<div class="col-md-7 col">
 			<h4 class="text-sm-center">Fust Items</h4>
-			<a class="btn btn-primary" href="Fust/Add">Add Fust Item</a><br />
+			<a class="btn btn-primary shadow" href="Fust/Add">Add Fust Item</a><br />
 			<input class="mt-2 shadow" id="fustItemsSearch" onkeyup='filterTable("fustItemsSearch")' placeholder="Search Items" type="text" />
 			<table class="table table-hover mt-1 w-100 shadow" id="fustItems">
 				<thead class="table-dark justify-content-center sticky-top">
@@ -36,7 +36,7 @@
 							<td>@item.FustName</td>
 							<td>@item.FustType.FustTypeName</td>
 							<td>@item.FustAmountPerPallet</td>
-							<td><a class="btn btn-info" href="Fust/View/@item.Id">View</a></td>
+							<td><a class="btn btn-sm btn-outline-primary shadow" href="Fust/View/@item.Id">View</a></td>
 						</tr>
 					}
 				</tbody>
@@ -45,7 +45,7 @@
 
 		<div class="col-md-5">
 			<h4 class="text-sm-center">Fust Types</h4>
-			<a class="btn btn-primary" href="Fust/AddFustType">Add Fust Type</a><br />
+			<a class="btn btn-primary shadow" href="Fust/AddFustType">Add Fust Type</a><br />
 			<input class="mt-2 shadow" id="fustTypesSearch" onkeyup='filterTable("fustTypesSearch")' placeholder="Search Items" type="text" />
 			<table class="table table-hover mt-1 shadow" id="fustTypes">
 				<thead class="table-dark justify-content-center sticky-top">
@@ -61,7 +61,7 @@
 						<tr>
 							<td>@fusType.FustTypeName</td>
 							<td>@fusType.Comment</td>
-							<td><a class="btn btn-info" href="Fust/ViewFustType/@fusType.FustTypeId">View</a></td>
+							<td><a class="btn btn-sm btn-outline-primary shadow" href="Fust/ViewFustType/@fusType.FustTypeId">View</a></td>
 						</tr>
 					}
 				</tbody>

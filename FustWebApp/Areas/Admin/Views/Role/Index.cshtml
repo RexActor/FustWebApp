@@ -8,7 +8,7 @@
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 	var userlist = ViewBag.Users as IEnumerable<IdentityUser>;
 }
-<a asp-action="Create" class="btn btn-primary btn-sm mb-3">Create Role</a>
+<a asp-action="Create" class="btn btn-outline-primary btn-sm mb-3 shadow">Create Role</a>
 
 <table class="table w-50 text-sm-center shadow">
 	<thead>
@@ -28,7 +28,7 @@
 				<td>@role.Name</td>
 				<td i-role="@role.Id"></td>
 				<td>
-					<a class="btn btn-primary btn-sm" asp-action="Update" asp-route-id="@role.Id">Update</a>
+					<a class="btn btn-outline-primary btn-sm shadow" asp-action="Update" asp-route-id="@role.Id">Update</a>
 				</td>
 				<td>
 					@Html.ActionLink(
@@ -36,7 +36,7 @@
 				"Delete",
 				"Role",
 				new{confirm=true,id=role.Id},
-				new{onclick ="return confirm ('Do you really want to delete this role?')",@class="btn btn-sm btn-danger"}
+				new{onclick ="return confirm ('Do you really want to delete this role?')",@class="btn btn-sm btn-outline-danger shadow"}
 				)
 				</td>
 			</tr>
@@ -46,7 +46,7 @@
 
 <div class="container mt-5 mw-100">
 	<h3 class="fw-bold text-sm-center mt-3">User List</h3>
-	<a asp-action="CreateUser" class="btn btn-warning mb-3 btn-sm">Create User</a>
+	<a asp-action="CreateUser" class="btn btn-outline-primary mb-3 btn-sm shadow">Create User</a>
 	<table class="table text-sm-center shadow">
 		<thead>
 			<tr>
@@ -61,13 +61,16 @@
 		<tbody>
 			@foreach (IdentityUser user in userlist)
 			{
+				
 				<tr>
 					<td>@user.UserName</td>
 					<td>@user.Email</td>
 					<td>@user.EmailConfirmed</td>
 					<td>@user.TwoFactorEnabled</td>
-					<td width="50px">
-						<a class="btn btn-primary btn-sm" asp-action="UpdateUser" asp-route-id="@user.Id">Update</a>
+					<td >
+						<a class="btn btn-outline-primary btn-sm shadow" asp-action="UpdateUser" asp-route-field="username" asp-route-id="@user.Id">Update  User</a>
+						
+
 					</td>
 					<td width="50px">
 						@Html.ActionLink(
@@ -76,7 +79,7 @@
 					"Role",
 					new{confirm=true,id=user.Id},
 
-					new{onclick ="return confirm ('Do you really want to delete this user?')",@class="btn btn-sm btn-danger"}
+					new{onclick ="return confirm ('Do you really want to delete this user?')",@class="btn btn-sm btn-outline-danger shadow"}
 					)
 					</td>
 				</tr>

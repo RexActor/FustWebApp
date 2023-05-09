@@ -12,7 +12,7 @@
 	@if (User.IsInRole("Admin") || User.IsInRole("Fust") || User.IsInRole("Operations"))
 	{
 		<div class="mx-2">
-			<a class="btn btn-sm btn-success" href="../ReceiveLoad/@Model.LoadId">Receive Load</a>
+			<a class="btn btn-sm btn-outline-success shadow" href="../ReceiveLoad/@Model.LoadId">Receive Load</a>
 		</div>
 	}
 
@@ -20,7 +20,7 @@
 	@if (User.IsInRole("Admin") || User.IsInRole("Fust"))
 	{
 		<div class="mx-2">
-			<a class="btn btn-sm btn-danger" href="../EditLoad/@Model.LoadId">Edit Load</a>
+			<a class="btn btn-sm btn-outline-danger shadow" href="../EditLoad/@Model.LoadId">Edit Load</a>
 		</div>
 	}
 
@@ -30,7 +30,7 @@
 		var supplierId = applicationDbContext.Suppliers.Where(item => item.SupplierName == Model.LoadSupplier).Select(item => item.Id).FirstOrDefault();
 
 		<div class="mx-2">
-			<a class="btn btn-sm btn-info" asp-area="Admin"  asp-controller="Suppliers" asp-action="View" asp-route-Id="@supplierId">View Supplier</a>
+			<a class="btn btn-sm btn-outline-primary shadow" asp-area="Admin"  asp-controller="Suppliers" asp-action="View" asp-route-Id="@supplierId">View Supplier</a>
 
 		</div>
 	}

@@ -12,11 +12,11 @@
 		<div class="mx-2">
 			@if (!User.IsInRole("Operations"))
 			{
-				<a class="btn btn-danger" href="../EditLoad/@Model.LoadId">Edit Load</a>
+				<a class="btn btn-outline-success btn-sm shadow" href="../EditLoad/@Model.LoadId">Edit Load</a>
 			}
 		</div>
 		<div class="mx-2">
-			<input type="submit" class="btn btn-warning" value="Save Load">
+			<input type="submit" class="btn btn-outline-danger btn-sm shadow" value="Save Load">
 		</div>
 	</div>
 

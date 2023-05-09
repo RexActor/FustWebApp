@@ -19,21 +19,17 @@
 				</button>
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 					<ul class="navbar-nav flex-grow-1">
-
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
 						</li>
-
-
 						<partial name="_extendedLayout" />
 					</ul>
-
-
 					<partial name="_LoginPartial" />
 				</div>
 			</div>
 		</nav>
 	</header>
+
 	<div class="container mw-100 mx-auto">
 		<main role="main" class="pb-3">
 			<div class="row">
@@ -41,24 +37,23 @@
 				@if (User.IsInRole("Admin"))
 				{
 					<div class="col-md-2 ">
-						<div class="bg-light text-sm-center mb-3 shadow ">
+						<div class="bg-light  mb-3 shadow ">
 							<div class="text-sm-center navheader ">
 								<span class="text-sm-center w-100 fw-bold">Suppliers</span>
 							</div>
 							<nav class="navbar navbar-light navbody">
 								<div class="container-fluid navbody my-1 mx-2">
 									<ul class="navbar-nav">
-										<li class="nav-item">
+										<li>
 											<a class="nav-link" asp-area="Admin" asp-controller="Suppliers" asp-action="CreateSupplier">Create Supplier</a>
 										</li>
-										<li class="nav-item">
+										<li>
 											<a class="nav-link" asp-area="Admin" asp-controller="Suppliers" asp-action="Index">Supplier List</a>
 										</li>
 									</ul>
 								</div>
 							</nav>
 						</div>
-
 
 						<div class="bg-light text-sm-center shadow">
 							<div class="text-sm-center mt-3 navheader">
@@ -70,6 +65,7 @@
 										<li class="nav-item ">
 											<a class="nav-link" asp-area="Admin" asp-controller="Fust" asp-action="Index">Manage Fust</a>
 										</li>
+
 									</ul>
 								</div>
 							</nav>
@@ -135,20 +131,10 @@
 								</div>
 							</nav>
 						</div>
-
-
-
 					</div>
 				}
-
-
-
 				<div class="col-md-10">
-
-
 					@RenderBody()
-
-
 				</div>
 			</div>
 		</main>

@@ -9,6 +9,7 @@ using FustWebApp.Data;
 using Audit.Core;
 
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace FustWebApp.Areas.Admin.Controllers
 {
@@ -239,7 +240,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 		{
 			IdentityUser user = await userManager.FindByIdAsync(id);
 
-
+			
 			return View(user);
 
 		}
@@ -251,9 +252,10 @@ namespace FustWebApp.Areas.Admin.Controllers
 			IdentityResult result;
 			IdentityUser user = await userManager.FindByIdAsync(id);
 
+			
 			using (AuditScope.Create("Update:User", () => user))
 			{
-				if (ModelState["password"] != null) ModelState["password"].Errors.Clear();
+				
 
 				if (ModelState.IsValid)
 				{
@@ -266,6 +268,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 
 					await userManager.UpdateAsync(user);
+
 
 					if (password != null)
 					{
