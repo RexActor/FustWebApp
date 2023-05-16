@@ -3,6 +3,7 @@ using System;
 using FustWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FustWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230516114723_SupplierUpdate6")]
+    partial class SupplierUpdate6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.15");
@@ -87,9 +89,6 @@ namespace FustWebApp.Migrations
                     b.Property<string>("currencyTargetNameAbrevation")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("exchangeRateYear")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("currencyId");
 

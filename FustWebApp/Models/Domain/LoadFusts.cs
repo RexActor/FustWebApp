@@ -15,7 +15,15 @@ namespace FustWebApp.Models.Domain
 		public int ExpectedQuantity { get; set; }
 		public int ReceivedQty { get; set; }
 
+		public float unitValue { get; set; }
+
+
 		public Loads Loads { get; set; }
+
+
+		[DisplayName("Currency")]
+		public Currency Currency { get; set; }
+
 
 		[DisplayName("Type")]
 		public FustType FustType { get; set; }

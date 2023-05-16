@@ -17,7 +17,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 {
 	[Authorize]
 	[Area("Admin")]
-	
+
 	public class SuppliersController : Controller
 	{
 
@@ -98,6 +98,11 @@ namespace FustWebApp.Areas.Admin.Controllers
 				});
 			});
 
+			List<string> CurrencyList = new List<string>();
+			await applicationDbContext.Currency.ForEachAsync(item => { CurrencyList.Add(item.currencyAbrevation); });
+
+			ViewBag.Currencies = CurrencyList;
+
 			ViewBag.GroupsCheckBoxes = GroupCheckBoxModel;
 			return View();
 		}
@@ -106,65 +111,68 @@ namespace FustWebApp.Areas.Admin.Controllers
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Add(Supplier addSupplierRequest, string Save, List<string> FustTypeChecked, List<string> GroupChecked)
 		{
-			using (AuditScope.Create("Create:Supplier", () => addSupplierRequest))
+
+			if (Save != null)
 			{
-				if (Save != null)
+
+				string fustTypeList = string.Join(",", FustTypeChecked);
+				string groupList = string.Join(",", GroupChecked);
+
+				var currency = await applicationDbContext.Currency.FirstOrDefaultAsync(item => item.currencyAbrevation == addSupplierRequest.Currency.currencyAbrevation);
+
+				var supplier = new Supplier()
 				{
+					Id = Guid.NewGuid(),
+					SupplierName = addSupplierRequest.SupplierName,
+					SupplierAddress = addSupplierRequest.SupplierAddress,
+					FustTypeList = fustTypeList,
+					Currency = currency,
+					SupplierGroup = groupList,
+					SupplierOrigin = addSupplierRequest.SupplierOrigin
+				};
 
-					string fustTypeList = string.Join(",", FustTypeChecked);
-					string groupList = string.Join(",", GroupChecked);
+				List<StockHolding> stockHoldingList = new List<StockHolding>();
 
-					var supplier = new Supplier()
+				await applicationDbContext.Fusts.ForEachAsync(item =>
+				{
+					var stockholding = new StockHolding()
 					{
-						Id = Guid.NewGuid(),
-						SupplierName = addSupplierRequest.SupplierName,
-						SupplierAddress = addSupplierRequest.SupplierAddress,
-						FustTypeList = fustTypeList,
-						SupplierGroup = groupList,
-						SupplierOrigin = addSupplierRequest.SupplierOrigin
+						StockholdingDate = DateTime.Now,
+						StockHoldingQty = 0,
+						StockHoldingSupplier = supplier,
+
+						StockHoldingFustItems = item
 					};
 
-					List<StockHolding> stockHoldingList = new List<StockHolding>();
+					stockHoldingList.Add(stockholding);
+				});
 
-					await applicationDbContext.Fusts.ForEachAsync(item =>
-					{
-						var stockholding = new StockHolding()
-						{
-							StockholdingDate = DateTime.Now,
-							StockHoldingQty = 0,
-							StockHoldingSupplier = supplier,
-							StockHoldingFustItems = item
-						};
+				await applicationDbContext.AddRangeAsync(stockHoldingList);
+				await applicationDbContext.Suppliers.AddAsync(supplier);
+				await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-						stockHoldingList.Add(stockholding);
-					});
-
-					await applicationDbContext.AddRangeAsync(stockHoldingList);
-					await applicationDbContext.Suppliers.AddAsync(supplier);
-					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-					TempData["result"] = "Success";
-					TempData["action"] = "Supplier Creation";
-					return RedirectToAction("Index");
-				}
-				else
-				{
-					TempData["result"] = "Fail";
-					TempData["action"] = "Supplier Creation";
-					return RedirectToAction("CreateSupplier");
-				}
-
+				TempData["result"] = "Success";
+				TempData["action"] = "Supplier Creation";
+				return RedirectToAction("Index");
 			}
+			else
+			{
+				TempData["result"] = "Fail";
+				TempData["action"] = "Supplier Creation";
+				return RedirectToAction("CreateSupplier");
+			}
+
+
 		}
 
 		[Authorize(Roles = "Fust,Admin")]
 		[HttpGet]
 		public async Task<IActionResult> View(Guid Id, string editSupplier)
 		{
-		
+
 
 			List<Loads> supplierLoadList = new List<Loads>();
-			var supplier = await applicationDbContext.Suppliers.FirstOrDefaultAsync(x => x.Id == Id);
+			var supplier = await applicationDbContext.Suppliers.Include(item => item.Currency).FirstOrDefaultAsync(x => x.Id == Id);
 
 			await applicationDbContext.Loads.Where(load => load.LoadSupplier == supplier.SupplierName).ForEachAsync(load =>
 			{
@@ -186,12 +194,14 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 			if (supplier != null)
 			{
+				var currency = await applicationDbContext.Currency.FirstOrDefaultAsync(item => item.currencyAbrevation == supplier.Currency.currencyAbrevation);
 				var viewModel = new Supplier()
 				{
 					Id = supplier.Id,
 					SupplierAddress = supplier.SupplierAddress,
 					FustTypeList = supplier.FustTypeList,
 					SupplierGroup = supplier.SupplierGroup,
+					Currency = currency,
 					SupplierName = supplier.SupplierName,
 					SupplierOrigin = supplier.SupplierOrigin
 				};
@@ -214,6 +224,13 @@ namespace FustWebApp.Areas.Admin.Controllers
 				await applicationDbContext.Origins.ForEachAsync(item => { originList.Add(item.OriginName); });
 
 				ViewBag.Origins = originList;
+
+
+				List<string> CurrencyList = new List<string>();
+				await applicationDbContext.Currency.ForEachAsync(item => { CurrencyList.Add(item.currencyAbrevation); });
+
+				ViewBag.Currencies = CurrencyList;
+
 
 				int groups = 0;
 				await applicationDbContext.Groups.ForEachAsync(item =>
@@ -243,6 +260,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 						StockholdingDate = item.StockholdingDate,
 						StockHoldingFustItems = item.StockHoldingFustItems,
 						StockHoldingQty = stockHolding,
+
 						StockHoldingSupplier = item.StockHoldingSupplier,
 						StockHoldingId = item.StockHoldingId
 					});
@@ -260,7 +278,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Edit(Supplier updateSupplierViewModel, string Save, string Delete, List<string> FustTypeChecked, List<string> GroupChecked)
 		{
-			
+
 
 			if (Delete != null)
 			{
@@ -268,62 +286,61 @@ namespace FustWebApp.Areas.Admin.Controllers
 				{
 					Id = updateSupplierViewModel.Id,
 				};
-				using (AuditScope.Create("Delete:Supplier", () => updateSupplierViewModel))
-				{
-					applicationDbContext.Update(supplierToRemvoe);
-					applicationDbContext.Suppliers.Attach(supplierToRemvoe);
 
-					applicationDbContext.Suppliers.Remove(supplierToRemvoe);
+				applicationDbContext.Update(supplierToRemvoe);
+				applicationDbContext.Suppliers.Attach(supplierToRemvoe);
 
-					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
-					TempData["result"] = "Success";
-					TempData["action"] = "Supplier Deletion";
-				}
+				applicationDbContext.Suppliers.Remove(supplierToRemvoe);
+
+				await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+				TempData["result"] = "Success";
+				TempData["action"] = "Supplier Deletion";
+
 			}
 			if (Save != null)
 			{
 
-				var supplierToUpdate = applicationDbContext.Suppliers.SingleOrDefault(item => item.Id == updateSupplierViewModel.Id);
-				using (AuditScope.Create("Update:Supplier", () => supplierToUpdate))
+				var supplierToUpdate = applicationDbContext.Suppliers.Include(item => item.Currency).SingleOrDefault(item => item.Id == updateSupplierViewModel.Id);
+
+				string fustTypeList = string.Join(",", FustTypeChecked);
+				string groupList = string.Join(",", GroupChecked);
+				var currency = await applicationDbContext.Currency.FirstOrDefaultAsync(item => item.currencyAbrevation == updateSupplierViewModel.Currency.currencyAbrevation);
+				if (supplierToUpdate != null)
 				{
-					string fustTypeList = string.Join(",", FustTypeChecked);
-					string groupList = string.Join(",", GroupChecked);
-
-					if (supplierToUpdate != null)
+					if (applicationDbContext.StockHolding.Where(item => item.StockHoldingSupplier == supplierToUpdate).Count() == 0)
 					{
-						if (applicationDbContext.StockHolding.Where(item => item.StockHoldingSupplier == supplierToUpdate).Count() == 0)
+
+						List<StockHolding> stockHoldingList = new List<StockHolding>();
+						await applicationDbContext.Fusts.ForEachAsync(item =>
 						{
-
-							List<StockHolding> stockHoldingList = new List<StockHolding>();
-							await applicationDbContext.Fusts.ForEachAsync(item =>
+							var stockholding = new StockHolding()
 							{
-								var stockholding = new StockHolding()
-								{
-									StockholdingDate = DateTime.Now,
-									StockHoldingQty = 0,
-									StockHoldingSupplier = supplierToUpdate,
-									StockHoldingFustItems = item
-								};
+								StockholdingDate = DateTime.Now,
+								StockHoldingQty = 0,
+								StockHoldingSupplier = supplierToUpdate,
+								StockHoldingFustItems = item
+							};
 
-								stockHoldingList.Add(stockholding);
-							});
-							await applicationDbContext.AddRangeAsync(stockHoldingList);
-						}
-						supplierToUpdate.Id = updateSupplierViewModel.Id;
-						supplierToUpdate.SupplierGroup = groupList;
-						supplierToUpdate.SupplierName = updateSupplierViewModel.SupplierName;
-						supplierToUpdate.SupplierOrigin = updateSupplierViewModel.SupplierOrigin;
-						supplierToUpdate.SupplierAddress = updateSupplierViewModel.SupplierAddress;
-						supplierToUpdate.FustTypeList = fustTypeList;
-
-						applicationDbContext.Suppliers.Update(supplierToUpdate);
-
-						await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
-
+							stockHoldingList.Add(stockholding);
+						});
+						await applicationDbContext.AddRangeAsync(stockHoldingList);
 					}
-					TempData["result"] = "Success";
-					TempData["action"] = "Supplier Update";
+					supplierToUpdate.Id = updateSupplierViewModel.Id;
+					supplierToUpdate.Currency = currency;
+					supplierToUpdate.SupplierGroup = groupList;
+					supplierToUpdate.SupplierName = updateSupplierViewModel.SupplierName;
+					supplierToUpdate.SupplierOrigin = updateSupplierViewModel.SupplierOrigin;
+					supplierToUpdate.SupplierAddress = updateSupplierViewModel.SupplierAddress;
+					supplierToUpdate.FustTypeList = fustTypeList;
+
+					applicationDbContext.Suppliers.Update(supplierToUpdate);
+
+					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+
 				}
+				TempData["result"] = "Success";
+				TempData["action"] = "Supplier Update";
+
 
 			}
 			return RedirectToAction("Index");

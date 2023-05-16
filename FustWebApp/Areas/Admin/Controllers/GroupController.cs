@@ -52,8 +52,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 			if (Delete != null)
 			{
 				var groupFound = applicationDbContext.Suppliers.FirstOrDefault(item => item.SupplierGroup == group.GroupName);
-				using (AuditScope.Create("Delete:Group", () => groupFound))
-				{
+				
 					if (groupFound != null)
 					{
 						TempData["result"] = "Fail";
@@ -68,15 +67,14 @@ namespace FustWebApp.Areas.Admin.Controllers
 					TempData["result"] = "Success";
 					TempData["action"] = "Delete";
 					return RedirectToAction("Index");
-				}
+				
 			}
 
 			if (Edit != null)
 			{
 
 				var itemToUpdate = await applicationDbContext.Groups.FirstOrDefaultAsync(item => item.Id == group.Id);
-				using (AuditScope.Create("Update:Group", () => itemToUpdate))
-				{
+				
 
 					if (itemToUpdate != null)
 					{
@@ -89,7 +87,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 					TempData["result"] = "Success";
 					TempData["action"] = "Update";
 					return RedirectToAction("Index");
-				}
+				
 
 			}
 			TempData["result"] = "Fail";
@@ -107,8 +105,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Add(Group group, string Save)
 		{
-			using (AuditScope.Create("Add:Group", () => group))
-			{
+			
 				if (Save != null)
 				{
 					var groupToadd = new Group()
@@ -131,7 +128,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 					TempData["action"] = "Upload";
 					return RedirectToAction("Add");
 				}
-			}
+			
 		}
 	}
 }

@@ -1,5 +1,5 @@
 ﻿@model FustWebApp.Models.LoadViewModel
-@using FustWebApp.Models.Domain
+
 
 @*
 	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -7,7 +7,7 @@
 @{
 
 	ViewData["Title"] = "Create Load for " + Model.LoadSupplier;
-	var fustItemObjectList = new Fust();
+	
 	Layout = "~/Views/Shared/_LoadLayout.cshtml";
 }
 
@@ -17,7 +17,7 @@
 	;
 	<div class="container  ">
 		<div class="row mb-3">
-			@Html.HiddenFor(model=>model.LoadSupplier)
+		
 			<div class="row mb-3">
 				<div class="col-md-4 h-25 ">
 					<div class="row mb-3">
@@ -33,7 +33,7 @@
 						@Html.LabelFor(model=>model.LoadOrigin,  htmlAttributes:new {@class="col-form-label col-4"})
 						<div class="col-auto">
 							@Html.EditorFor(model=>model.LoadOrigin, new { htmlAttributes = new { @class = "form-control",@readonly="readonly", @required ="required", @placeholder="Enter Trailer Number" } })
-							@Html.ValidationMessageFor(model=>model.LoadOrigin, "", new { @class = "text-danger" })
+							
 						</div>
 					</div>
 
@@ -46,10 +46,10 @@
 					</div>
 
 					<div class="row mb-3">
-						@Html.LabelFor(model=>model.LoadDate,  htmlAttributes:new {@class="col-form-label col-4"})
+						@Html.LabelFor(model=>model.LoadDate,   htmlAttributes:new {@class="col-form-label col-4"})
 						<div class="col-auto">
-							@Html.EditorFor(model=>model.LoadDate,"12/04/2023", new { htmlAttributes = new { @class = "form-control",@required ="required",@type="date"} })
-							@Html.ValidationMessageFor(model=>model.LoadDate, "", new { @class = "text-danger" })
+							@Html.TextBoxFor(model=>model.LoadDate,"{0:yyyy-MM-dd}",new { @class = "form-control",@type = "date"})
+							@Html.ValidationMessageFor(model=>model.PONumber, "", new { @class = "text-danger" })
 						</div>
 					</div>
 
@@ -76,13 +76,14 @@
 							@if (ViewBag.Groups.Count > 1)
 							{
 								@Html.DropDownListFor(model=>model.LoadGroup,new SelectList(ViewBag.Groups),"Please Select",new { @class = "form-select" })
+								@Html.ValidationMessageFor(model=>model.LoadGroup, "", new { @class = "text-danger" })
 							}
 							else
 							{
 								@Html.DropDownListFor(model=>model.LoadGroup,new SelectList(ViewBag.Groups),new { @class = "form-select" })
 							}
 
-							@Html.ValidationMessageFor(model=>model.LoadGroup, "", new { @class = "text-danger" })
+							
 						</div>
 					</div>
 

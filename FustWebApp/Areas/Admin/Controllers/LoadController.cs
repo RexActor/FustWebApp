@@ -73,6 +73,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 			if (Next != null)
 			{
+				inboundLoad.LoadDate = DateTime.Now;
 				return RedirectToAction("CreateLoad", inboundLoad);
 			}
 
@@ -124,7 +125,8 @@ namespace FustWebApp.Areas.Admin.Controllers
 				{
 					LoadSupplier = inboundLoad.LoadSupplier,
 					LoadOrigin = supplierDetail.SupplierOrigin,
-
+					LoadDate = inboundLoad.LoadDate,
+					
 					LoadFustItems = fustItems,
 				};
 
@@ -163,12 +165,17 @@ namespace FustWebApp.Areas.Admin.Controllers
 			   {
 
 				   var fustTypeFound = applicationDbContext.FustTypes.FirstOrDefault(item => item.FustTypeName == fustItem.FustType.FustTypeName);
+				   var supplier = applicationDbContext.Suppliers.Include(item=>item.Currency).FirstOrDefault(item => item.SupplierName == load.LoadSupplier);
+
+				   var currency = applicationDbContext.Currency.FirstOrDefault(item => item.currencyAbrevation == supplier.Currency.currencyAbrevation);
+
+
 				   if (fustTypeFound != null)
 				   {
 					   fustItems.Add(new LoadFusts()
 					   {
 						   FustType = fustTypeFound,
-
+						   Currency=currency,
 						   FustName = foundFust.FustName,
 						   ReceivedQty = 0,
 						   ExpectedQuantity = fustItem.ExpectedQuantity
@@ -194,6 +201,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 					LoadFustItems = fustItems,
 					CreatedDate = DateTime.Now,
 					LoadGroup = load.LoadGroup,
+					
 					LoadOrigin = load.LoadOrigin,
 					PONumber = loadPo,
 					LoadSupplier = load.LoadSupplier,
@@ -241,12 +249,16 @@ namespace FustWebApp.Areas.Admin.Controllers
 					{
 						var fustTypeFound = applicationDbContext.FustTypes.FirstOrDefault(item => item.FustTypeName == fustItem.FustType.FustTypeName);
 						var loadFound = applicationDbContext.Loads.FirstOrDefault(item => item.LoadId == load.LoadId);
+						var supplier = applicationDbContext.Suppliers.Include(item=>item.Currency).FirstOrDefault(item => item.SupplierName == load.LoadSupplier);
+
+						var currency = applicationDbContext.Currency.FirstOrDefault(item => item.currencyAbrevation == supplier.Currency.currencyAbrevation);
 						if (fustTypeFound != null)
 						{
 							fustItems.Add(new LoadFusts()
 							{
 								FustType = fustTypeFound,
 								LoadFustId = fustItem.LoadFustId,
+								Currency=currency,
 								Loads = load,
 								FustName = foundFust.FustName,
 								ReceivedQty = fustItem.ReceivedQty,
@@ -352,6 +364,9 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 						var fustTypeFound = applicationDbContext.FustTypes.FirstOrDefault(item => item.FustTypeName == fustItem.FustType.FustTypeName);
 						var loadFound = applicationDbContext.Loads.FirstOrDefault(item => item.LoadId == load.LoadId);
+						var supplier = applicationDbContext.Suppliers.Include(item=>item.Currency).FirstOrDefault(item => item.SupplierName == load.LoadSupplier);
+
+						var currency = applicationDbContext.Currency.FirstOrDefault(item => item.currencyAbrevation == supplier.Currency.currencyAbrevation);
 						if (fustTypeFound != null)
 						{
 							fustItems.Add(new LoadFusts()
@@ -360,6 +375,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 								FustType = fustTypeFound,
 								LoadFustId = fustItem.LoadFustId,
 								Loads = load,
+								Currency=currency,
 								FustName = foundFust.FustName,
 								ReceivedQty = fustItem.ReceivedQty,
 								ExpectedQuantity = fustItem.ExpectedQuantity

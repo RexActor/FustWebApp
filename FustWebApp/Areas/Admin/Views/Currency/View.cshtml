@@ -1,0 +1,63 @@
+﻿@model FustWebApp.Models.Domain.Currency
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+<div class="container">
+    <h4>Currency</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.currencyName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.currencyName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.currencyAbrevation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.currencyAbrevation)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.currencyCountryCode)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.currencyCountryCode)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.currencyTargetName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.currencyTargetName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.currencyTargetNameAbrevation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.currencyTargetNameAbrevation)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.currencyExchangeRate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.currencyExchangeRate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.exchangeRateYear)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.exchangeRateYear)
+        </dd>
+    </dl>
+    <div>
+        <a class="btn btn-sm btn-outline-danger shadow" asp-area="Admin" asp-controller="Currency" asp-action="Edit" asp-route-id="@Model?.currencyId">Edit</a> |
+        <a class="btn btn-sm btn-outline-dark shadow" asp-area="Admin" asp-controller="Currency" asp-action="Delete" asp-route-id="@Model.currencyId">Delete</a> |
+        <a class="btn btn-sm btn-outline-secondary shadow" asp-area="Admin" asp-controller="Currency" asp-action="Index">Back to List</a>
+    </div>
+</div>
+

@@ -3,6 +3,7 @@ using System;
 using FustWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FustWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230516084835_fustValue")]
+    partial class fustValue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.15");
@@ -57,43 +59,6 @@ namespace FustWebApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AuditLogs");
-                });
-
-            modelBuilder.Entity("FustWebApp.Models.Domain.Currency", b =>
-                {
-                    b.Property<int>("currencyId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("currencyAbrevation")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("currencyCountryCode")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<float>("currencyExchangeRate")
-                        .HasColumnType("REAL");
-
-                    b.Property<string>("currencyName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("currencyTargetName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("currencyTargetNameAbrevation")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("exchangeRateYear")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("currencyId");
-
-                    b.ToTable("Currency");
                 });
 
             modelBuilder.Entity("FustWebApp.Models.Domain.Fust", b =>
@@ -183,9 +148,6 @@ namespace FustWebApp.Migrations
                     b.Property<int>("ReceivedQty")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("currencyId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<float>("unitValue")
                         .HasColumnType("REAL");
 
@@ -194,8 +156,6 @@ namespace FustWebApp.Migrations
                     b.HasIndex("FustTypeId");
 
                     b.HasIndex("LoadsLoadId");
-
-                    b.HasIndex("currencyId");
 
                     b.ToTable("LoadFusts");
                 });
@@ -330,12 +290,7 @@ namespace FustWebApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("currencyId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("currencyId");
 
                     b.ToTable("Suppliers");
                 });
@@ -561,14 +516,6 @@ namespace FustWebApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FustWebApp.Models.Domain.Currency", "Currency")
-                        .WithMany()
-                        .HasForeignKey("currencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Currency");
-
                     b.Navigation("FustType");
 
                     b.Navigation("Loads");
@@ -591,17 +538,6 @@ namespace FustWebApp.Migrations
                     b.Navigation("StockHoldingFustItems");
 
                     b.Navigation("StockHoldingSupplier");
-                });
-
-            modelBuilder.Entity("FustWebApp.Models.Domain.Supplier", b =>
-                {
-                    b.HasOne("FustWebApp.Models.Domain.Currency", "Currency")
-                        .WithMany()
-                        .HasForeignKey("currencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Currency");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

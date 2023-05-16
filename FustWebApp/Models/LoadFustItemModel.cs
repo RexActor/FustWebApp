@@ -1,4 +1,5 @@
 ﻿using FustWebApp.Models.Domain;
+
 using System.ComponentModel;
 
 namespace FustWebApp.Models
@@ -17,7 +18,11 @@ namespace FustWebApp.Models
 
 
 
+		public float unitValue { get; set; }
 
+
+		[DisplayName("Currency")]
+		public Currency Currency { get; set; }
 
 		[DisplayName("Type")]
 		public FustType FustType { get; set; }

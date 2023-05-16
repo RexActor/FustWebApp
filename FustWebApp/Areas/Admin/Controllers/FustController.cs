@@ -69,41 +69,40 @@ namespace FustWebApp.Areas.Admin.Controllers
 			if (Save != null)
 			{
 				var findFustType = await applicationDbContext.FustTypes.FirstOrDefaultAsync(item => item.FustTypeName == fustViewModel.FustType.FustTypeName);
-				using (AuditScope.Create("Add:Fust", () => findFustType))
+
+				if (findFustType != null)
 				{
-					if (findFustType != null)
+					var fustToSave = new Fust()
 					{
-						var fustToSave = new Fust()
+						FustName = fustViewModel.FustName,
+						FustAmountPerPallet = fustViewModel.FustAmountPerPallet,
+						FustType = findFustType,
+					};
+
+					await applicationDbContext.Fusts.AddAsync(fustToSave);
+
+
+					await applicationDbContext.StockHolding.Select(item => item.StockHoldingSupplier).Distinct().ForEachAsync(item =>
+					{
+						var stockItemToAdd = new StockHolding()
 						{
-							FustName = fustViewModel.FustName,
-							FustAmountPerPallet = fustViewModel.FustAmountPerPallet,
-							FustType = findFustType,
+							StockholdingDate = DateTime.Now,
+							StockHoldingFustItems = fustToSave,
+							StockHoldingQty = 0,
+							StockHoldingSupplier = item,
+
+
 						};
+						applicationDbContext.StockHolding.Add(stockItemToAdd);
 
-						await applicationDbContext.Fusts.AddAsync(fustToSave);
-
-
-						await applicationDbContext.StockHolding.Select(item => item.StockHoldingSupplier).Distinct().ForEachAsync(item =>
-						{
-							var stockItemToAdd = new StockHolding()
-							{
-								StockholdingDate = DateTime.Now,
-								StockHoldingFustItems = fustToSave,
-								StockHoldingQty = 0,
-								StockHoldingSupplier = item,
-								
-							
-							};
-							applicationDbContext.StockHolding.Add(stockItemToAdd);
-
-						});
+					});
 
 
-						await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
-						TempData["result"] = "Success";
-						TempData["action"] = "Fust Item Added";
-					}
+					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+					TempData["result"] = "Success";
+					TempData["action"] = "Fust Item Added";
 				}
+
 
 				return RedirectToAction("Index");
 			}
@@ -115,26 +114,25 @@ namespace FustWebApp.Areas.Admin.Controllers
 		[HttpPost]
 		public async Task<IActionResult> SaveFustType(FustType fustTypesViewModel, string Save)
 		{
-			using (AuditScope.Create("Add:FustType", () => fustTypesViewModel))
-			{
-				if (Save != null)
-				{
-					var fustTypeToSave = new FustType()
-					{
-						FustTypeName = fustTypesViewModel.FustTypeName,
-						Comment = fustTypesViewModel.Comment,
-					};
-					await applicationDbContext.FustTypes.AddAsync(fustTypeToSave);
-					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-					TempData["result"] = "Success";
-					TempData["action"] = "Fust Type Added";
-					return RedirectToAction("Index");
-				}
+			if (Save != null)
+			{
+				var fustTypeToSave = new FustType()
+				{
+					FustTypeName = fustTypesViewModel.FustTypeName,
+					Comment = fustTypesViewModel.Comment,
+				};
+				await applicationDbContext.FustTypes.AddAsync(fustTypeToSave);
+				await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+
 				TempData["result"] = "Success";
-				TempData["action"] = "Fust Type adding";
+				TempData["action"] = "Fust Type Added";
 				return RedirectToAction("Index");
 			}
+			TempData["result"] = "Success";
+			TempData["action"] = "Fust Type adding";
+			return RedirectToAction("Index");
+
 		}
 
 		[HttpGet]
@@ -151,6 +149,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 					FustAmountPerPallet = fust.FustAmountPerPallet,
 					FustName = fust.FustName,
 					FustType = fust.FustType,
+					baseValue = fust.baseValue
 
 				};
 
@@ -191,21 +190,21 @@ namespace FustWebApp.Areas.Admin.Controllers
 				var fustItemToUpdate = await applicationDbContext.Fusts.FirstOrDefaultAsync(item => item.Id == updateFustViewModel.Id);
 				var findFustType = await applicationDbContext.FustTypes.FirstOrDefaultAsync(item => item.FustTypeName == updateFustViewModel.FustType.FustTypeName);
 
-				using (AuditScope.Create("Update:Fust", () => fustItemToUpdate))
+
+				if (fustItemToUpdate != null && findFustType != null)
 				{
-					if (fustItemToUpdate != null && findFustType != null)
-					{
-						applicationDbContext.Entry(fustItemToUpdate).State = EntityState.Unchanged;
-						fustItemToUpdate.FustName = updateFustViewModel.FustName;
-						fustItemToUpdate.FustAmountPerPallet = updateFustViewModel.FustAmountPerPallet;
-						fustItemToUpdate.FustType = findFustType;
-						applicationDbContext.Fusts.Update(fustItemToUpdate);
-						await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
-						TempData["result"] = "Success";
-						TempData["action"] = "Fust Item Updated";
-						return RedirectToAction("Index");
-					}
+					applicationDbContext.Entry(fustItemToUpdate).State = EntityState.Unchanged;
+					fustItemToUpdate.FustName = updateFustViewModel.FustName;
+					fustItemToUpdate.FustAmountPerPallet = updateFustViewModel.FustAmountPerPallet;
+					fustItemToUpdate.baseValue = updateFustViewModel.baseValue;
+					fustItemToUpdate.FustType = findFustType;
+					applicationDbContext.Fusts.Update(fustItemToUpdate);
+					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+					TempData["result"] = "Success";
+					TempData["action"] = "Fust Item Updated";
+					return RedirectToAction("Index");
 				}
+
 			}
 			TempData["result"] = "Failure";
 			TempData["action"] = "Item not Updated";
@@ -252,39 +251,38 @@ namespace FustWebApp.Areas.Admin.Controllers
 					return RedirectToAction("ViewFustType");
 				}
 
-				using (AuditScope.Create("Delete:Fust", () => updateFustTypeViewModel))
+
+
+
+				var fustTypeToRemove = new FustType()
 				{
+					FustTypeId = updateFustTypeViewModel.FustTypeId,
+				};
 
-					var fustTypeToRemove = new FustType()
-					{
-						FustTypeId = updateFustTypeViewModel.FustTypeId,
-					};
+				applicationDbContext.FustTypes.Attach(fustTypeToRemove);
+				applicationDbContext.FustTypes.Remove(fustTypeToRemove);
+				await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+				TempData["result"] = "Success";
+				TempData["action"] = "Fust Type Deleted";
 
-					applicationDbContext.FustTypes.Attach(fustTypeToRemove);
-					applicationDbContext.FustTypes.Remove(fustTypeToRemove);
-					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
-					TempData["result"] = "Success";
-					TempData["action"] = "Fust Type Deleted";
-				}
 			}
 			if (Edit != null)
 			{
 				var fustTypeToUpdate = await applicationDbContext.FustTypes.SingleOrDefaultAsync(item => item.FustTypeId == updateFustTypeViewModel.FustTypeId);
 
-				using (AuditScope.Create("Update:Fust", () => fustTypeToUpdate))
+
+
+				if (fustTypeToUpdate != null)
 				{
+					fustTypeToUpdate.FustTypeName = updateFustTypeViewModel.FustTypeName;
+					fustTypeToUpdate.Comment = updateFustTypeViewModel.Comment;
+					applicationDbContext.FustTypes.Update(fustTypeToUpdate);
 
-					if (fustTypeToUpdate != null)
-					{
-						fustTypeToUpdate.FustTypeName = updateFustTypeViewModel.FustTypeName;
-						fustTypeToUpdate.Comment = updateFustTypeViewModel.Comment;
-						applicationDbContext.FustTypes.Update(fustTypeToUpdate);
-
-						await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
-					}
-					TempData["result"] = "Success";
-					TempData["action"] = "Fust Type Updated";
+					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
 				}
+				TempData["result"] = "Success";
+				TempData["action"] = "Fust Type Updated";
+
 			}
 
 			return RedirectToAction("Index");

@@ -58,8 +58,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Update(RoleModification model)
 		{
-			using (AuditScope.Create("Update:Role", () => model))
-			{
+			
 				IdentityResult result;
 				if (ModelState.IsValid)
 				{
@@ -99,7 +98,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 				{
 					return await Update(model.RoleId);
 				}
-			}
+			
 		}
 
 		[HttpGet]
@@ -115,8 +114,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 			if (ModelState.IsValid)
 			{
 				IdentityUser userToCreate = new IdentityUser();
-				using (AuditScope.Create("Create:User", () => userToCreate))
-				{
+				
 					Guid guid = Guid.NewGuid();
 					userToCreate.Id = guid.ToString();
 					userToCreate.UserName = email;
@@ -133,7 +131,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
 					return RedirectToAction("Index");
-				}
+				
 
 			}
 			else
@@ -154,8 +152,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Create([Required] string name)
 		{
-			using (AuditScope.Create("Create:Role", () => name))
-			{
+			
 				if (ModelState.IsValid)
 				{
 					IdentityResult result = await roleManager.CreateAsync(new IdentityRole(name));
@@ -172,15 +169,14 @@ namespace FustWebApp.Areas.Admin.Controllers
 					}
 				}
 				return View();
-			}
+			
 		}
 
 		public async Task<IActionResult> Delete(string id)
 		{
 
 			IdentityRole role = await roleManager.FindByIdAsync(id);
-			using (AuditScope.Create("Delete:Role", () => role))
-			{
+			
 				if (role != null)
 				{
 					IdentityResult result = await roleManager.DeleteAsync(role);
@@ -201,7 +197,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 				}
 				return View("Index", roleManager.Roles);
-			}
+			
 		}
 
 		public async Task<ActionResult> DeleteUser(bool confirm, string id)
@@ -209,8 +205,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 			IdentityUser user = await userManager.FindByIdAsync(id);
 
-			using (AuditScope.Create("Delete:User", () => user))
-			{
+			
 				if (user != null && confirm)
 				{
 					IdentityResult result = await userManager.DeleteAsync(user);
@@ -232,7 +227,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 				}
 				return View("Index", userManager.Users);
-			}
+			
 		}
 
 
@@ -252,16 +247,8 @@ namespace FustWebApp.Areas.Admin.Controllers
 			IdentityResult result;
 			IdentityUser user = await userManager.FindByIdAsync(id);
 
-			
-			using (AuditScope.Create("Update:User", () => user))
-			{
-				
-
 				if (ModelState.IsValid)
 				{
-
-
-
 
 					user.Email = email;
 					user.UserName = email;
@@ -288,7 +275,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 					return await UpdateUser(user.Id);
 				}
 
-			}
+			
 		}
 
 

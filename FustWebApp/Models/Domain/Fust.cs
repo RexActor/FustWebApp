@@ -17,8 +17,8 @@ namespace FustWebApp.Models.Domain
 
 		public int ExpectedQuantity { get; set; } = 0;
 
-		
-
+		[DisplayName("Base Value")]
+		public float baseValue { get; set; }
 
 		
 		[DisplayName("Type")]

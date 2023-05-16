@@ -53,43 +53,41 @@ namespace FustWebApp.Areas.Admin.Controllers
 			{
 				var originFound = await applicationDbContext.Suppliers.FirstOrDefaultAsync(item => item.SupplierOrigin == origin.OriginName);
 
-				using (AuditScope.Create("Delete:Origin", () => originFound))
+
+				if (originFound != null)
 				{
-					if (originFound != null)
-					{
-						TempData["result"] = "Fail";
-						TempData["reason"] = "Origin is being used";
-						return RedirectToAction("Index");
-					}
-
-					var originToDelete = new Origin()
-					{
-						Id = origin.Id,
-					};
-
-					applicationDbContext.Origins.Attach(originToDelete);
-					applicationDbContext.Origins.Remove(originToDelete);
-					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
-					TempData["result"] = "Success";
-					TempData["action"] = "Delete";
+					TempData["result"] = "Fail";
+					TempData["reason"] = "Origin is being used";
+					return RedirectToAction("Index");
 				}
+
+				var originToDelete = new Origin()
+				{
+					Id = origin.Id,
+				};
+
+				applicationDbContext.Origins.Attach(originToDelete);
+				applicationDbContext.Origins.Remove(originToDelete);
+				await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+				TempData["result"] = "Success";
+				TempData["action"] = "Delete";
+
 			}
 
 			if (Edit != null)
 			{
 				var originToUpdate = await applicationDbContext.Origins.FirstOrDefaultAsync(item => item.Id == origin.Id);
-				using (AuditScope.Create("Update:Origin", () => originToUpdate))
-				{
-					if (originToUpdate != null)
-					{
-						originToUpdate.OriginName = origin.OriginName;
-						applicationDbContext.Origins.Update(originToUpdate);
-						await applicationDbContext.SaveChangesAsync();
-					}
 
-					TempData["result"] = "Success";
-					TempData["action"] = "Update";
+				if (originToUpdate != null)
+				{
+					originToUpdate.OriginName = origin.OriginName;
+					applicationDbContext.Origins.Update(originToUpdate);
+					await applicationDbContext.SaveChangesAsync();
 				}
+
+				TempData["result"] = "Success";
+				TempData["action"] = "Update";
+
 			}
 			return RedirectToAction("Index");
 
@@ -104,29 +102,28 @@ namespace FustWebApp.Areas.Admin.Controllers
 		[HttpPost]
 		public async Task<IActionResult> AddOrigin(AddOriginViewModel addOriginViewModel, string Save)
 		{
-			using (AuditScope.Create("Create:Origin", () => addOriginViewModel))
-			{
-				if (Save != null)
-				{
-					var originToAdd = new Origin()
-					{
-						Id = Guid.NewGuid(),
-						OriginName = addOriginViewModel.OriginName,
-					};
 
-					await applicationDbContext.Origins.AddAsync(originToAdd);
-					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
-					TempData["result"] = "Success";
-					TempData["action"] = "Origin Added";
-					return RedirectToAction("Index");
-				}
-				else
+			if (Save != null)
+			{
+				var originToAdd = new Origin()
 				{
-					TempData["result"] = "Fail";
-					TempData["action"] = "Origin Add";
-					return RedirectToAction("Add");
-				}
+					Id = Guid.NewGuid(),
+					OriginName = addOriginViewModel.OriginName,
+				};
+
+				await applicationDbContext.Origins.AddAsync(originToAdd);
+				await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+				TempData["result"] = "Success";
+				TempData["action"] = "Origin Added";
+				return RedirectToAction("Index");
 			}
+			else
+			{
+				TempData["result"] = "Fail";
+				TempData["action"] = "Origin Add";
+				return RedirectToAction("Add");
+			}
+
 		}
 	}
 }

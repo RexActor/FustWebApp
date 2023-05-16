@@ -16,8 +16,9 @@ namespace FustWebApp.Models
 		public string LoadTrailerNumber { get; set; }
 		[DisplayName("Load Date")]
 
-		[DataType(DataType.Date), Required]
-		[DisplayFormat(DataFormatString = "{0:dd/mm/yyyy}", ApplyFormatInEditMode = true)]
+	//	[DataType(DataType.Date), Required]
+	//	[DisplayFormat(DataFormatString = "{0:dd/mm/yyyy}", ApplyFormatInEditMode = true)]
+		
 		public DateTime LoadDate { get; set; }
 
 

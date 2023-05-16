@@ -27,6 +27,10 @@ namespace FustWebApp.Models.Domain
 		[DisplayName("Group")]
 		public string SupplierGroup { get; set; }
 
+
+		[DisplayName("Currency")]
+		public Currency Currency { get; set; }
+
 		[Required]
 		[DisplayName("Fust Type")]
 		public  string FustTypeList { get; set; }

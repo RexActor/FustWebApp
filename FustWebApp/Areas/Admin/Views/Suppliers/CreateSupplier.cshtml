@@ -31,6 +31,16 @@
 		</div>
 
 		<div class="row mb-3">
+			@Html.LabelFor(model=>model.Currency,htmlAttributes:new{@class ="col-form-label col-sm-2"})
+			<div class="col-auto">
+
+				@Html.DropDownListFor(model => model.Currency.currencyAbrevation,new SelectList(ViewBag.Currencies),"Please Select",new { @class = "form-select mb-2" } )
+
+				@Html.ValidationMessageFor(model => model.Currency.currencyAbrevation, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="row mb-3">
 			@Html.LabelFor(model=>model.SupplierOrigin,htmlAttributes:new{@class ="col-form-label col-sm-2"})
 			<div class="col-auto">
 				@Html.DropDownListFor(model => model.SupplierOrigin,new SelectList(ViewBag.Origins),"Please Select",new { @class = "form-select"} )

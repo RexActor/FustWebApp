@@ -40,6 +40,7 @@ namespace FustWebApp.Data
 
 		public DbSet<LoadFusts> LoadFusts { get; set; }
 		public DbSet<StockHolding> StockHolding { get; set; }
+		public DbSet<Currency> Currency { get; set; }
 
 
 

@@ -1,0 +1,120 @@
+﻿@model List<FustWebApp.Models.Domain.Currency>
+
+@{
+	ViewData["Title"] = "Currency";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+
+<a class="btn btn-outline-primary btn-sm mb-2 shadow" asp-controller="Currency" asp-action="AddCurrency">Add Currency</a>
+<br />
+<input id="search" class="shadow mb-2" onkeyup="searchItem()" placeholder="search" type="text" />
+
+<table class="table table-hover shadow" id="currencyTable">
+	<thead class="table-dark sticky-top">
+		<tr>
+			<th>ID</th>
+			<th>Currency Name</th>
+			<th>Abrevation</th>
+			<th>Target Name</th>
+			<th>Target Abrevation</th>
+			<th>Exchange Rate</th>
+			<th>Year</th>
+			<th></th>
+
+		</tr>
+	</thead>
+
+
+	<tbody>
+		@foreach (var currency in Model)
+		{
+			<tr>
+				<td>@currency.currencyId</td>
+				<td>@currency.currencyName</td>
+				<td>@currency.currencyAbrevation</td>
+				<td>@currency.currencyTargetName</td>
+				<td>@currency.currencyTargetNameAbrevation</td>
+				<td>@currency.currencyExchangeRate</td>
+				<td>@currency.exchangeRateYear</td>
+				<td>
+					<a class="btn btn-sm btn-outline-primary shadow" asp-area="Admin" asp-controller="Currency" asp-action="View" asp-route-id="@currency.currencyId">View</a>
+					<a class="btn btn-sm btn-outline-danger shadow" asp-area="Admin" asp-controller="Currency" asp-action="Edit" asp-route-id="@currency.currencyId">Edit</a>
+					<a class="btn btn-sm btn-outline-dark shadow" asp-area="Admin" asp-controller="Currency" asp-action="Delete" asp-route-id="@currency.currencyId">Delete</a>
+
+				</td>
+
+			</tr>
+		}
+	</tbody>
+
+
+</table>
+
+@section Scripts{
+
+	<script type="text/javascript">
+
+
+		function searchItem() {
+
+			var input = document.getElementById("search");
+
+			var searchValue = input.value.toUpperCase();
+			var table = document.getElementById("currencyTable");
+			var tr = table.getElementsByTagName("tr");
+
+
+			for (var i = 0; i < tr.length; i++) {
+				td = tr[i].getElementsByTagName("td")[0];
+				td1 = tr[i].getElementsByTagName("td")[1];
+				td2 = tr[i].getElementsByTagName("td")[2];
+				td3 = tr[i].getElementsByTagName("td")[3];
+				td4 = tr[i].getElementsByTagName("td")[4];
+				td5 = tr[i].getElementsByTagName("td")[5];
+				td6 = tr[i].getElementsByTagName("td")[6];
+
+
+				if (td && td1 && td2 && td3 && td4 && td5 && td6) {
+					var txtValue = td.textContent || td.innerText;
+					var txtValue2 = td1.textContent || td1.innerText;
+					var txtValue2 = td2.textContent || td2.innerText;
+					var txtValue3 = td3.textContent || td3.innerText;
+					var txtValue4 = td4.textContent || td4.innerText;
+					var txtValue5 = td5.textContent || td5.innerText;
+					var txtValue6 = td6.textContent || td6.innerText;
+
+
+					if (txtValue.toUpperCase().indexOf(searchValue) > -1 ||
+						txtValue2.toUpperCase().indexOf(searchValue) > -1 ||
+						txtValue2.toUpperCase().indexOf(searchValue) > -1 ||
+						txtValue3.toUpperCase().indexOf(searchValue) > -1 ||
+						txtValue4.toUpperCase().indexOf(searchValue) > -1 ||
+						txtValue5.toUpperCase().indexOf(searchValue) > -1 ||
+						txtValue6.toUpperCase().indexOf(searchValue) > -1) {
+
+						tr[i].style.display = "";
+					}
+					else {
+						tr[i].style.display = "none";
+					}
+
+
+
+				}
+
+			}
+
+
+		}
+
+
+
+
+	</script>
+
+
+
+}
