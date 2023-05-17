@@ -288,5 +288,52 @@ namespace FustWebApp.Areas.Admin.Controllers
 			return RedirectToAction("Index");
 
 		}
+
+
+		[HttpGet]
+		public async Task<IActionResult> BaseValue() => View(await applicationDbContext.StockHolding.Include(item => item.StockHoldingSupplier).ThenInclude(item => item.Currency).Include(item => item.StockHoldingFustItems).ThenInclude(item => item.FustType).ToListAsync());
+
+
+
+		[HttpGet]
+
+		public IActionResult ViewSupplier(Guid SupplierId) => View(applicationDbContext.StockHolding.Include(item => item.StockHoldingSupplier).ThenInclude(item => item.Currency).Include(item => item.StockHoldingFustItems).ThenInclude(item => item.FustType).Where(item => item.StockHoldingSupplier.Id == SupplierId).ToList());
+
+		[HttpGet]
+		
+		public async Task<IActionResult> EditSupplier(Guid SupplierId) => View(await applicationDbContext.StockHolding.Include(item => item.StockHoldingSupplier).ThenInclude(item => item.Currency).Include(item => item.StockHoldingFustItems).ThenInclude(item => item.FustType).Where(item => item.StockHoldingSupplier.Id == SupplierId).ToListAsync());
+
+
+		[HttpPost]
+		public async Task<IActionResult> EditSupplier(Guid supplierId, int fustItemId,float baseValue, int stockholdingId)
+		{
+
+			var itemtoUpdate = applicationDbContext.StockHolding.Include(item=>item.StockHoldingSupplier).ThenInclude(item=>item.Currency).Include(item=>item.StockHoldingFustItems).ThenInclude(item=>item.FustType).Where(item=>item.StockHoldingSupplier.Id== supplierId).Where(item=>item.StockHoldingFustItems.Id== fustItemId).Where(item=>item.StockHoldingId==stockholdingId).FirstOrDefault();
+			if (itemtoUpdate != null)
+			{
+				itemtoUpdate.baseValue = baseValue;
+
+				applicationDbContext.StockHolding.Update(itemtoUpdate);
+				await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+				return RedirectToRoute(new
+				{
+					Controller = "Fust",
+					Action = "ViewSupplier",
+					SupplierId = supplierId
+				});
+			}
+			else
+			{
+
+				return RedirectToAction("Index");
+			}
+
+
+
+
+
+		}
+
 	}
 }

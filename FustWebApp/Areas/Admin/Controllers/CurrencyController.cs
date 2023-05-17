@@ -21,11 +21,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 			this.applicationDbContext = applicationDbContext;
 		}
 
-
-
 		public async Task<IActionResult> Index() => View(await applicationDbContext.Currency.ToListAsync());
-
-
 
 
 		[HttpGet]
@@ -36,34 +32,22 @@ namespace FustWebApp.Areas.Admin.Controllers
 		public async Task<IActionResult> AddCurrency(Currency currency)
 		{
 
-
 			applicationDbContext.Currency.Add(currency);
 			await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-
 			return RedirectToAction("Index");
-
 		}
-
 
 		[HttpGet]
 		public async Task<IActionResult> View(int id) => View(await applicationDbContext.Currency.FindAsync(id));
 
-
 		[HttpGet]
 		public async Task<IActionResult> Edit(int id) => View(await applicationDbContext.Currency.FindAsync(id));
-
-
 
 		[HttpPost]
 		public async Task<IActionResult> Edit(Currency currency)
 		{
-
-
 			applicationDbContext.Currency.Update(currency);
 			await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-
 
 			return RedirectToRoute(new
 			{
@@ -76,7 +60,6 @@ namespace FustWebApp.Areas.Admin.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Delete(int id)
 		{
-
 			var currencyToRemove = await applicationDbContext.Currency.FindAsync(id);
 			applicationDbContext.Currency.Remove(currencyToRemove);
 			await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);

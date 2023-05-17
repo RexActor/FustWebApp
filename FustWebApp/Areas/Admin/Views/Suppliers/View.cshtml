@@ -256,7 +256,7 @@
 			{
 				var status = string.Empty;
 				RegionInfo region = new RegionInfo(item.StockHoldingSupplier.Currency.currencyCountryCode);
-				var fustItemValue = item.StockHoldingFustItems.baseValue * item.StockHoldingQty;
+				var fustItemValue = item.baseValue * item.StockHoldingQty;
 
 				if (@item.StockHoldingQty < 0)
 				{
@@ -279,7 +279,8 @@
 					<td>@item.StockHoldingSupplier.SupplierName</td>
 					<td>@item.StockholdingDate.ToShortDateString()</td>
 					<td>@item.StockHoldingSupplier.Currency.currencyAbrevation</td>
-					<td>@region.CurrencySymbol @item.StockHoldingFustItems.baseValue</td>
+
+					<td>@region.CurrencySymbol @item.baseValue</td>
 					<td>@region.CurrencySymbol @fustItemValue</td>
 				</tr>
 			}

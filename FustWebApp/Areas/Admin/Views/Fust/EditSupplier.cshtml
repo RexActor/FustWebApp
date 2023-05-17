@@ -1,0 +1,62 @@
+﻿@model IEnumerable<FustWebApp.Models.Domain.StockHolding>
+@using System.Globalization;
+
+@{
+
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+
+<h2>
+	View Fust Items for <span class="fw-bold fs-1 text-decoration-underline">@Model.FirstOrDefault().StockHoldingSupplier.SupplierName </span>
+
+	
+	<a class="btn mx-3 btn-sm btn-outline-secondary shadow" asp-controller="Fust" asp-action="ViewSupplier" asp-route-SupplierId="@Model.FirstOrDefault().StockHoldingSupplier.Id">Back</a>
+</h2>
+
+
+
+<table class="table shadow text-sm-center table-hover mt-3">
+	<thead class="table-dark sticky-top">
+		<tr>
+			<th>ID</th>
+			<th>
+				Fust Type
+			</th>
+			<th>
+				Fust Item
+			</th>
+			<th>Base Value</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			RegionInfo region = new RegionInfo(item.StockHoldingSupplier.Currency.currencyCountryCode);
+			@using (Html.BeginForm("EditSupplier", "Fust", HttpMethod.Post))
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(model=>item.StockHoldingFustItems.Id)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.StockHoldingFustItems.FustType.FustTypeName)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.StockHoldingFustItems.FustName)
+					</td>
+					<td>
+						@region.CurrencySymbol &nbsp;
+						<input name="supplierId" hidden asp-for="@item.StockHoldingSupplier.Id">
+						<input name="fustItemId" hidden asp-for="@item.StockHoldingFustItems.Id">
+						<input name="stockholdingId" hidden asp-for="@item.StockHoldingId">
+						<input class="form-control-sm" name="baseValue" asp-for="@item.StockHoldingFustItems.baseValue" value="@item.baseValue">
+
+					</td>
+					<td><input class="btn btn-sm btn-outline-success shadow" type="submit" value="Update" /></td>
+				</tr>
+			}
+		}
+	</tbody>
+</table>

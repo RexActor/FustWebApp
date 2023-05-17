@@ -37,12 +37,12 @@
 				@if (User.IsInRole("Admin"))
 				{
 					<div class="col-md-2 ">
-						<div class="bg-light  mb-3 shadow ">
+						<div class="bg-light  mb-1 shadow ">
 							<div class="text-sm-center navheader ">
 								<span class="text-sm-center w-100 fw-bold">Suppliers</span>
 							</div>
 							<nav class="navbar navbar-light navbody">
-								<div class="container-fluid navbody my-1 mx-2">
+								<div class="container-fluid navbody">
 									<ul class="navbar-nav">
 										<li>
 											<a class="nav-link" asp-area="Admin" asp-controller="Suppliers" asp-action="CreateSupplier">Create Supplier</a>
@@ -55,15 +55,18 @@
 							</nav>
 						</div>
 
-						<div class="bg-light text-sm-center shadow">
+						<div class="bg-light shadow">
 							<div class="text-sm-center mt-3 navheader">
 								<span class="text-sm-center w-100 fw-bold ">Fust Items</span>
 							</div>
 							<nav class="navbar  navbar-light  navbody">
-								<div class="container-fluid navbody my-1 mx-2 ">
+								<div class="container-fluid navbody">
 									<ul class="navbar-nav">
 										<li class="nav-item ">
 											<a class="nav-link" asp-area="Admin" asp-controller="Fust" asp-action="Index">Manage Fust</a>
+										</li>
+										<li class="nav-item ">
+											<a class="nav-link" asp-area="Admin" asp-controller="Fust" asp-action="BaseValue">Fust Base Value</a>
 										</li>
 
 									</ul>
@@ -71,12 +74,12 @@
 							</nav>
 						</div>
 
-						<div class="bg-light text-sm-center shadow">
+						<div class="bg-light  shadow">
 							<div class="text-sm-center mt-3 navheader">
 								<span class="text-sm-center w-100 fw-bold">Origins</span>
 							</div>
 							<nav class="navbar  navbar-light navbody">
-								<div class="container-fluid navbody my-1 mx-2 ">
+								<div class="container-fluid navbody">
 									<ul class="navbar-nav">
 										<li class="nav-item ">
 											<a class="nav-link" asp-area="Admin" asp-controller="Origin" asp-action="Index">Manage Origins</a>
@@ -86,12 +89,12 @@
 							</nav>
 						</div>
 
-						<div class="bg-light text-sm-center shadow ">
+						<div class="bg-light  shadow ">
 							<div class="text-sm-center mt-3 navheader">
 								<span class="text-sm-center w-100 fw-bold">Groups</span>
 							</div>
 							<nav class="navbar  navbar-light navbody">
-								<div class="container-fluid navbody my-1 mx-2 ">
+								<div class="container-fluid navbody">
 									<ul class="navbar-nav">
 										<li class="nav-item ">
 											<a class="nav-link" asp-area="Admin" asp-controller="Group" asp-action="Index">Manage Groups</a>
@@ -101,12 +104,12 @@
 							</nav>
 						</div>
 
-						<div class="bg-light text-sm-center shadow">
+						<div class="bg-light  shadow">
 							<div class="text-sm-center mt-3 navheader">
 								<span class="text-sm-center w-100 fw-bold">Users</span>
 							</div>
 							<nav class="navbar navbar-light navbody">
-								<div class="container-fluid navbody my-1 mx-2 ">
+								<div class="container-fluid navbody">
 									<ul class="navbar-nav">
 										<li class="nav-item">
 											<a class="nav-link" asp-area="Admin" asp-controller="Role" asp-action="Index">Manage Users</a>
@@ -116,12 +119,12 @@
 								</div>
 							</nav>
 						</div>
-						<div class="bg-light text-sm-center shadow">
+						<div class="bg-light shadow">
 							<div class="text-sm-center mt-3 navheader">
 								<span class="text-sm-center w-100 fw-bold">Currency</span>
 							</div>
 							<nav class="navbar navbar-light navbody">
-								<div class="container-fluid navbody my-1 mx-2 ">
+								<div class="container-fluid navbody">
 									<ul class="navbar-nav">
 										<li class="nav-item">
 											<a class="nav-link" asp-area="Admin" asp-controller="Currency" asp-action="Index">Manage Currency</a>
@@ -132,12 +135,12 @@
 							</nav>
 						</div>
 
-						<div class="bg-light text-sm-center shadow">
+						<div class="bg-light shadow">
 							<div class="text-sm-center mt-3 navheader">
 								<span class="text-sm-center w-100 fw-bold">Logs</span>
 							</div>
 							<nav class="navbar  navbar-light navbody">
-								<div class="container-fluid navbody my-1 mx-2 ">
+								<div class="container-fluid navbody">
 									<ul class="navbar-nav">
 										<li class="nav-item">
 											<a class="nav-link" asp-area="Admin" asp-controller="Log" asp-action="LogReader">Read Logs</a>

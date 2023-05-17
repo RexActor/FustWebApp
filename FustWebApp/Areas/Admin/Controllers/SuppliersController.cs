@@ -260,7 +260,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 						StockholdingDate = item.StockholdingDate,
 						StockHoldingFustItems = item.StockHoldingFustItems,
 						StockHoldingQty = stockHolding,
-
+						baseValue = item.baseValue,
 						StockHoldingSupplier = item.StockHoldingSupplier,
 						StockHoldingId = item.StockHoldingId
 					});

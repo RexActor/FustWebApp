@@ -12,8 +12,6 @@ namespace FustWebApp.Models.Domain
 		[DisplayName("Abbrevation")]
 		public string currencyAbrevation { get; set; }
 
-		
-
 		[DisplayName("Country Code")]
 		public string currencyCountryCode { get; set; }
 

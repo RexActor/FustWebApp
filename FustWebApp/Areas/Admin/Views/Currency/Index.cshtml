@@ -5,9 +5,6 @@
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-
-
-
 <a class="btn btn-outline-primary btn-sm mb-2 shadow" asp-controller="Currency" asp-action="AddCurrency">Add Currency</a>
 <br />
 <input id="search" class="shadow mb-2" onkeyup="searchItem()" placeholder="search" type="text" />
@@ -23,10 +20,8 @@
 			<th>Exchange Rate</th>
 			<th>Year</th>
 			<th></th>
-
 		</tr>
 	</thead>
-
 
 	<tbody>
 		@foreach (var currency in Model)
@@ -43,30 +38,20 @@
 					<a class="btn btn-sm btn-outline-primary shadow" asp-area="Admin" asp-controller="Currency" asp-action="View" asp-route-id="@currency.currencyId">View</a>
 					<a class="btn btn-sm btn-outline-danger shadow" asp-area="Admin" asp-controller="Currency" asp-action="Edit" asp-route-id="@currency.currencyId">Edit</a>
 					<a class="btn btn-sm btn-outline-dark shadow" asp-area="Admin" asp-controller="Currency" asp-action="Delete" asp-route-id="@currency.currencyId">Delete</a>
-
 				</td>
-
 			</tr>
 		}
 	</tbody>
-
-
 </table>
 
 @section Scripts{
 
 	<script type="text/javascript">
-
-
 		function searchItem() {
-
 			var input = document.getElementById("search");
-
 			var searchValue = input.value.toUpperCase();
 			var table = document.getElementById("currencyTable");
 			var tr = table.getElementsByTagName("tr");
-
-
 			for (var i = 0; i < tr.length; i++) {
 				td = tr[i].getElementsByTagName("td")[0];
 				td1 = tr[i].getElementsByTagName("td")[1];
@@ -76,7 +61,6 @@
 				td5 = tr[i].getElementsByTagName("td")[5];
 				td6 = tr[i].getElementsByTagName("td")[6];
 
-
 				if (td && td1 && td2 && td3 && td4 && td5 && td6) {
 					var txtValue = td.textContent || td.innerText;
 					var txtValue2 = td1.textContent || td1.innerText;
@@ -85,7 +69,6 @@
 					var txtValue4 = td4.textContent || td4.innerText;
 					var txtValue5 = td5.textContent || td5.innerText;
 					var txtValue6 = td6.textContent || td6.innerText;
-
 
 					if (txtValue.toUpperCase().indexOf(searchValue) > -1 ||
 						txtValue2.toUpperCase().indexOf(searchValue) > -1 ||
@@ -100,21 +83,8 @@
 					else {
 						tr[i].style.display = "none";
 					}
-
-
-
 				}
-
 			}
-
-
 		}
-
-
-
-
 	</script>
-
-
-
 }

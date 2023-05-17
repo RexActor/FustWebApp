@@ -1,0 +1,50 @@
+﻿@model IEnumerable<FustWebApp.Models.Domain.StockHolding>
+@using System.Globalization;
+
+@{
+   
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+  
+}
+
+<h2>View Fust Items for <span class="fw-bold fs-1 text-decoration-underline">@Model.FirstOrDefault().StockHoldingSupplier.SupplierName </span>
+    
+
+    <a class="btn mx-3 btn-sm btn-outline-danger shadow" asp-controller="Fust" asp-action="EditSupplier" asp-route-SupplierId="@Model.FirstOrDefault().StockHoldingSupplier.Id">Edit</a>
+</h2>
+
+
+
+<table class="table shadow text-sm-center table-hover mt-3">
+    <thead class="table-dark sticky-top">
+        <tr>
+            <th>ID</th>
+            <th>
+              Fust Type
+            </th>
+            <th>
+               Fust Item
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+            RegionInfo region = new RegionInfo(item.StockHoldingSupplier.Currency.currencyCountryCode);
+            <tr>
+                <td>
+                    @Html.DisplayFor(model=>item.StockHoldingFustItems.Id)
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StockHoldingFustItems.FustType.FustTypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StockHoldingFustItems.FustName)
+            </td>
+            <td>@region.CurrencySymbol &nbsp;
+                    @Html.EditorFor(modelItem=>item.baseValue,  new { htmlAttributes = new { @class = "form-control-sm mb-2",@type="number",@disabled="disabled" } })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

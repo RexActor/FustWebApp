@@ -19,6 +19,9 @@ namespace FustWebApp.Models.Domain
 		[DisplayName("Holding Quantity")]
 		public int StockHoldingQty { get;set; }
 
+		[DisplayName("Base Value")]
+		public float baseValue { get; set; }
+
 
 
 
