@@ -183,6 +183,9 @@ namespace FustWebApp.Migrations
                     b.Property<int>("ReceivedQty")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("StorageQty")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("currencyId")
                         .HasColumnType("INTEGER");
 
@@ -294,6 +297,9 @@ namespace FustWebApp.Migrations
 
                     b.Property<DateTime>("StockholdingDate")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("StorageQuantity")
+                        .HasColumnType("INTEGER");
 
                     b.Property<float>("baseValue")
                         .HasColumnType("REAL");

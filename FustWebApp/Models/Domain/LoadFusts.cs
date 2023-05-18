@@ -14,6 +14,7 @@ namespace FustWebApp.Models.Domain
 
 		public int ExpectedQuantity { get; set; }
 		public int ReceivedQty { get; set; }
+		public int StorageQty { get; set; }
 
 		public float unitValue { get; set; }
 

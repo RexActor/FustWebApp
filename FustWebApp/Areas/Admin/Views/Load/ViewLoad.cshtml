@@ -34,6 +34,11 @@
 
 		</div>
 	}
+
+	<div class="mx-2">
+		<a class="btn btn-sm btn-outline-dark shadow" asp-area="Admin" asp-controller="Load" asp-action="Index">Back</a>
+	</div>
+
 </div>
 
 <div class="container mb-4">
@@ -141,6 +146,7 @@
 			<th>Fust Name</th>
 			<th>Expected Quantity:</th>
 			<th>Received Quantity:</th>
+			<th>Storage Quantity:</th>
 			<th>Difference</th>
 		</tr>
 	</thead>
@@ -148,7 +154,7 @@
 	<tbody>
 		@foreach (var item in Model.LoadFustItems)
 		{
-			var difference = item.ReceivedQty - item.ExpectedQuantity;
+			var difference = (item.StorageQty+item.ReceivedQty) - item.ExpectedQuantity;
 			var status = string.Empty;
 			if (difference != 0)
 			{
@@ -164,6 +170,7 @@
 				<td>@item.FustName</td>
 				<td>@item.ExpectedQuantity</td>
 				<td> @item.ReceivedQty</td>
+				<td>@item.StorageQty</td>
 				<td>
 					@if (difference != 0)
 					{

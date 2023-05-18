@@ -15,6 +15,9 @@
 		<div class="mx-2">
 			<input type="submit" class="btn btn-outline-danger btn-sm shadow" value="Save Load">
 		</div>
+		<div class="mx-2">
+		<a  class="btn btn-sm btn-outline-dark shadow" asp-area="Admin" asp-controller="Load" asp-action="ViewLoad" asp-route-Id="@Model.LoadId">Back</a>
+		</div>
 	</div>
 
 	<div class="container mb-4">
@@ -126,6 +129,7 @@
 				<th>Fust Name</th>
 				<th>Expected Quantity:</th>
 				<th>Received Quantity:</th>
+				<th>Qty for Storage:</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -145,10 +149,13 @@
 						@Model.LoadFustItems[i].FustName
 					</td>
 					<td width="200">
-						@Html.EditorFor(model=>model.LoadFustItems[i].ExpectedQuantity,new { htmlAttributes = new { @class = "form-control", @placeholder="0",type="Number" } })
+						@Html.EditorFor(model=>model.LoadFustItems[i].ExpectedQuantity,new { htmlAttributes = new { @class = "form-control", @placeholder="0",@type="Number" } })
 					</td>
 					<td width="200">
-						@Html.EditorFor(model=>model.LoadFustItems[i].ReceivedQty,new { htmlAttributes = new { @class = "form-control", @placeholder="0",type="Number" } })
+						@Html.EditorFor(model=>model.LoadFustItems[i].ReceivedQty,new { htmlAttributes = new { @class = "form-control", @placeholder="0",@type="Number" } })
+					</td>
+					<td width="200">
+						@Html.EditorFor(model=>model.LoadFustItems[i].StorageQty,new {htmlAttributes = new {@class="form-control",@placeholder="0",@type="number"}})
 					</td>
 				</tr>
 			}

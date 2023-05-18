@@ -126,7 +126,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 					LoadSupplier = inboundLoad.LoadSupplier,
 					LoadOrigin = supplierDetail.SupplierOrigin,
 					LoadDate = inboundLoad.LoadDate,
-					
+
 					LoadFustItems = fustItems,
 				};
 
@@ -165,7 +165,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 			   {
 
 				   var fustTypeFound = applicationDbContext.FustTypes.FirstOrDefault(item => item.FustTypeName == fustItem.FustType.FustTypeName);
-				   var supplier = applicationDbContext.Suppliers.Include(item=>item.Currency).FirstOrDefault(item => item.SupplierName == load.LoadSupplier);
+				   var supplier = applicationDbContext.Suppliers.Include(item => item.Currency).FirstOrDefault(item => item.SupplierName == load.LoadSupplier);
 
 				   var currency = applicationDbContext.Currency.FirstOrDefault(item => item.currencyAbrevation == supplier.Currency.currencyAbrevation);
 
@@ -175,7 +175,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 					   fustItems.Add(new LoadFusts()
 					   {
 						   FustType = fustTypeFound,
-						   Currency=currency,
+						   Currency = currency,
 						   FustName = foundFust.FustName,
 						   ReceivedQty = 0,
 						   ExpectedQuantity = fustItem.ExpectedQuantity
@@ -201,7 +201,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 					LoadFustItems = fustItems,
 					CreatedDate = DateTime.Now,
 					LoadGroup = load.LoadGroup,
-					
+
 					LoadOrigin = load.LoadOrigin,
 					PONumber = loadPo,
 					LoadSupplier = load.LoadSupplier,
@@ -211,11 +211,10 @@ namespace FustWebApp.Areas.Admin.Controllers
 					UpdatedBy = "Not Updated"
 				};
 
-				using (AuditScope.Create("Add:Load", () => loadToAdd))
-				{
-					await applicationDbContext.Loads.AddAsync(loadToAdd);
-					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
-				}
+
+				await applicationDbContext.Loads.AddAsync(loadToAdd);
+				await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+
 			}
 
 			return RedirectToAction("Index");
@@ -239,104 +238,132 @@ namespace FustWebApp.Areas.Admin.Controllers
 		{
 
 			var loadToUpdate = applicationDbContext.Loads.Include(item => item.LoadFustItems).SingleOrDefault(item => item.LoadId == load.LoadId);
-			using (AuditScope.Create("Update:Load", () => loadToUpdate))
+
+
+
+			List<LoadFusts> fustItems = new List<LoadFusts>();
+
+			load.LoadFustItems.ForEach(fustItem =>
 			{
-				List<LoadFusts> fustItems = new List<LoadFusts>();
 
-				load.LoadFustItems.ForEach(fustItem =>
+
+
+				applicationDbContext.Fusts.Where(item => item.FustName == fustItem.FustName).ToList().ForEach(foundFust =>
 				{
-					applicationDbContext.Fusts.Where(item => item.FustName == fustItem.FustName).ToList().ForEach(foundFust =>
+					var fustTypeFound = applicationDbContext.FustTypes.FirstOrDefault(item => item.FustTypeName == fustItem.FustType.FustTypeName);
+					var loadFound = applicationDbContext.Loads.FirstOrDefault(item => item.LoadId == load.LoadId);
+					var supplier = applicationDbContext.Suppliers.Include(item => item.Currency).FirstOrDefault(item => item.SupplierName == load.LoadSupplier);
+
+					var currency = applicationDbContext.Currency.FirstOrDefault(item => item.currencyAbrevation == supplier.Currency.currencyAbrevation);
+					if (fustTypeFound != null)
 					{
-						var fustTypeFound = applicationDbContext.FustTypes.FirstOrDefault(item => item.FustTypeName == fustItem.FustType.FustTypeName);
-						var loadFound = applicationDbContext.Loads.FirstOrDefault(item => item.LoadId == load.LoadId);
-						var supplier = applicationDbContext.Suppliers.Include(item=>item.Currency).FirstOrDefault(item => item.SupplierName == load.LoadSupplier);
-
-						var currency = applicationDbContext.Currency.FirstOrDefault(item => item.currencyAbrevation == supplier.Currency.currencyAbrevation);
-						if (fustTypeFound != null)
+						fustItems.Add(new LoadFusts()
 						{
-							fustItems.Add(new LoadFusts()
-							{
-								FustType = fustTypeFound,
-								LoadFustId = fustItem.LoadFustId,
-								Currency=currency,
-								Loads = load,
-								FustName = foundFust.FustName,
-								ReceivedQty = fustItem.ReceivedQty,
-								ExpectedQuantity = fustItem.ExpectedQuantity
-							});
-						}
-					});
-
+							FustType = fustTypeFound,
+							LoadFustId = fustItem.LoadFustId,
+							Currency = currency,
+							Loads = load,
+							FustName = foundFust.FustName,
+							ReceivedQty = fustItem.ReceivedQty,
+							ExpectedQuantity = fustItem.ExpectedQuantity,
+							StorageQty = fustItem.StorageQty
+						});
+					}
 				});
 
-				if (loadToUpdate != null)
-				{
+			});
 
-					int loadPo = 0;
+			if (loadToUpdate != null)
+			{
+
+				int loadPo = 0;
+				if (load.LoadType == "Inbound")
+				{
+					loadPo = load.PONumber;
+				}
+
+				loadToUpdate.LoadId = load.LoadId;
+				loadToUpdate.PONumber = loadPo;
+				loadToUpdate.LoadSupplier = load.LoadSupplier;
+				loadToUpdate.LoadGroup = load.LoadGroup;
+				loadToUpdate.LoadTrailerNumber = load.LoadTrailerNumber;
+				loadToUpdate.CreatedDate = load.CreatedDate;
+				loadToUpdate.LoadComment = load.LoadComment;
+				loadToUpdate.LoadDate = load.LoadDate;
+				loadToUpdate.LoadOrigin = load.LoadOrigin;
+				loadToUpdate.UpdatedBy = User.Identity.Name ?? "Unknown User";
+				loadToUpdate.LoadUpdatedDate = DateTime.Now;
+
+				foreach (var fustItem in fustItems)
+				{
+					int currentvalue = loadToUpdate.LoadFustItems.Where(item => item.FustName == fustItem.FustName).FirstOrDefault().ReceivedQty;
+					int currentStorage = loadToUpdate.LoadFustItems.Where(item => item.FustName == fustItem.FustName).FirstOrDefault().StorageQty;
+
+					var stockholdingToUpdate = await applicationDbContext.StockHolding.Where(item => item.StockHoldingSupplier.SupplierName == load.LoadSupplier).Include(item => item.StockHoldingFustItems).SingleOrDefaultAsync(item => item.StockHoldingFustItems.FustName == fustItem.FustName);
+
 					if (load.LoadType == "Inbound")
 					{
-						loadPo = load.PONumber;
-					}
-
-					loadToUpdate.LoadId = load.LoadId;
-					loadToUpdate.PONumber = loadPo;
-					loadToUpdate.LoadSupplier = load.LoadSupplier;
-					loadToUpdate.LoadGroup = load.LoadGroup;
-					loadToUpdate.LoadTrailerNumber = load.LoadTrailerNumber;
-					loadToUpdate.CreatedDate = load.CreatedDate;
-					loadToUpdate.LoadComment = load.LoadComment;
-					loadToUpdate.LoadDate = load.LoadDate;
-					loadToUpdate.LoadOrigin = load.LoadOrigin;
-					loadToUpdate.UpdatedBy = User.Identity.Name ?? "Unknown User";
-					loadToUpdate.LoadUpdatedDate = DateTime.Now;
-
-					foreach (var fustItem in fustItems)
-					{
-						int currentvalue = loadToUpdate.LoadFustItems.Where(item => item.FustName == fustItem.FustName).FirstOrDefault().ReceivedQty;
-
-						var stockholdingToUpdate = await applicationDbContext.StockHolding.Where(item => item.StockHoldingSupplier.SupplierName == load.LoadSupplier).Include(item => item.StockHoldingFustItems).SingleOrDefaultAsync(item => item.StockHoldingFustItems.FustName == fustItem.FustName);
-
-						if (load.LoadType == "Inbound")
+						if (fustItem.ReceivedQty > currentvalue)
 						{
-							if (fustItem.ReceivedQty > currentvalue)
-							{
-								stockholdingToUpdate.StockHoldingQty += (fustItem.ReceivedQty - currentvalue);
-							}
-							else
-							{
-								stockholdingToUpdate.StockHoldingQty += fustItem.ReceivedQty - currentvalue;
-							}
+							stockholdingToUpdate.StockHoldingQty += (fustItem.ReceivedQty - currentvalue);
 						}
 						else
 						{
-							if (fustItem.ReceivedQty > currentvalue)
-							{
-								stockholdingToUpdate.StockHoldingQty -= (fustItem.ReceivedQty - currentvalue);
-							}
-							else
-							{
-								stockholdingToUpdate.StockHoldingQty -= fustItem.ReceivedQty - currentvalue;
-							}
+							stockholdingToUpdate.StockHoldingQty += fustItem.ReceivedQty - currentvalue;
 						}
-						stockholdingToUpdate.StockholdingDate = loadToUpdate.LoadUpdatedDate;
-						applicationDbContext.StockHolding.Update(stockholdingToUpdate);
+
+						if (fustItem.StorageQty > currentStorage)
+						{
+							stockholdingToUpdate.StorageQuantity += (fustItem.StorageQty - currentStorage);
+						}
+						else
+						{
+							stockholdingToUpdate.StorageQuantity += fustItem.StorageQty - currentStorage;
+						}
+
 
 					}
-					loadToUpdate.LoadFustItems = fustItems;
-					applicationDbContext.Loads.Update(loadToUpdate);
+					else
+					{
+						if (fustItem.ReceivedQty > currentvalue)
+						{
+							stockholdingToUpdate.StockHoldingQty -= (fustItem.ReceivedQty - currentvalue);
+						}
+						else
+						{
+							stockholdingToUpdate.StockHoldingQty -= fustItem.ReceivedQty - currentvalue;
+						}
 
-					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+						if (fustItem.StorageQty > currentStorage)
+						{
+							stockholdingToUpdate.StorageQuantity -= (fustItem.StorageQty - currentStorage);
+						}
+						else
+						{
+							stockholdingToUpdate.StorageQuantity -= fustItem.StorageQty - currentStorage;
+						}
+
+
+					}
+					stockholdingToUpdate.StockholdingDate = loadToUpdate.LoadUpdatedDate;
+					applicationDbContext.StockHolding.Update(stockholdingToUpdate);
 
 				}
+				loadToUpdate.LoadFustItems = fustItems;
+				applicationDbContext.Loads.Update(loadToUpdate);
 
-				return RedirectToRoute(
-					new
-					{
-						Controller = "Load",
-						Action = "ViewLoad",
-						Id = load.LoadId,
-					});
+				await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+
 			}
+
+			return RedirectToRoute(
+				new
+				{
+					Controller = "Load",
+					Action = "ViewLoad",
+					Id = load.LoadId,
+				});
+
 
 		}
 
@@ -353,114 +380,139 @@ namespace FustWebApp.Areas.Admin.Controllers
 		{
 
 			var loadToUpdate = applicationDbContext.Loads.Include(item => item.LoadFustItems).SingleOrDefault(item => item.LoadId == load.LoadId);
-			using (AuditScope.Create("Receive:Load", () => loadToUpdate))
-			{
-				List<LoadFusts> fustItems = new List<LoadFusts>();
 
-				load.LoadFustItems.ForEach(fustItem =>
+			List<LoadFusts> fustItems = new List<LoadFusts>();
+
+			load.LoadFustItems.ForEach(fustItem =>
+			{
+
+
+				applicationDbContext.Fusts.Where(item => item.FustName == fustItem.FustName).ToList().ForEach(foundFust =>
 				{
-					applicationDbContext.Fusts.Where(item => item.FustName == fustItem.FustName).ToList().ForEach(foundFust =>
+
+					var fustTypeFound = applicationDbContext.FustTypes.FirstOrDefault(item => item.FustTypeName == fustItem.FustType.FustTypeName);
+					var loadFound = applicationDbContext.Loads.FirstOrDefault(item => item.LoadId == load.LoadId);
+					var supplier = applicationDbContext.Suppliers.Include(item => item.Currency).FirstOrDefault(item => item.SupplierName == load.LoadSupplier);
+
+					var currency = applicationDbContext.Currency.FirstOrDefault(item => item.currencyAbrevation == supplier.Currency.currencyAbrevation);
+					if (fustTypeFound != null)
 					{
 
-						var fustTypeFound = applicationDbContext.FustTypes.FirstOrDefault(item => item.FustTypeName == fustItem.FustType.FustTypeName);
-						var loadFound = applicationDbContext.Loads.FirstOrDefault(item => item.LoadId == load.LoadId);
-						var supplier = applicationDbContext.Suppliers.Include(item=>item.Currency).FirstOrDefault(item => item.SupplierName == load.LoadSupplier);
-
-						var currency = applicationDbContext.Currency.FirstOrDefault(item => item.currencyAbrevation == supplier.Currency.currencyAbrevation);
-						if (fustTypeFound != null)
+						fustItems.Add(new LoadFusts()
 						{
-							fustItems.Add(new LoadFusts()
-							{
 
-								FustType = fustTypeFound,
-								LoadFustId = fustItem.LoadFustId,
-								Loads = load,
-								Currency=currency,
-								FustName = foundFust.FustName,
-								ReceivedQty = fustItem.ReceivedQty,
-								ExpectedQuantity = fustItem.ExpectedQuantity
-							});
-						}
-					});
-
+							FustType = fustTypeFound,
+							LoadFustId = fustItem.LoadFustId,
+							Loads = load,
+							Currency = currency,
+							FustName = foundFust.FustName,
+							ReceivedQty = fustItem.ReceivedQty,
+							ExpectedQuantity = fustItem.ExpectedQuantity,
+							StorageQty = fustItem.StorageQty
+						});
+					}
 				});
 
+			});
 
-				if (loadToUpdate != null)
+
+			if (loadToUpdate != null)
+			{
+
+				int loadPo = 0;
+				if (load.LoadType == "Inbound")
 				{
+					loadPo = load.PONumber;
+				}
 
-					int loadPo = 0;
+				loadToUpdate.LoadId = load.LoadId;
+				loadToUpdate.PONumber = loadPo;
+				loadToUpdate.LoadSupplier = load.LoadSupplier;
+				loadToUpdate.LoadGroup = load.LoadGroup;
+				loadToUpdate.LoadTrailerNumber = load.LoadTrailerNumber;
+				loadToUpdate.CreatedDate = load.CreatedDate;
+				loadToUpdate.LoadComment = load.LoadComment;
+				loadToUpdate.LoadDate = load.LoadDate;
+				loadToUpdate.LoadOrigin = load.LoadOrigin;
+				loadToUpdate.ReceivedBy = User.Identity.Name ?? "Unknown User";
+				loadToUpdate.ReceivedDate = DateTime.Now;
+
+
+				foreach (var fustItem in fustItems)
+				{
+					int currentvalue = loadToUpdate.LoadFustItems.Where(item => item.FustName == fustItem.FustName).FirstOrDefault().ReceivedQty;
+					int currentStorage = loadToUpdate.LoadFustItems.Where(item => item.FustName == fustItem.FustName).FirstOrDefault().StorageQty;
+
+					var stockholdingToUpdate = await applicationDbContext.StockHolding.Where(item => item.StockHoldingSupplier.SupplierName == load.LoadSupplier).Include(item => item.StockHoldingFustItems).SingleOrDefaultAsync(item => item.StockHoldingFustItems.FustName == fustItem.FustName);
+
 					if (load.LoadType == "Inbound")
 					{
-						loadPo = load.PONumber;
-					}
 
-					loadToUpdate.LoadId = load.LoadId;
-					loadToUpdate.PONumber = loadPo;
-					loadToUpdate.LoadSupplier = load.LoadSupplier;
-					loadToUpdate.LoadGroup = load.LoadGroup;
-					loadToUpdate.LoadTrailerNumber = load.LoadTrailerNumber;
-					loadToUpdate.CreatedDate = load.CreatedDate;
-					loadToUpdate.LoadComment = load.LoadComment;
-					loadToUpdate.LoadDate = load.LoadDate;
-					loadToUpdate.LoadOrigin = load.LoadOrigin;
-					loadToUpdate.ReceivedBy = User.Identity.Name ?? "Unknown User";
-					loadToUpdate.ReceivedDate = DateTime.Now;
-
-
-					foreach (var fustItem in fustItems)
-					{
-						int currentvalue = loadToUpdate.LoadFustItems.Where(item => item.FustName == fustItem.FustName).FirstOrDefault().ReceivedQty;
-
-						var stockholdingToUpdate = await applicationDbContext.StockHolding.Where(item => item.StockHoldingSupplier.SupplierName == load.LoadSupplier).Include(item => item.StockHoldingFustItems).SingleOrDefaultAsync(item => item.StockHoldingFustItems.FustName == fustItem.FustName);
-
-						if (load.LoadType == "Inbound")
+						if (fustItem.ReceivedQty > currentvalue)
 						{
-
-							if (fustItem.ReceivedQty > currentvalue)
-							{
-								stockholdingToUpdate.StockHoldingQty += (fustItem.ReceivedQty - currentvalue);
-							}
-							else
-							{
-								stockholdingToUpdate.StockHoldingQty += fustItem.ReceivedQty - currentvalue;
-							}
+							stockholdingToUpdate.StockHoldingQty += (fustItem.ReceivedQty - currentvalue);
 						}
 						else
 						{
-							if (fustItem.ReceivedQty > currentvalue)
-							{
-								stockholdingToUpdate.StockHoldingQty -= (fustItem.ReceivedQty - currentvalue);
-							}
-							else
-							{
-								stockholdingToUpdate.StockHoldingQty += currentvalue - fustItem.ReceivedQty;
-							}
+							stockholdingToUpdate.StockHoldingQty += fustItem.ReceivedQty - currentvalue;
 						}
 
-						stockholdingToUpdate.StockholdingDate = loadToUpdate.ReceivedDate;
 
-						applicationDbContext.StockHolding.Update(stockholdingToUpdate);
+
+						if (fustItem.StorageQty > currentStorage)
+						{
+							stockholdingToUpdate.StorageQuantity += (fustItem.StorageQty - currentStorage);
+						}
+						else
+						{
+							stockholdingToUpdate.StorageQuantity += (fustItem.StorageQty - currentStorage);
+						}
+
 
 					}
-					loadToUpdate.LoadFustItems = fustItems;
-					applicationDbContext.Loads.Update(loadToUpdate);
+					else
+					{
+						if (fustItem.ReceivedQty > currentvalue)
+						{
+							stockholdingToUpdate.StockHoldingQty -= (fustItem.ReceivedQty - currentvalue);
+						}
+						else
+						{
+							stockholdingToUpdate.StockHoldingQty += currentvalue - fustItem.ReceivedQty;
+						}
+						if (fustItem.StorageQty > currentStorage)
+						{
+							stockholdingToUpdate.StorageQuantity -= (fustItem.StorageQty - currentStorage);
+						}
+						else
+						{
+							stockholdingToUpdate.StorageQuantity += currentStorage - fustItem.StorageQty;
+						}
+					}
 
-					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+					stockholdingToUpdate.StockholdingDate = loadToUpdate.ReceivedDate;
+
+					applicationDbContext.StockHolding.Update(stockholdingToUpdate);
 
 				}
+				loadToUpdate.LoadFustItems = fustItems;
+				applicationDbContext.Loads.Update(loadToUpdate);
 
-
-
-				return RedirectToRoute(
-					new
-					{
-						Controller = "Load",
-						Action = "ViewLoad",
-						Id = load.LoadId,
-					});
+				await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
 
 			}
+
+
+
+			return RedirectToRoute(
+				new
+				{
+					Controller = "Load",
+					Action = "ViewLoad",
+					Id = load.LoadId,
+				});
+
+
 		}
 
 	}

@@ -140,7 +140,8 @@ namespace FustWebApp.Areas.Admin.Controllers
 						StockholdingDate = DateTime.Now,
 						StockHoldingQty = 0,
 						StockHoldingSupplier = supplier,
-
+						baseValue = 0,
+						StorageQuantity = 0,
 						StockHoldingFustItems = item
 					};
 
@@ -202,6 +203,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 					FustTypeList = supplier.FustTypeList,
 					SupplierGroup = supplier.SupplierGroup,
 					Currency = currency,
+					
 					SupplierName = supplier.SupplierName,
 					SupplierOrigin = supplier.SupplierOrigin
 				};
@@ -261,6 +263,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 						StockHoldingFustItems = item.StockHoldingFustItems,
 						StockHoldingQty = stockHolding,
 						baseValue = item.baseValue,
+						StorageQuantity=item.StorageQuantity,
 						StockHoldingSupplier = item.StockHoldingSupplier,
 						StockHoldingId = item.StockHoldingId
 					});
