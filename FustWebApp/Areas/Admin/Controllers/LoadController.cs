@@ -28,34 +28,15 @@ namespace FustWebApp.Areas.Admin.Controllers
 			viewModel = await applicationDbContext.Loads.OrderBy(item => item.LoadType).ThenByDescending(item => item.LoadDate).ToListAsync();
 			List<LoadFusts> fustItemsList = new List<LoadFusts>();
 
-			/*
-			foreach (var item in viewModel)
-			{
 
-				await applicationDbContext.LoadFusts.Where(loadFust => loadFust.Loads.LoadId == item.LoadId).ForEachAsync(loadFust =>
-				{
-					fustItemsList.Add(new LoadFusts()
-					{
-						FustName = loadFust.FustName,
-						Loads = loadFust.Loads,
-						FustType = loadFust.FustType,
-						LoadFustId = loadFust.LoadFustId,
-						ExpectedQuantity = loadFust.ExpectedQuantity,
-					});
-
-				});
-
-			}
-
-			ViewBag.FustItems = fustItemsList;*/
 
 			return View(viewModel);
 		}
 		[HttpGet]
-		public async Task<IActionResult>ViewLoads(string date)
+		public async Task<IActionResult> ViewLoads(string date)
 		{
 			List<Loads> viewModel = new List<Loads>();
-			viewModel = applicationDbContext.Loads.AsEnumerable().OrderBy(item=>item.LoadType).ThenByDescending(item=>item.LoadDate).Where(item=>item.LoadDate.ToShortDateString()==date).ToList();
+			viewModel = applicationDbContext.Loads.AsEnumerable().OrderBy(item => item.LoadType).ThenByDescending(item => item.LoadDate).Where(item => item.LoadDate.ToShortDateString() == date).ToList();
 			return View(viewModel);
 		}
 

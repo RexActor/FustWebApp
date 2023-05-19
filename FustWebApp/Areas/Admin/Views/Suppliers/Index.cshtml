@@ -35,7 +35,7 @@
 					<tr>
 						<td>@item.SupplierName</td>
 						<td>@item.SupplierOrigin</td>
-						<td>@item.SupplierGroup</td>
+						<td>@item.SupplierGroup.Replace(",",", ")</td>
 						<td>@item.FustTypeList.Replace(",",", ")</td>
 						<td>@item.SupplierAddress</td>
 
@@ -48,7 +48,7 @@
 							
 						}
 						else{
-							@:<td> <span class="text-danger">No Loads</span></td>
+							@:<td> <span class="text-danger fw-bold">No Loads</span></td>
 						}
 						<td>
 							<a class="btn btn-sm btn-outline-primary shadow" href="Suppliers/View/@item.Id">View</a>

@@ -38,11 +38,20 @@ button.accept-policy {
   font-size: 1rem;
   line-height: inherit;
 }
+.header {
+    background-color: rgb(134, 167, 130, 0.52);
+}
 
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
+    background-color: rgb(134, 167, 130, 0.52);
+}
+
+.layoutBg {
+    background-color: rgb(134, 167, 130, 0.52);
+    color: blue;
 }

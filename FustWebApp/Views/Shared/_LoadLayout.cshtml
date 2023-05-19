@@ -25,7 +25,7 @@
 </head>
 <body>
 	<header>
-		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light  border-bottom bg-success bg-opacity-25 box-shadow mb-3 shadow ">
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light  border-bottom box-shadow mb-3 shadow header ">
 			<div class="container-fluid">
 				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Fust Application</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -52,12 +52,12 @@
 			<div class="row">
 				<div class="text-sm-center mb-3"><h3>@ViewData["Title"]</h3></div>
 				<div class="col-md-2">
-					<div class="shadow">
+					<div class="navbody mt-3 shadow mb-3 border-1 border-success border">
 						<div class="navheader text-sm-center">
 							<span class="text-sm-center w-100 fw-bold">Quick Links</span>
 						</div>
-						<nav class="navbar sticky-top navbar-light navbody">
-							<div class="container-fluid navbody my-1 mx-2 ">
+						<nav class="navbar sticky-top ">
+							<div class="container-fluid my-1 mx-2 ">
 								<ul class="navbar-nav">
 									@if (action == "Index")
 									{

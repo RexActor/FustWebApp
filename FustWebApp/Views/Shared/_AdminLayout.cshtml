@@ -10,7 +10,7 @@
 </head>
 <body>
 	<header>
-		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light  border-bottom bg-success bg-opacity-25 box-shadow mb-3 ">
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light  border-bottom box-shadow mb-3 header ">
 			<div class="container-fluid">
 				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Fust Application</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -37,12 +37,12 @@
 				@if (User.IsInRole("Admin"))
 				{
 					<div class="col-md-2 ">
-						<div class="bg-light  mb-1 shadow ">
+						<div class="navbody mt-3 shadow mb-3 border-1 border-success border">
 							<div class="text-sm-center navheader ">
 								<span class="text-sm-center w-100 fw-bold">Suppliers</span>
 							</div>
-							<nav class="navbar navbar-light navbody">
-								<div class="container-fluid navbody">
+							<nav class="navbar">
+								<div class="container-fluid ">
 									<ul class="navbar-nav">
 										<li>
 											<a class=" btn btn-sm btn-outline-success shadow mb-1 mt-1" asp-area="Admin" asp-controller="Suppliers" asp-action="CreateSupplier">Create Supplier</a>
@@ -55,12 +55,12 @@
 							</nav>
 						</div>
 
-						<div class="bg-light shadow">
-							<div class="text-sm-center mt-3 navheader">
+						<div class="navbody mt-3 shadow mb-3 border-1 border-success border">
+							<div class="text-sm-center navheader">
 								<span class="text-sm-center w-100 fw-bold ">Fust Items</span>
 							</div>
-							<nav class="navbar  navbar-light  navbody">
-								<div class="container-fluid navbody">
+							<nav class="navbar">
+								<div class="container-fluid ">
 									<ul class="navbar-nav">
 										<li class="nav-item ">
 											<a class="btn btn-sm btn-outline-success shadow mb-1 mt-1" asp-area="Admin" asp-controller="Fust" asp-action="Index">Manage Fust</a>
@@ -74,12 +74,12 @@
 							</nav>
 						</div>
 
-						<div class="bg-light  shadow">
-							<div class="text-sm-center mt-3 navheader">
+						<div class="navbody mt-3 shadow mb-3 border-1 border-success border">
+							<div class="text-sm-center navheader">
 								<span class="text-sm-center w-100 fw-bold">Origins</span>
 							</div>
-							<nav class="navbar  navbar-light navbody">
-								<div class="container-fluid navbody">
+							<nav class="navbar">
+								<div class="container-fluid ">
 									<ul class="navbar-nav">
 										<li class="nav-item ">
 											<a class="btn btn-sm btn-outline-success shadow mb-1 mt-1" asp-area="Admin" asp-controller="Origin" asp-action="Index">Manage Origins</a>
@@ -89,12 +89,12 @@
 							</nav>
 						</div>
 
-						<div class="bg-light  shadow ">
-							<div class="text-sm-center mt-3 navheader">
+						<div class="navbody mt-3 shadow mb-3 border-1 border-success border">
+							<div class="text-sm-center navheader">
 								<span class="text-sm-center w-100 fw-bold">Groups</span>
 							</div>
-							<nav class="navbar  navbar-light navbody">
-								<div class="container-fluid navbody">
+							<nav class="navbar ">
+								<div class="container-fluid ">
 									<ul class="navbar-nav">
 										<li class="nav-item ">
 											<a class="btn btn-sm btn-outline-success shadow mb-1 mt-1" asp-area="Admin" asp-controller="Group" asp-action="Index">Manage Groups</a>
@@ -104,12 +104,12 @@
 							</nav>
 						</div>
 
-						<div class="bg-light  shadow">
-							<div class="text-sm-center mt-3 navheader">
+						<div class="navbody mt-3 shadow mb-3 border-1 border-success border">
+							<div class="text-sm-center navheader">
 								<span class="text-sm-center w-100 fw-bold">Users</span>
 							</div>
-							<nav class="navbar navbar-light navbody">
-								<div class="container-fluid navbody">
+							<nav class="navbar ">
+								<div class="container-fluid ">
 									<ul class="navbar-nav">
 										<li class="nav-item">
 											<a class="btn btn-sm btn-outline-success shadow mb-1 mt-1" asp-area="Admin" asp-controller="Role" asp-action="Index">Manage Users</a>
@@ -119,12 +119,12 @@
 								</div>
 							</nav>
 						</div>
-						<div class="bg-light shadow">
-							<div class="text-sm-center mt-3 navheader">
+						<div class="navbody mt-3 shadow mb-3 border-1 border-success border">
+							<div class="text-sm-center navheader">
 								<span class="text-sm-center w-100 fw-bold">Currency</span>
 							</div>
-							<nav class="navbar navbar-light navbody">
-								<div class="container-fluid navbody">
+							<nav class="navbar">
+								<div class="container-fluid ">
 									<ul class="navbar-nav">
 										<li class="nav-item">
 											<a class="btn btn-sm btn-outline-success shadow mb-1 mt-1" asp-area="Admin" asp-controller="Currency" asp-action="Index">Manage Currency</a>
@@ -135,12 +135,12 @@
 							</nav>
 						</div>
 
-						<div class="bg-light shadow">
-							<div class="text-sm-center mt-3 navheader">
+						<div class="navbody mt-3 shadow mb-3 border-1 border-success border">
+							<div class="text-sm-center navheader">
 								<span class="text-sm-center w-100 fw-bold">Logs</span>
 							</div>
-							<nav class="navbar  navbar-light navbody">
-								<div class="container-fluid navbody">
+							<nav class="navbar">
+								<div class="container-fluid ">
 									<ul class="navbar-nav">
 										<li class="nav-item">
 											<a class="btn btn-sm btn-outline-success shadow mb-1 mt-1" asp-area="Admin" asp-controller="Log" asp-action="LogReader">Read Logs</a>

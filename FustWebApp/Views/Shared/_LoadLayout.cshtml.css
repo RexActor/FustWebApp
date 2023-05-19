@@ -22,7 +22,9 @@ a {
     background-color: #1b6ec2;
     border-color: #1861ac;
 }
-
+.header {
+    background-color: rgb(134, 167, 130, 0.52);
+}
 .border-top {
     border-top: 1px solid #e5e5e5;
 }
@@ -46,11 +48,12 @@ button.accept-policy {
     width: 100%;
     white-space: nowrap;
     line-height: 60px;
+    background-color: rgb(134, 167, 130, 0.52);
 }
 .navheader {
-    background-color: #C5E1D4;
+    background-color: rgb(134, 167, 130, 0.52);
 }
 
 .navbody {
-    background-color: #D5E9E0;
+    background-color: rgba(134, 167, 130, 0.19);
 }

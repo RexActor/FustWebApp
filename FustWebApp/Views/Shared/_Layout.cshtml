@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FustWebApp.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light  border-bottom bg-success bg-opacity-25 box-shadow mb-3 shadow ">
+<body class="layoutBg">
+    <header class="header">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light  border-bottom  box-shadow mb-3 shadow header">
             <div class="container-fluid  ">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Fust Application</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -34,6 +34,7 @@
     </header>
     <div class="container mw-100 mx-auto">
         <main role="main" class="pb-3">
+            
             @RenderBody()
         </main>
     </div>
