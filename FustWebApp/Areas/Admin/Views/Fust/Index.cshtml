@@ -20,52 +20,58 @@
 			<h4 class="text-sm-center">Fust Items</h4>
 			<a class="btn btn-outline-primary shadow" href="Fust/Add">Add Fust Item</a><br />
 			<input class="mt-2 shadow" id="fustItemsSearch" onkeyup='filterTable("fustItemsSearch")' placeholder="Search Items" type="text" />
-			<table class="table table-hover mt-1 w-100 shadow" id="fustItems">
-				<thead class="table-dark justify-content-center sticky-top">
-					<tr>
-						<th>Name</th>
-						<th>Type</th>
-						<th>Amount Per Pallet</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var item in Model)
-					{
+			<div class="row  overflow-auto shadow mb-2 " style="display:block;height:100vh;scrollbar-width:thin;">
+
+				<table class="table table-hover mt-1 w-100" id="fustItems">
+					<thead class="table-dark justify-content-center sticky-top">
 						<tr>
-							<td>@item.FustName</td>
-							<td>@item.FustType.FustTypeName</td>
-							<td>@item.FustAmountPerPallet</td>
-							<td><a class="btn btn-sm btn-outline-primary shadow" href="Fust/View/@item.Id">View</a></td>
+							<th>Name</th>
+							<th>Type</th>
+							<th>Amount Per Pallet</th>
+							<th></th>
 						</tr>
-					}
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						@foreach (var item in Model)
+						{
+							<tr>
+								<td>@item.FustName</td>
+								<td>@item.FustType.FustTypeName</td>
+								<td>@item.FustAmountPerPallet</td>
+								<td><a class="btn btn-sm btn-outline-primary shadow" href="Fust/View/@item.Id">View</a></td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
 		</div>
 
 		<div class="col-md-5">
+
 			<h4 class="text-sm-center">Fust Types</h4>
 			<a class="btn btn-outline-primary shadow" href="Fust/AddFustType">Add Fust Type</a><br />
 			<input class="mt-2 shadow" id="fustTypesSearch" onkeyup='filterTable("fustTypesSearch")' placeholder="Search Items" type="text" />
-			<table class="table table-hover mt-1 shadow" id="fustTypes">
-				<thead class="table-dark justify-content-center sticky-top">
-					<tr>
-						<th>Type</th>
-						<th>Comment</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach (var fusType in ViewBag.FustTypes)
-					{
+			<div class="row  overflow-auto shadow mb-2 ms-2 me-2" style="display:block;height:100vh;scrollbar-width:thin;">
+				<table class="table table-hover mt-1" id="fustTypes">
+					<thead class="table-dark justify-content-center sticky-top">
 						<tr>
-							<td>@fusType.FustTypeName</td>
-							<td>@fusType.Comment</td>
-							<td><a class="btn btn-sm btn-outline-primary shadow" href="Fust/ViewFustType/@fusType.FustTypeId">View</a></td>
+							<th>Type</th>
+							<th>Comment</th>
+							<th></th>
 						</tr>
-					}
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						@foreach (var fusType in ViewBag.FustTypes)
+						{
+							<tr>
+								<td>@fusType.FustTypeName</td>
+								<td>@fusType.Comment</td>
+								<td><a class="btn btn-sm btn-outline-primary shadow" href="Fust/ViewFustType/@fusType.FustTypeId">View</a></td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>
@@ -86,7 +92,7 @@
 				tablename = "fustItems";
 			}
 			else if (inputVariable == "fustTypesSearch") {
-				tablename="fustTypes";
+				tablename = "fustTypes";
 			}
 
 

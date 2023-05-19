@@ -4,41 +4,46 @@
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<input class="mb-2 shadow" id="loadSearch" onkeyup="filterTable()" placeholder="Search Fust Items" type="text" />
-<table class="table shadow" id="Table">
-	<thead class="table-dark sticky-top">
-		<tr>
-			<th>Fust Type</th>
-			<th>Fust Item</th>
-			<th>Balance</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in ViewBag.StockHoldingList as IEnumerable<StockholdingViewModel>)
-		{
-			var status = string.Empty;
 
-			if (item.StockHoldingQty > 0)
-			{
-				status = "positive";
-			}
-			else if (item.StockHoldingQty == 0)
-			{
-				status = "zero";
-			}
-			else
-			{
-				status = "negative";
-			}
-
-			<tr class="status" data-status="@status">
-				<td>@item.StockHoldingFustItems.FustType.FustTypeName</td>
-				<td>@item.StockHoldingFustItems.FustName</td>
-				<td>@item.StockHoldingQty</td>
+<div class="container">
+	<input class="mb-2 shadow" id="loadSearch" onkeyup="filterTable()" placeholder="Search Fust Items" type="text" />
+	<div class="row overflow-auto shadow" style="scrollbar-width:thin;height:100vh;display:block;">
+	<table class="table" id="Table">
+		<thead class="table-dark sticky-top">
+			<tr>
+				<th>Fust Type</th>
+				<th>Fust Item</th>
+				<th>Balance</th>
 			</tr>
-		}
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			@foreach (var item in ViewBag.StockHoldingList as IEnumerable<StockholdingViewModel>)
+			{
+				var status = string.Empty;
+
+				if (item.StockHoldingQty > 0)
+				{
+					status = "positive";
+				}
+				else if (item.StockHoldingQty == 0)
+				{
+					status = "zero";
+				}
+				else
+				{
+					status = "negative";
+				}
+
+				<tr class="status" data-status="@status">
+					<td>@item.StockHoldingFustItems.FustType.FustTypeName</td>
+					<td>@item.StockHoldingFustItems.FustName</td>
+					<td>@item.StockHoldingQty</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	</div>
+</div>
 
 @section Scripts{
 

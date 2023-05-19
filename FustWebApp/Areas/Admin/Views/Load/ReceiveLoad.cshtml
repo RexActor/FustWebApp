@@ -10,11 +10,15 @@
 	@Html.HiddenFor(model=>model.LoadDate)
 	<div class="d-flex flex-row flex-row-reverse mb-3">
 		<div class="mx-2">
+			<a class="btn btn-sm btn-outline-dark shadow" asp-area="Admin" asp-controller="Load" asp-action="Index">Back</a>
+		</div>
+		<div class="mx-2">
 			@if (!User.IsInRole("Operations"))
 			{
 				<a class="btn btn-outline-success btn-sm shadow" href="../EditLoad/@Model.LoadId">Edit Load</a>
 			}
 		</div>
+
 		<div class="mx-2">
 			<input type="submit" class="btn btn-outline-danger btn-sm shadow" value="Save Load">
 		</div>

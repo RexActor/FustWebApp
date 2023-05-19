@@ -190,102 +190,110 @@
 
 @if (ViewBag.SupplierLoads != null && editSupplier == false)
 {
-	<div class="container mt-5 mb-3 align-items-xxl-center w-50 text-sm-center">
+
+	<div class="container mt-5 mb-3 mw-100 text-sm-center">
 		<h2>@Model.SupplierName Load list</h2>
-	</div>
-	<table class="table shadow">
-		<thead class="table-dark text-sm-center  sticky-top">
-			<tr>
-				<th>Load Id</th>
-				<th>Load Type</th>
-				<th>Date</th>
-				<th>Group</th>
-				<th>Trailer Number</th>
-				<th>Comment</th>
-				<th>Created Date</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody class="text-sm-center">
-			@if (ViewBag.SupplierLoads.Count > 0)
-			{
-				@foreach (var item in ViewBag.SupplierLoads as IEnumerable<Loads>)
-				{
+		<div class="row shadow overflow-auto" style="display:block;scrollbar-width:thin;height:50vh;">
+			<table class="table">
+				<thead class="table-dark text-sm-center  sticky-top">
 					<tr>
-						<td>@item.LoadId</td>
-						<td>@item.LoadType</td>
-						<td>@item.LoadDate.ToShortDateString()</td>
-						<td>@item.LoadGroup</td>
-						<td>@item.LoadTrailerNumber</td>
-						<td>@item.LoadComment</td>
-						<td>@item.CreatedDate</td>
-						<td><a class="btn btn-sm btn-outline-primary shadow" href="~/Admin/Load/ViewLoad/@item.LoadId">View</a></td>
+						<th>Load Id</th>
+						<th>Load Type</th>
+						<th>Date</th>
+						<th>Group</th>
+						<th>Trailer Number</th>
+						<th>Comment</th>
+						<th>Created Date</th>
+						<th></th>
 					</tr>
-				}
-			}
-			else
-			{
-				<tr>
-					<td colspan="7" class="text-muted"><h4>No Loads Available for this supplier</h4></td>
-				</tr>
-			}
-		</tbody>
-	</table>
+				</thead>
+				<tbody class="text-sm-center">
+					@if (ViewBag.SupplierLoads.Count > 0)
+					{
+						@foreach (var item in ViewBag.SupplierLoads as IEnumerable<Loads>)
+						{
+							<tr>
+								<td>@item.LoadId</td>
+								<td>@item.LoadType</td>
+								<td>@item.LoadDate.ToShortDateString()</td>
+								<td>@item.LoadGroup</td>
+								<td>@item.LoadTrailerNumber</td>
+								<td>@item.LoadComment</td>
+								<td>@item.CreatedDate</td>
+								<td><a class="btn btn-sm btn-outline-primary shadow" href="~/Admin/Load/ViewLoad/@item.LoadId">View</a></td>
+							</tr>
+						}
+					}
+					else
+					{
+						<tr>
+							<td colspan="7" class="text-muted"><h4>No Loads Available for this supplier</h4></td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
 }
-<div class="container mt-5 mb-3 align-items-xxl-center w-50 text-sm-center">
+
+
+<div class="container mt-5 mb-3 mw-100 text-sm-center">
 	<h2>@Model.SupplierName Stockholding</h2>
-</div>
-<table class="table shadow">
-	<thead class="table-dark sticky-top">
-		<tr>
-			<th>ID</th>
-			<th>Fust Item</th>
-			<th>Fust Type</th>
-			<th>Stock Holding</th>
-			<th>Storage Quantity</th>
-			<th>Supplier</th>
-			<th>Date</th>
-			<th>Currency</th>
-			<th>Base Value</th>
-			<th>Total Value</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in ViewBag.StockHoldingList as IEnumerable<StockHolding>)
-		{
-			if (Model.FustTypeList.Contains(item.StockHoldingFustItems.FustType.FustTypeName))
-			{
-				var status = string.Empty;
-				RegionInfo region = new RegionInfo(item.StockHoldingSupplier.Currency.currencyCountryCode);
-				var fustItemValue = item.baseValue * item.StockHoldingQty;
 
-				if (@item.StockHoldingQty < 0)
-				{
-					status = "negative";
-				}
-				else if (item.StockHoldingQty == 0)
-				{
-					status = "zero";
-				}
-				else
-				{
-					status = "positive";
-				}
-
-				<tr class="status" data-status=@status>
-					<td>@item.StockHoldingId</td>
-					<td>@item.StockHoldingFustItems.FustName</td>
-					<td>@item.StockHoldingFustItems.FustType.FustTypeName</td>
-					<td>@item.StockHoldingQty</td>
-					<td>@item.StorageQuantity</td>
-					<td>@item.StockHoldingSupplier.SupplierName</td>
-					<td>@item.StockholdingDate.ToShortDateString()</td>
-					<td>@item.StockHoldingSupplier.Currency.currencyAbrevation</td>
-
-					<td>@region.CurrencySymbol @item.baseValue</td>
-					<td>@region.CurrencySymbol @fustItemValue</td>
+	<div class="row shadow overflow-auto" style="scrollbar-width:thin;display:block;height:100vh;">
+		<table class="table">
+			<thead class="table-dark sticky-top">
+				<tr>
+					<th>ID</th>
+					<th>Fust Item</th>
+					<th>Fust Type</th>
+					<th>Stock Holding</th>
+					<th>Storage Quantity</th>
+					<th>Supplier</th>
+					<th>Date</th>
+					<th>Currency</th>
+					<th>Base Value</th>
+					<th>Total Value</th>
 				</tr>
-			}
-		}
-	</tbody>
-</table>
+			</thead>
+			<tbody>
+				@foreach (var item in ViewBag.StockHoldingList as IEnumerable<StockHolding>)
+				{
+					if (Model.FustTypeList.Contains(item.StockHoldingFustItems.FustType.FustTypeName))
+					{
+						var status = string.Empty;
+						RegionInfo region = new RegionInfo(item.StockHoldingSupplier.Currency.currencyCountryCode);
+						var fustItemValue = item.baseValue * item.StockHoldingQty;
+
+						if (@item.StockHoldingQty < 0)
+						{
+							status = "negative";
+						}
+						else if (item.StockHoldingQty == 0)
+						{
+							status = "zero";
+						}
+						else
+						{
+							status = "positive";
+						}
+
+						<tr class="status" data-status=@status>
+							<td>@item.StockHoldingId</td>
+							<td>@item.StockHoldingFustItems.FustName</td>
+							<td>@item.StockHoldingFustItems.FustType.FustTypeName</td>
+							<td>@item.StockHoldingQty</td>
+							<td>@item.StorageQuantity</td>
+							<td>@item.StockHoldingSupplier.SupplierName</td>
+							<td>@item.StockholdingDate.ToShortDateString()</td>
+							<td>@item.StockHoldingSupplier.Currency.currencyAbrevation</td>
+
+							<td>@region.CurrencySymbol @item.baseValue</td>
+							<td>@region.CurrencySymbol @fustItemValue</td>
+						</tr>
+					}
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

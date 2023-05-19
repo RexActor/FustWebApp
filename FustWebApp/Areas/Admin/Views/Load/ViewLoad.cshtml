@@ -8,7 +8,9 @@
 }
 
 <div class="d-flex flex-row flex-row-reverse mb-3">
-
+	<div class="mx-2">
+		<a class="btn btn-sm btn-outline-dark shadow" asp-area="Admin" asp-controller="Load" asp-action="Index">Back</a>
+	</div>
 	@if (User.IsInRole("Admin") || User.IsInRole("Fust") || User.IsInRole("Operations"))
 	{
 		<div class="mx-2">
@@ -35,9 +37,7 @@
 		</div>
 	}
 
-	<div class="mx-2">
-		<a class="btn btn-sm btn-outline-dark shadow" asp-area="Admin" asp-controller="Load" asp-action="Index">Back</a>
-	</div>
+	
 
 </div>
 
@@ -137,8 +137,9 @@
 	</div>
 </div>
 
+<div class="container mw-100 overflow-auto shadow" style="display:block;scrollbar-width:thin;height:100vh;">
 
-<table class="table text-sm-center shadow">
+<table class="table text-sm-center">
 	<thead class="table-dark sticky-top">
 		<tr>
 			<th hidden>Fust Item Id</th>
@@ -185,3 +186,4 @@
 		}
 	</tbody>
 </table>
+</div>

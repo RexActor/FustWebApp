@@ -4,69 +4,82 @@
 @{
 	ViewData["Title"] = "Fust Item Base Values";
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	string currentSupplier = string.Empty;
 }
 
-<input class="shadow mb-2" id="search" onkeyup="filterTable()" placeholder="search Supplier" />
-<table class="table shadow table-hover text-sm-center" id="baseValueTable">
-	<thead class="table-dark sticky-top">
-		<tr>
+<div class="container mw-100">
+	<input class="shadow mb-2" id="search" onkeyup="filterTable()" placeholder="search Supplier" />
+	<div class="row overflow-auto shadow" style="scrollbar-width:thin;display:block;height:100vh;">
+		<table class="table table-hover text-sm-center" id="baseValueTable">
+			<thead class="table-dark sticky-top">
+				<tr>
+					<th>Supplier</th>
+										<th>
+						@Html.DisplayNameFor(model => model.StockHoldingSupplier.SupplierOrigin)
+					</th>
+					<th>
+						@Html.DisplayNameFor(model => model.StockHoldingSupplier.SupplierGroup)
+					</th>
+					<th>Fust Type</th>
+					<th>Fust Item</th>
+					<th>Currency</th>
+					<th>
+						@Html.DisplayNameFor(model => model.StockHoldingFustItems.baseValue)
+					</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
 
-			<th>Supplier Name</th>
-			<th>
-				@Html.DisplayNameFor(model => model.StockHoldingSupplier.SupplierOrigin)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.StockHoldingSupplier.SupplierGroup)
-			</th>
-			<th>Fust Type</th>
-			<th>Fust Item</th>
-			<th>Currency</th>
-			<th>
-				@Html.DisplayNameFor(model => model.StockHoldingFustItems.baseValue)
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model)
-		{
-			RegionInfo region = new RegionInfo(item.StockHoldingSupplier.Currency.currencyCountryCode);
-			<tr>
-
-				<td>
-					<a class=" btn btn-sm btn-outline-success shadow" title="Will open All stockholding list for @item.StockHoldingSupplier.SupplierName" asp-controller="Fust" asp-area="Admin" asp-action="ViewSupplier" asp-route-SupplierId="@item.StockHoldingSupplier.Id">
+					if (currentSupplier != item.StockHoldingSupplier.SupplierName)
+					{
+						@:</tr><tr class="bg-light text-black fs-1 fw-bolder"><td colspan="8">
 						@Html.DisplayFor(modelItem => item.StockHoldingSupplier.SupplierName)
-					</a>
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.StockHoldingSupplier.SupplierOrigin)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.StockHoldingSupplier.SupplierGroup)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.StockHoldingFustItems.FustType.FustTypeName)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.StockHoldingFustItems.FustName)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.StockHoldingSupplier.Currency.currencyAbrevation)
-				</td>
-				<td>
-					@region.CurrencySymbol
-					@Html.DisplayFor(modelItem => item.baseValue)
-				</td>
-				<td>
-					<a class="btn btn-sm btn-outline-danger shadow" asp-controller="Fust" asp-area="Admin" asp-action="Edit" asp-route-SupplierId="@item.StockHoldingSupplier.Id" asp-route-StockHoldingId="@item.StockHoldingId">Edit</a> |
-					<a class="btn btn-sm btn-outline-primary shadow" asp-controller="Fust" asp-area="Admin" asp-action="Details" asp-route-SupplierId="@item.StockHoldingSupplier.Id" asp-route-StockHoldingId="@item.StockHoldingId">Details</a>
+						@:</td></tr>
 
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
+						currentSupplier = item.StockHoldingSupplier.SupplierName;
+					}
 
+					RegionInfo region = new RegionInfo(item.StockHoldingSupplier.Currency.currencyCountryCode);
+					<tr>
+						<td>
+							<a class=" btn btn-sm btn-outline-primary shadow" title="Will open All stockholding list for @item.StockHoldingSupplier.SupplierName" asp-controller="Fust" asp-area="Admin" asp-action="ViewSupplier" asp-route-SupplierId="@item.StockHoldingSupplier.Id">
+								@Html.DisplayFor(modelItem => item.StockHoldingSupplier.SupplierName)
+							</a>
+						</td>
+					
+						<td>
+							@Html.DisplayFor(modelItem => item.StockHoldingSupplier.SupplierOrigin)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.StockHoldingSupplier.SupplierGroup)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.StockHoldingFustItems.FustType.FustTypeName)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.StockHoldingFustItems.FustName)
+						</td>
+						<td>
+							@Html.DisplayFor(modelItem => item.StockHoldingSupplier.Currency.currencyAbrevation)
+						</td>
+						<td>
+							@region.CurrencySymbol
+							@Html.DisplayFor(modelItem => item.baseValue)
+						</td>
+						<td>
+							<a class="btn btn-sm btn-outline-danger shadow" asp-controller="Fust" asp-area="Admin" asp-action="Edit" asp-route-SupplierId="@item.StockHoldingSupplier.Id" asp-route-StockHoldingId="@item.StockHoldingId">Edit</a> |
+							<a class="btn btn-sm btn-outline-primary shadow" asp-controller="Fust" asp-area="Admin" asp-action="Details" asp-route-SupplierId="@item.StockHoldingSupplier.Id" asp-route-StockHoldingId="@item.StockHoldingId">Details</a>
+
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
 
 @section Scripts{
 	<script type="text/javascript">

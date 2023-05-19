@@ -5,44 +5,49 @@
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<a class="btn btn-outline-primary btn-sm mb-2 shadow" asp-controller="Currency" asp-action="AddCurrency">Add Currency</a>
-<br />
-<input id="search" class="shadow mb-2" onkeyup="searchItem()" placeholder="search" type="text" />
 
-<table class="table table-hover shadow" id="currencyTable">
-	<thead class="table-dark sticky-top">
-		<tr>
-			<th>ID</th>
-			<th>Currency Name</th>
-			<th>Abrevation</th>
-			<th>Target Name</th>
-			<th>Target Abrevation</th>
-			<th>Exchange Rate</th>
-			<th>Year</th>
-			<th></th>
-		</tr>
-	</thead>
+<div class="container">
 
-	<tbody>
-		@foreach (var currency in Model)
-		{
-			<tr>
-				<td>@currency.currencyId</td>
-				<td>@currency.currencyName</td>
-				<td>@currency.currencyAbrevation</td>
-				<td>@currency.currencyTargetName</td>
-				<td>@currency.currencyTargetNameAbrevation</td>
-				<td>@currency.currencyExchangeRate</td>
-				<td>@currency.exchangeRateYear</td>
-				<td>
-					<a class="btn btn-sm btn-outline-primary shadow" asp-area="Admin" asp-controller="Currency" asp-action="View" asp-route-id="@currency.currencyId">View</a>
-					<a class="btn btn-sm btn-outline-danger shadow" asp-area="Admin" asp-controller="Currency" asp-action="Edit" asp-route-id="@currency.currencyId">Edit</a>
-					<a class="btn btn-sm btn-outline-dark shadow" asp-area="Admin" asp-controller="Currency" asp-action="Delete" asp-route-id="@currency.currencyId">Delete</a>
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
+	<a class="btn btn-outline-primary btn-sm mb-2 shadow" asp-controller="Currency" asp-action="AddCurrency">Add Currency</a>
+	<br />
+	<input id="search" class="shadow mb-2" onkeyup="searchItem()" placeholder="search" type="text" />
+	<div class="row shadow overflow-auto" style="scrollbar-width:thin;display:block;height:100vh;">
+		<table class="table table-hover mt-2" id="currencyTable">
+			<thead class="table-dark sticky-top">
+				<tr>
+					<th>ID</th>
+					<th>Currency Name</th>
+					<th>Abrevation</th>
+					<th>Target Name</th>
+					<th>Target Abrevation</th>
+					<th>Exchange Rate</th>
+					<th>Year</th>
+					<th></th>
+				</tr>
+			</thead>
+
+			<tbody>
+				@foreach (var currency in Model)
+				{
+					<tr>
+						<td>@currency.currencyId</td>
+						<td>@currency.currencyName</td>
+						<td>@currency.currencyAbrevation</td>
+						<td>@currency.currencyTargetName</td>
+						<td>@currency.currencyTargetNameAbrevation</td>
+						<td>@currency.currencyExchangeRate</td>
+						<td>@currency.exchangeRateYear</td>
+						<td>
+							<a class="btn btn-sm btn-outline-primary shadow" asp-area="Admin" asp-controller="Currency" asp-action="View" asp-route-id="@currency.currencyId">View</a>
+							<a class="btn btn-sm btn-outline-danger shadow" asp-area="Admin" asp-controller="Currency" asp-action="Edit" asp-route-id="@currency.currencyId">Edit</a>
+							<a class="btn btn-sm btn-outline-dark shadow" asp-area="Admin" asp-controller="Currency" asp-action="Delete" asp-route-id="@currency.currencyId">Delete</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
 
 @section Scripts{
 

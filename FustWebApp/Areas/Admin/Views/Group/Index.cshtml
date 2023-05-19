@@ -6,29 +6,36 @@
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<a href="Group/Add" class="btn btn-outline-primary mb-2 shadow">Add Group</a>
+
 @if (@ViewBag.Message != null)
 {
 	<div class="@ViewBag.Style  text-sm-center mb-1 py-1"><h4>@ViewBag.Message</h4></div>
 }
-<table class="table table-hover mt-2 shadow">
-	<thead class="table-dark justify-content-center">
-		<tr>
-			<th>Group</th>
-			<th>Comment</th>
-			<th></th>
-		</tr>
-	</thead>
 
-	<tbody>
-		@foreach (var item in Model)
-		{
-			<tr>
-				<td>@item.GroupName</td>
-				<td>@item.GroupComment</td>
-				<td><a class="btn btn-sm btn-outline-primary shadow" href="Group/View/@item.Id">Edit</a></td>
-			</tr>
-		}
-	</tbody>
-</table>
+<div class="container">
+	<a href="Group/Add" class="btn btn-outline-primary mb-2 shadow">Add Group</a>
+	<div class="row shadow mt-2 overflow-auto" style="scrollbar-width:thin;display:block;height:100vh;">
 
+		<table class="table table-hover">
+			<thead class="table-dark justify-content-center">
+				<tr>
+					<th>Group</th>
+					<th>Comment</th>
+					<th></th>
+				</tr>
+			</thead>
+
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>@item.GroupName</td>
+						<td>@item.GroupComment</td>
+						<td><a class="btn btn-sm btn-outline-primary shadow" href="Group/View/@item.Id">Edit</a></td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+</div>

@@ -6,21 +6,38 @@
 	var loadList = ViewBag.InboundList as IEnumerable<Loads>;
 	TimeSpan daysAhead = new TimeSpan(0);
 }
+@{
+	DateTime getDate = DateTime.Now;
+	var firstDayOfMonth = new DateTime(getDate.Year, getDate.Month, 1);
+	DateTime startDate = firstDayOfMonth.AddDays(-(int)firstDayOfMonth.DayOfWeek);
+	List<DateTime> inboundDates = new List<DateTime>();
+	@foreach (var load in loadList)
+	{
+
+		if (!inboundDates.Contains(load.LoadDate.Date))
+		{
+			inboundDates.Add(load.LoadDate.Date);
+		}
+	}
+}
+
 
 <div class="container mw-100">
 	<div class="row">
-		<div class="col-md-2">
-			<div class="row text-sm-center mt-2">
-				<H3><span style="font-weight:bold;">Stockholding</span></H3>
-				<table class="table shadow">
-					<thead class="table-dark  sticky-top">
+		<div class="col-md-2 ms-1 mt-1">
+			<H3 class="text-sm-center w-100 text-lg-center mb-5 mt-2"><span style="font-weight:bold;">Stockholding</span></H3>
+			<div class="row text-sm-center shadow overflow-auto" style="scrollbar-width:thin;height:100vh;display:block;">
+
+				
+				<table class="table">
+					<thead class="table-dark sticky-top">
 						<tr>
 							<th>Fust Type</th>
 							<th>Fust Item</th>
 							<th>Balance</th>
 						</tr>
 					</thead>
-					<tbody style="font-size:90%">
+					<tbody style="font-size:80%">
 						@foreach (var item in ViewBag.StockHoldingList as IEnumerable<StockholdingViewModel>)
 						{
 							var status = string.Empty;
@@ -50,14 +67,14 @@
 			</div>
 
 		</div>
-		<div class="col-md-10 w-75 ms-5">
-
-			<div class="row text-sm-center mt-2">
-				<h3 class="w-100 text-lg-center mb-3 mt-3" style=" font-weight:bold;">Loads</h3>
-				<div class="d-flex flex-row-reverse">
+		<div class="col-md-8 ms-4">
+			<h3 class="w-100 text-lg-center mb-2 mt-1" style=" font-weight:bold;">Loads</h3>
+			<div class="d-flex flex-row-reverse">
 					<input class="form-control mb-2 shadow " type="date" id="date" name="date" style="width:200px;" onchange="filterTalbe('date')" />
 				</div>
-				<table class="table table-hover shadow" id="loads">
+			<div class="row text-sm-center mt-2 shadow overflow-auto"style="scrollbar-width:thin; height:100vh;display:block;">
+				
+				<table class="table table-hover  " id="loads">
 					<thead class="table-dark text-sm-center font-monospace h6 sticky-top">
 						<tr>
 							<th>Load Type</th>
@@ -81,6 +98,9 @@
 						{
 							@foreach (var load in loadList)
 							{
+
+
+
 								<tr>
 									<td>@load.LoadType</td>
 									<td>@load.LoadSupplier</td>
@@ -98,8 +118,65 @@
 			</div>
 
 		</div>
+
+		<div class="col-md-1 ms-3">
+			<div class="row">
+				<table class="table table-bordered shadow text-sm-center" style="width:1%;height:1%; margin-top:100px;">
+					<thead  class="text-sm-center">
+						<tr class="calendarTitle">
+							<th colspan="7">@getDate.ToString("MMM")</th>
+						</tr>
+					</thead>
+	
+					<tbody>
+						<tr>
+							@for(int i = 0; i < 42; i++)
+							{
+								DateTime date = startDate.AddDays(i);
+								if(i%7==0 && i > 0)
+								{
+									@:</tr><tr>
+								}
+								if (date.Month == getDate.Month)
+								{
+										if (inboundDates.Contains(date))
+										{
+											<td class="loadExists" title="Expected loads: @loadList.Count(item=>item.LoadDate==date)"><a class="link-danger" asp-area="Admin" asp-controller="Load" asp-action="ViewLoads" asp-route-date="@date.Date.ToShortDateString()">@date.Day</a></td>
+										}
+										else
+										{
+											<td class="current">@date.Day</td>
+										}
+						
+								}
+								else
+								{
+										if (inboundDates.Contains(date))
+										{
+											<td class="loadExists" title="Expected loads: @loadList.Count(item=>item.LoadDate==date)"><a class="link-danger" asp-area="Admin" asp-controller="Load" asp-action="ViewLoads" asp-route-date="@date.Date.ToShortDateString()">@date.Day</a></td>
+										}
+										else
+										{
+											<td class="other">@date.Day</td>
+										}
+						
+								}
+				
+							}
+						</tr>
+
+	
+					</tbody>
+			</table>
+		<label class="loadExistsLabel">Load Exists</label>
+		
+		</div>
+		</div>
 	</div>
 </div>
+
+
+
 
 @section Scripts{
 

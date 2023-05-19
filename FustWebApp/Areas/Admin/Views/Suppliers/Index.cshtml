@@ -1,5 +1,5 @@
 ﻿@model List<FustWebApp.Models.Domain.Supplier>
-
+@inject FustWebApp.Data.ApplicationDbContext applicationDbContext;
 
 
 @{
@@ -13,39 +13,54 @@
 {
 	<div class="@ViewBag.Style  text-sm-center mb-1 py-1"><h4>@ViewBag.Message</h4></div>
 }
+<div class="container mw-100">
+	<input class="mb-2 shadow" id="searchInput" onkeyup="filterTable()" placeholder="Search " type="text" />
+	<div class="row overflow-auto shadow" style="scrollbar-width:thin;display:block;height:100vh;">
+		<table class="table table-hover mt-0 text-sm-center" id="Table">
+			<thead class="table-dark justify-content-center sticky-top">
+				<tr>
+					<th>Supplier Name </th>
+					<th>Origin</th>
+					<th>Group</th>
+					<th>Fust Type</th>
+					<th>Address</th>
+					<th>Total Loads</th>
+					<th></th>
+				</tr>
+			</thead>
 
-<input class="mb-2 shadow" id="searchInput" onkeyup="filterTable()" placeholder="Search " type="text" />
-<table class="table table-hover mt-0 shadow" id="Table">
-	<thead class="table-dark justify-content-center">
-		<tr>
-			<th>Supplier Name </th>
-			<th>Origin</th>
-			<th>Group</th>
-			<th>Fust Type</th>
-			<th>Address</th>
-			<th></th>
-		</tr>
-	</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>@item.SupplierName</td>
+						<td>@item.SupplierOrigin</td>
+						<td>@item.SupplierGroup</td>
+						<td>@item.FustTypeList.Replace(",",", ")</td>
+						<td>@item.SupplierAddress</td>
 
-	<tbody>
-		@foreach (var item in Model)
-		{
-			<tr>
-				<td>@item.SupplierName</td>
-				<td>@item.SupplierOrigin</td>
-				<td>@item.SupplierGroup</td>
-				<td>@item.FustTypeList.Replace(",",", ")</td>
-				<td>@item.SupplierAddress</td>
-				<td>
-					<a class="btn btn-sm btn-outline-primary shadow" href="Suppliers/View/@item.Id">View</a>
-					<a class="btn btn-sm btn-outline-danger shadow" href="Suppliers/View/@item.Id?editSupplier=true">Edit</a>
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
-
-@section Scripts{
+						@if (applicationDbContext.Loads.Where(load => load.LoadSupplier == item.SupplierName).Count() > 0)
+						{
+							@:<td style="font-size:small;">
+							@:	Inbound: <span style="font-weight:bold">@applicationDbContext.Loads.Where(load=>load.LoadSupplier==item.SupplierName).Where(load=>load.LoadType=="Inbound").Count()</span><br />
+							@:	Outbound: <span style="font-weight:bold"> @applicationDbContext.Loads.Where(load=>load.LoadSupplier==item.SupplierName).Where(load=>load.LoadType=="Outbound").Count()</span>
+							@:</td>
+							
+						}
+						else{
+							@:<td> <span class="text-danger">No Loads</span></td>
+						}
+						<td>
+							<a class="btn btn-sm btn-outline-primary shadow" href="Suppliers/View/@item.Id">View</a>
+							<a class="btn btn-sm btn-outline-danger shadow" href="Suppliers/View/@item.Id?editSupplier=true">Edit</a>
+							</td>
+						</tr>
+						}
+				</tbody>
+			</table>
+		</div>
+	</div>
+					@section Scripts{
 
 
 	<script type="text/javascript">

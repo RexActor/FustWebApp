@@ -47,7 +47,7 @@ namespace FustWebApp.Data
 
 		public DbSet<FustWebApp.Models.Domain.Audit> AuditLogs { get; set; }
 
-		public virtual async Task<int> SaveChangesAsync(string userId = null)
+		public virtual async Task<int> SaveChangesAsync(string userId)
 		{
 			OnBeforeSaveChanges(userId);
 			var result = await base.SaveChangesAsync();

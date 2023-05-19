@@ -9,3 +9,32 @@
 .status[data-status="zero"] {
     background-color: rgba(244, 221, 199,0.2)
 }
+.calendarTitle {
+    background-color: rgba(23, 41, 21,0.2);
+    font-weight:bolder;
+    font-size:large;
+   
+}
+.current {
+    background-color: rgba(99, 180, 91,0.2);
+}
+.other {
+    background-color: rgba(128, 128, 128,0.2);
+}
+.loadExists {
+    background-color: rgba(246, 127, 7,0.2);
+}
+.loadExistsDifferentMonth {
+    background: #D8D8F3;
+}
+.loadExistsLabel {
+    background-color: rgba(246, 127, 7,0.2);
+    margin:5px;
+    width:auto;
+    height:30px;
+    text-align:center;
+    display:flex;
+    align-items:center;
+    font-size:small;
+    border: none;
+}

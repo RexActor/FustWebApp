@@ -7,12 +7,18 @@
 
 }
 
-<h2>
-	View Fust Items for <span class="fw-bold fs-1 text-decoration-underline">@Model.FirstOrDefault().StockHoldingSupplier.SupplierName </span>
+<div class="d-flex flex-row flex-row-reverse">
 
-	
-	<a class="btn mx-3 btn-sm btn-outline-secondary shadow" asp-controller="Fust" asp-action="ViewSupplier" asp-route-SupplierId="@Model.FirstOrDefault().StockHoldingSupplier.Id">Back</a>
-</h2>
+	<div class="mx-2">
+		<a class="btn btn-sm btn-outline-dark shadow mt-3" asp-controller="Fust" asp-action="ViewSupplier" asp-route-SupplierId="@Model.FirstOrDefault().StockHoldingSupplier.Id">Back</a>
+	</div>
+
+	<div class="flex-row-reverse w-100 text-sm-center">
+		<span class="fs-2">
+			Edit Fust Items for <span class="fw-bold fs-2 text-decoration-underline">@Model.FirstOrDefault().StockHoldingSupplier.SupplierName </span>
+		</span>
+	</div>
+</div>
 
 
 

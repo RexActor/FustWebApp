@@ -28,6 +28,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 			viewModel = await applicationDbContext.Loads.OrderBy(item => item.LoadType).ThenByDescending(item => item.LoadDate).ToListAsync();
 			List<LoadFusts> fustItemsList = new List<LoadFusts>();
 
+			/*
 			foreach (var item in viewModel)
 			{
 
@@ -46,9 +47,18 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 			}
 
-			ViewBag.FustItems = fustItemsList;
+			ViewBag.FustItems = fustItemsList;*/
+
 			return View(viewModel);
 		}
+		[HttpGet]
+		public async Task<IActionResult>ViewLoads(string date)
+		{
+			List<Loads> viewModel = new List<Loads>();
+			viewModel = applicationDbContext.Loads.AsEnumerable().OrderBy(item=>item.LoadType).ThenByDescending(item=>item.LoadDate).Where(item=>item.LoadDate.ToShortDateString()==date).ToList();
+			return View(viewModel);
+		}
+
 
 		[Authorize(Roles = "Admin,Fust")]
 		[HttpGet]
