@@ -1,0 +1,101 @@
+﻿@*protected global::System.Web.UI.DataVisualization.Charting.Chart Chart;*@
+@using FustWebApp.Models;
+@{
+	ViewData["Title"] = "Statistics";
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	var InboundconvertedList = (List<DataPoint>)@ViewBag.LoadsStats;
+
+}
+
+
+
+
+
+<div class="container shadow bg-white">
+	<div class="row">
+		<div class=" w-50 shadow ms-5 mt-2 mb-2">
+			<canvas id="inbound-chart" width="100" height="100"></canvas>
+		</div>
+		<div class=" w-50 shadow ms-5 mt-2 mb-2">
+			<canvas id="bar-chart" width="100" height="100"></canvas>
+		</div>
+
+	</div>
+</div>
+@section Scripts{
+
+	<script src="~/lib/chartjs/dist/chart.umd.js"></script>
+
+
+	<script type="text/javascript">
+
+		var labelArray = []
+		var dataArray=[]
+	
+	
+		
+		@for (int i = 0; i < InboundconvertedList.Count; i++)
+		{
+
+
+			@:dataArray.push(["@InboundconvertedList[i].chartvalue"])
+			@:labelArray.push("@InboundconvertedList[i].chartlabel")
+			
+		}
+
+										 var lineChartData = {
+			labels: [],
+			datasets: []
+		},
+			array = [
+				"[0,0,0,0,0,0,0,0,0,0,0,0,0,58,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
+				"[0,0,53,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
+				"[0,0,381,0,0,649,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]"
+			];
+		
+		
+
+	labelArray.forEach(function(a,i){
+		lineChartData.labels.push(a)
+	})
+
+		dataArray.forEach(function (a, i) {
+			lineChartData.datasets.push({
+				label: labelArray[i],
+				fillColor: 'rgba(220,220,220,0.2)',
+				strokeColor: 'rgba(220,220,220,1)',
+				pointColor: 'rgba(220,220,220,1)',
+				pointStrokeColor: '#fff',
+				pointHighlightFill: '#fff',
+				pointHighlightStroke:
+					'rgba(220,220,220,1)',
+				data: JSON.parse(i)
+			});
+		});
+
+		// Bar chart
+		var barChart = new Chart(document.getElementById("inbound-chart"), {
+			type: 'bar',
+
+
+
+			data: {
+				labels: lineChartData.labels,
+				datasets: lineChartData.datasets
+			},
+
+
+
+			options: {
+				legend: { display: false },
+				title: {
+					display: true,
+					text: 'Loads'
+				}
+			}
+		});
+
+	</script>
+
+
+	}

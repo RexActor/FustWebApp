@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Audit.EntityFramework.Core" Version="21.0.0" />
     <PackageReference Include="Audit.NET" Version="21.0.0" />
+    <PackageReference Include="Chart.js" Version="3.7.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.15" />
@@ -27,6 +28,12 @@
     <Folder Include="Migrations\" />
     <Folder Include="Models\Types\" />
     <Folder Include="ErrorPages\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Web.DataVisualization">
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\System.Web.DataVisualization.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
