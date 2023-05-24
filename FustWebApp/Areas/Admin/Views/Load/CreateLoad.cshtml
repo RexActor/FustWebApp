@@ -14,18 +14,34 @@
 @using (Html.BeginForm("CreateLoad", "Load", HttpMethod.Post))
 {
 	@Html.AntiForgeryToken()
-	;
+	@Html.HiddenFor(model=>model.LoadSupplier.FustTypeList)
+	
+	@Html.HiddenFor(model=>model.LoadSupplier.SupplierGroup)
+	
+	@Html.HiddenFor(model=>model.LoadSupplier.Id)
+	@Html.HiddenFor(model=>model.LoadSupplier.SupplierAddress)
+	@Html.HiddenFor(model=>model.LoadSupplier.SupplierOrigin)
+	@Html.HiddenFor(model=>model.LoadSupplier.Currency.currencyTargetName)
+	@Html.HiddenFor(model=>model.LoadSupplier.Currency.currencyTargetNameAbrevation)
+	@Html.HiddenFor(model=>model.LoadSupplier.Currency.currencyAbrevation)
+	@Html.HiddenFor(model=>model.LoadSupplier.Currency.currencyCountryCode)
+	@Html.HiddenFor(model=>model.LoadSupplier.Currency.currencyExchangeRate)
+	@Html.HiddenFor(model=>model.LoadSupplier.Currency.currencyName)
+	@Html.HiddenFor(model=>model.LoadSupplier.Currency.currencyId)
+	@Html.HiddenFor(model=>model.LoadSupplier.Currency.exchangeRateYear)
+
+
 	<div class="container  ">
 		<div class="row mb-3">
 		
 			<div class="row mb-3">
 				<div class="col-md-4 h-25 ">
 					<div class="row mb-3">
-						@Html.LabelFor(model=>model.LoadSupplier,  htmlAttributes:new {@class="col-form-label col-4"})
-						@Html.HiddenFor(model=>model.LoadSupplier)
+						@Html.LabelFor(model=>model.LoadSupplier.SupplierName,  htmlAttributes:new {@class="col-form-label col-4"})
+						@Html.HiddenFor(model=>model.LoadSupplier.SupplierName)
 						<div class="col-auto">
-							@Html.EditorFor(model=>model.LoadSupplier, new { htmlAttributes = new { @class = "form-control",@readonly="readonly",@required ="required", @placeholder="Enter Trailer Number" } })
-							@Html.ValidationMessageFor(model=>model.LoadSupplier, "", new { @class = "text-danger" })
+							@Html.EditorFor(model=>model.LoadSupplier.SupplierName, new { htmlAttributes = new { @class = "form-control",@readonly="readonly",@required ="required", @placeholder="Enter Trailer Number" } })
+							@Html.ValidationMessageFor(model=>model.LoadSupplier.SupplierName, "", new { @class = "text-danger" })
 						</div>
 					</div>
 

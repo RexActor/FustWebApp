@@ -56,7 +56,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 			foreach (var item in suppliers)
 			{
-				int loadCount = applicationDbContext.Loads.Where(load=>load.LoadSupplier==item).ToList().Count();
+				int loadCount = applicationDbContext.Loads.Where(load=>load.LoadSupplier.SupplierName==item).ToList().Count();
 				supplierLoads.Add(new Models.SupplierStatistics
 				{
 					SupplierName=item,
@@ -65,6 +65,24 @@ namespace FustWebApp.Areas.Admin.Controllers
 			}
 
 			ViewData["SuppliersList"] = supplierLoads;
+
+
+			List<Models.StatisticsDataPoint> countryList=new List<Models.StatisticsDataPoint>();
+
+			var countries = applicationDbContext.Origins.ToList();
+
+			foreach (var item in countries)
+			{
+				int supplierCount = applicationDbContext.Suppliers.Where(supplier => supplier.SupplierOrigin == item.OriginName).Count();
+				countryList.Add(new StatisticsDataPoint
+				{
+					loadType = item.OriginName,
+					loadCount = supplierCount
+				});
+			}
+
+
+			ViewBag.CountryList = countryList;
 
 
 

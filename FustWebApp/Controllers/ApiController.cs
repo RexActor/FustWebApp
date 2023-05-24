@@ -45,7 +45,7 @@ namespace FustWebApp.Controllers
 		/// <returns>Returns All Loads</returns>
 		// GET api/<action> 
 		[HttpGet]
-		public IEnumerable<Loads> GetLoads() => applicationDbContext.Loads.Include(item => item.LoadFustItems).ThenInclude(item => item.FustType).ToList();
+		public IEnumerable<Loads> GetLoads() => applicationDbContext.Loads.Include(item => item.LoadFustItems).ThenInclude(item => item.FustType).Include(item=>item.LoadSupplier).ThenInclude(item=>item.Currency).ToList();
 
 
 		// GET api/<action> 

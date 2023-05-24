@@ -29,7 +29,7 @@
 	@if (User.IsInRole("Admin") || User.IsInRole("Fust"))
 
 	{
-		var supplierId = applicationDbContext.Suppliers.Where(item => item.SupplierName == Model.LoadSupplier).Select(item => item.Id).FirstOrDefault();
+		var supplierId = applicationDbContext.Suppliers.Where(item => item.SupplierName == Model.LoadSupplier.SupplierName).Select(item => item.Id).FirstOrDefault();
 
 		<div class="mx-2">
 			<a class="btn btn-sm btn-outline-primary shadow" asp-area="Admin"  asp-controller="Suppliers" asp-action="View" asp-route-Id="@supplierId">View Supplier</a>
@@ -52,9 +52,9 @@
 			</div>
 
 			<div class="row mb-3">
-				@Html.LabelFor(model=>model.LoadSupplier, htmlAttributes:new {@class="col-form-label col-4"})
+				@Html.LabelFor(model=>model.LoadSupplier.SupplierName, htmlAttributes:new {@class="col-form-label col-4"})
 				<div class="col-auto">
-					<input value="@Model.LoadSupplier" class="form-control" readonly>
+					<input value="@Model.LoadSupplier.SupplierName" class="form-control" readonly>
 				</div>
 			</div>
 

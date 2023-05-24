@@ -23,10 +23,10 @@
 					
 
 					<div class="row mb-3">
-						@Html.LabelFor(model=>model.LoadSupplier,  htmlAttributes:new {@class="col-form-label col-4"})
+						@Html.LabelFor(model=>model.LoadSupplier.SupplierName,  htmlAttributes:new {@class="col-form-label col-4"})
 						<div class="col-auto">
-							@Html.DropDownListFor(model=>model.LoadSupplier,new SelectList(ViewBag.Suppliers),"Please Select",new { @class = "form-select" })
-							@Html.ValidationMessageFor(model=>model.LoadSupplier, "", new { @class = "text-danger" })
+							@Html.DropDownListFor(model=>model.LoadSupplier.SupplierName,new SelectList(ViewBag.Suppliers),"Please Select",new { @class = "form-select" })
+							@Html.ValidationMessageFor(model=>model.LoadSupplier.SupplierName, "", new { @class = "text-danger" })
 						</div>
 					</div>
 

@@ -175,7 +175,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 			List<Loads> supplierLoadList = new List<Loads>();
 			var supplier = await applicationDbContext.Suppliers.Include(item => item.Currency).FirstOrDefaultAsync(x => x.Id == Id);
 
-			await applicationDbContext.Loads.Where(load => load.LoadSupplier == supplier.SupplierName).ForEachAsync(load =>
+			await applicationDbContext.Loads.Where(load => load.LoadSupplier.SupplierName == supplier.SupplierName).ForEachAsync(load =>
 			{
 				supplierLoadList.Add(load);
 			});
@@ -251,8 +251,8 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 				await applicationDbContext.StockHolding.Where(item => item.StockHoldingSupplier == supplier).Include(item => item.StockHoldingFustItems).ForEachAsync(item =>
 				{
-					int outboundQuantity = applicationDbContext.LoadFusts.Where(loadfust => loadfust.FustName == item.StockHoldingFustItems.FustName).Where(loadfust => loadfust.Loads.LoadType == "Outbound").Where(loadfust => loadfust.Loads.LoadSupplier == item.StockHoldingSupplier.SupplierName).Sum(loadfust => loadfust.ReceivedQty);
-					int inboundQuantity = applicationDbContext.LoadFusts.Where(loadfust => loadfust.FustName == item.StockHoldingFustItems.FustName).Where(loadfust => loadfust.Loads.LoadType == "Inbound").Where(loadfust => loadfust.Loads.LoadSupplier == item.StockHoldingSupplier.SupplierName).Sum(loadfust => loadfust.ReceivedQty);
+					int outboundQuantity = applicationDbContext.LoadFusts.Where(loadfust => loadfust.FustName == item.StockHoldingFustItems.FustName).Where(loadfust => loadfust.Loads.LoadType == "Outbound").Where(loadfust => loadfust.Loads.LoadSupplier.SupplierName == item.StockHoldingSupplier.SupplierName).Sum(loadfust => loadfust.ReceivedQty);
+					int inboundQuantity = applicationDbContext.LoadFusts.Where(loadfust => loadfust.FustName == item.StockHoldingFustItems.FustName).Where(loadfust => loadfust.Loads.LoadType == "Inbound").Where(loadfust => loadfust.Loads.LoadSupplier.SupplierName == item.StockHoldingSupplier.SupplierName).Sum(loadfust => loadfust.ReceivedQty);
 
 					int stockHolding = -outboundQuantity + inboundQuantity;
 

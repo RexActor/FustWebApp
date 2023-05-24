@@ -1,0 +1,82 @@
+﻿@model IEnumerable<FustWebApp.Models.Domain.StockHolding>;
+@using System.Globalization;
+
+@{
+
+	ViewData["Title"] = "StockHolding";
+
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+	string currentItem = string.Empty;
+	List<string> fustItemList = Model.Select(item => item.StockHoldingFustItems.FustName).Distinct().ToList();
+}
+
+
+<div class="container overflow-scroll shadow mw-100" style="scrollbar-width:thin;display:block;height:100vh;">
+
+	<table class="table table-hover mt-2 mb-2">
+		<thead class="sticky-top table-dark">
+			<tr>
+				<th>Supplier Name</th>
+				<th>Base Value</th>
+				<th>Stockholding</th>
+				<th>Storage Quantity</th>
+				<th></th>
+			</tr>
+		</thead>
+
+		<tbody>
+			@foreach (var item in fustItemList)
+			{
+
+				
+					
+					if (currentItem != item)
+					{
+						@:</tr><tr class="bg-light text-black fs-3 fw-bolder text-sm-center border-top border-2 border-dark"><td colspan="5">
+						@item
+					@:</td></tr>
+
+					currentItem = item;
+				}
+
+				var modelList = Model.Where(item => item.StockHoldingFustItems.FustName == currentItem).ToList();
+				@foreach(var subItem in modelList)
+				{
+					RegionInfo region = new RegionInfo(subItem.StockHoldingSupplier.Currency.currencyCountryCode);
+					<tr class="border-top border-2 border-light border-bottom-0">
+						<td>@subItem.StockHoldingSupplier.SupplierName</td>
+						<td>@region.CurrencySymbol @subItem.baseValue</td>
+						<td>
+							@if (@subItem.StockHoldingQty != 0)
+							{
+								<span style="color:red;font-weight:bold;">@subItem.StockHoldingQty </span>
+							}else{
+								<span style="color:black;">@subItem.StockHoldingQty </span>
+							}
+
+							
+							units</td>
+						<td>@subItem.StorageQuantity units</td>
+						<td>
+							<a class="btn btn-sm btn-outline-danger shadow" asp-action="EditStock" asp-controller="Stockholding" asp-area="Admin" asp-route-stockId="@subItem.StockHoldingFustItems.Id" asp-route-Supplier="@subItem.StockHoldingSupplier.Id">Update</a>
+						</td>
+					</tr>
+					
+				}
+			<tr style="height:20px;"></tr>
+				
+					
+
+										
+
+
+				
+
+			}
+		</tbody>
+
+	</table>
+
+
+
+</div>

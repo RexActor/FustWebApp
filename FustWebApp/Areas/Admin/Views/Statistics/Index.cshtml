@@ -12,6 +12,9 @@
 	IEnumerable<SupplierStatistics> suppliers = ViewData["SuppliersList"] as IEnumerable<SupplierStatistics>;
 }
 
+@{
+	var OriginsList = (List<StatisticsDataPoint>)@ViewBag.CountryList;
+}
 
 
 
@@ -29,16 +32,14 @@
 			<canvas  id="supplier-chart" height="500" width="800"></canvas>
 		</div>
 	</div>
+	<div class="row shadow  d-flex justify-content-center bg-secondary bg-opacity-25 mt-4">
+		<div style="max-width:800px;max-height:600px;" class=" mb-5 bg-white shadow mt-4">
+			<h1 class="text-sm-center">Suppliers Per Origin</h1>
+			<canvas id="Origins-chart" height="500" width="800"></canvas>
+		</div>
+	</div>
 
 </div>
-
-
-
-
-
-	
-
-
 
 
 
@@ -109,7 +110,7 @@
 
 		@foreach (SupplierStatistics supplier in suppliers)
 		{
-			@:supplierArray.push({ "@supplier.SupplierName": "@supplier.loadCount" })
+			
 			@:labelArray.push("@supplier.SupplierName")
 			@:valueArray.push("@supplier.loadCount")
 		}
@@ -136,34 +137,77 @@
 			options: {
 				legend: { display: false },
 				title: {
-					display: false,
+					display: true,
 					text: 'Loads'
-				},
-				tooltips: {
-					callbacks: {
-						label: function (tooltipItem) {
-							return tooltipItem.yLabel;
-						}
-					}
 				},
 				global: {
 					responsive: true,
 					maintainAspectRatio: false
 				},
-				scales: {
-					xAxes: [{
-						stacked: true,
-					}],
-					yAxes: [{
-						stacked: true,
-						ticks: {
-							precision: 2
-						}
-					}]
+				scale: {
+					ticks: {
+						precision: 0
+					}
+				}
+			}
+		});
+
+
+
+
+		
+		var OriginlabelArray = [];
+		var OriginvalueArray = [];
+
+
+
+		@foreach (var Origin in OriginsList)
+		{
+
+			@:OriginlabelArray.push("@Origin.loadType")
+			@:OriginvalueArray.push("@Origin.loadCount")
+		}
+
+
+
+
+
+																								// Bar chart
+																										var originChart = new Chart(document.getElementById("Origins-chart"), {
+			type: 'bar',
+
+
+			//data: supplierChartData,
+			data: {
+				labels: OriginlabelArray,
+				//datasets: SupplierChartData.datasets,
+				datasets: [{
+					label: "Total Suppliers Per Origin",
+					data: OriginvalueArray
+				}],
+			},
+
+			options: {
+				legend: { display: false },
+				title: {
+					display: true,
+					text: 'Loads'
+				},
+				global: {
+					responsive: true,
+					maintainAspectRatio: false
+				},
+				scale: {
+					ticks: {
+						precision: 0
+					}
 				}
 
 			}
 		});
+
+
+
 
 
 	</script>

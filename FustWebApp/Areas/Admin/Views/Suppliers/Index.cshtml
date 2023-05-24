@@ -39,11 +39,11 @@
 						<td>@item.FustTypeList.Replace(",",", ")</td>
 						<td>@item.SupplierAddress</td>
 
-						@if (applicationDbContext.Loads.Where(load => load.LoadSupplier == item.SupplierName).Count() > 0)
+						@if (applicationDbContext.Loads.Where(load => load.LoadSupplier.SupplierName == item.SupplierName).Count() > 0)
 						{
 							@:<td style="font-size:small;">
-							@:	Inbound: <span style="font-weight:bold">@applicationDbContext.Loads.Where(load=>load.LoadSupplier==item.SupplierName).Where(load=>load.LoadType=="Inbound").Count()</span><br />
-							@:	Outbound: <span style="font-weight:bold"> @applicationDbContext.Loads.Where(load=>load.LoadSupplier==item.SupplierName).Where(load=>load.LoadType=="Outbound").Count()</span>
+							@:	Inbound: <span style="font-weight:bold">@applicationDbContext.Loads.Where(load=>load.LoadSupplier.SupplierName==item.SupplierName).Where(load=>load.LoadType=="Inbound").Count()</span><br />
+							@:	Outbound: <span style="font-weight:bold"> @applicationDbContext.Loads.Where(load=>load.LoadSupplier.SupplierName==item.SupplierName).Where(load=>load.LoadType=="Outbound").Count()</span>
 							@:</td>
 							
 						}

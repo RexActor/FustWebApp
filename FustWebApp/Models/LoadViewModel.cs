@@ -20,7 +20,7 @@ namespace FustWebApp.Models
 
 		[DisplayName("Supplier")]
 		[Required(ErrorMessage = "Please select Supplier from list")]
-		public string LoadSupplier { get; set; }
+		public Supplier LoadSupplier { get; set; }
 
 
 

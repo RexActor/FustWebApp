@@ -34,7 +34,7 @@ namespace FustWebApp.Controllers
 			List<StockholdingViewModel> stockHoldingList = new List<StockholdingViewModel>();
 			List<Loads> InboundList = new List<Loads>();
 
-			InboundList = await applicationDbContext.Loads.OrderBy(item => item.LoadDate).ToListAsync();
+			InboundList = await applicationDbContext.Loads.Include(item=>item.LoadSupplier).ThenInclude(item=>item.Currency).OrderBy(item => item.LoadDate).ToListAsync();
 
 			await applicationDbContext.StockHolding.Include(item => item.StockHoldingFustItems).ThenInclude(item => item.FustType).ForEachAsync(item =>
 			{
