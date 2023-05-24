@@ -1,27 +1,47 @@
 ﻿@*protected global::System.Web.UI.DataVisualization.Charting.Chart Chart;*@
 @using FustWebApp.Models;
+
 @{
 	ViewData["Title"] = "Statistics";
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
-	var InboundconvertedList = (List<DataPoint>)@ViewBag.LoadsStats;
+	var InboundconvertedList = (List<StatisticsDataPoint>)@ViewBag.LoadsStats;
 
+}
+
+@{
+	IEnumerable<SupplierStatistics> suppliers = ViewData["SuppliersList"] as IEnumerable<SupplierStatistics>;
 }
 
 
 
 
-
-<div class="container shadow bg-white">
-	<div class="row">
-		<div class=" w-50 shadow ms-5 mt-2 mb-2">
-			<canvas id="inbound-chart" width="100" height="100"></canvas>
+<div class="container">
+	<div class="row shadow  d-flex justify-content-center bg-secondary bg-opacity-25">
+		<div style="max-width:800px;max-height:600px;" class="mb-4 bg-white shadow mt-4">
+			<h1 class="text-sm-center">Total Loads</h1>
+			<canvas  id="inbound-chart" height="300" width="800"></canvas>
 		</div>
-		<div class=" w-50 shadow ms-5 mt-2 mb-2">
-			<canvas id="bar-chart" width="100" height="100"></canvas>
-		</div>
-
 	</div>
+
+	<div class="row shadow  d-flex justify-content-center bg-secondary bg-opacity-25 mt-4">
+		<div style="max-width:800px;max-height:600px;" class=" mb-5 bg-white shadow mt-4">
+			<h1 class="text-sm-center">Loads Per Supplier</h1>
+			<canvas  id="supplier-chart" height="500" width="800"></canvas>
+		</div>
+	</div>
+
 </div>
+
+
+
+
+
+	
+
+
+
+
+
 @section Scripts{
 
 	<script src="~/lib/chartjs/dist/chart.umd.js"></script>
@@ -29,73 +49,126 @@
 
 	<script type="text/javascript">
 
-		var labelArray = []
-		var dataArray=[]
-	
-	
-		
+		var inboundArray = [];
 		@for (int i = 0; i < InboundconvertedList.Count; i++)
 		{
+			@:inboundArray.push({ "@InboundconvertedList[i].loadType": "@InboundconvertedList[i].loadCount" })
+
+		}
+																																var label = ["Loads"]
+
+		var barChartData = {
+			labels: label,
+			datasets: []
+		};
 
 
-			@:dataArray.push(["@InboundconvertedList[i].chartvalue"])
-			@:labelArray.push("@InboundconvertedList[i].chartlabel")
-			
+		for (var i = 0; i < inboundArray.length; i++) {
+
+
+			barChartData.datasets.push({
+				label: Object.keys(inboundArray[i]),
+
+				data: Object.values(inboundArray[i])
+			})
 		}
 
-										 var lineChartData = {
-			labels: [],
-			datasets: []
-		},
-			array = [
-				"[0,0,0,0,0,0,0,0,0,0,0,0,0,58,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
-				"[0,0,53,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
-				"[0,0,381,0,0,649,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]"
-			];
-		
-		
-
-	labelArray.forEach(function(a,i){
-		lineChartData.labels.push(a)
-	})
-
-		dataArray.forEach(function (a, i) {
-			lineChartData.datasets.push({
-				label: labelArray[i],
-				fillColor: 'rgba(220,220,220,0.2)',
-				strokeColor: 'rgba(220,220,220,1)',
-				pointColor: 'rgba(220,220,220,1)',
-				pointStrokeColor: '#fff',
-				pointHighlightFill: '#fff',
-				pointHighlightStroke:
-					'rgba(220,220,220,1)',
-				data: JSON.parse(i)
-			});
-		});
 
 		// Bar chart
 		var barChart = new Chart(document.getElementById("inbound-chart"), {
 			type: 'bar',
 
-
+			label: "Total Loads",
 
 			data: {
-				labels: lineChartData.labels,
-				datasets: lineChartData.datasets
+				labels: barChartData.labels,
+				datasets: barChartData.datasets,
 			},
-
-
 
 			options: {
 				legend: { display: false },
 				title: {
 					display: true,
 					text: 'Loads'
+				},
+				global: {
+					responsive: true,
+					maintainAspectRatio: false
 				}
 			}
 		});
 
+
+
+
+		var supplierArray = [];
+		var labelArray = [];
+		var valueArray = [];
+
+
+
+		@foreach (SupplierStatistics supplier in suppliers)
+		{
+			@:supplierArray.push({ "@supplier.SupplierName": "@supplier.loadCount" })
+			@:labelArray.push("@supplier.SupplierName")
+			@:valueArray.push("@supplier.loadCount")
+		}
+
+
+
+
+
+																						// Bar chart
+																						var barChart = new Chart(document.getElementById("supplier-chart"), {
+			type: 'bar',
+
+
+			//data: supplierChartData,
+			data: {
+				labels: labelArray,
+				//datasets: SupplierChartData.datasets,
+				datasets: [{
+					label: "Total Loads Per Supplier",
+					data: valueArray
+				}],
+			},
+
+			options: {
+				legend: { display: false },
+				title: {
+					display: false,
+					text: 'Loads'
+				},
+				tooltips: {
+					callbacks: {
+						label: function (tooltipItem) {
+							return tooltipItem.yLabel;
+						}
+					}
+				},
+				global: {
+					responsive: true,
+					maintainAspectRatio: false
+				},
+				scales: {
+					xAxes: [{
+						stacked: true,
+					}],
+					yAxes: [{
+						stacked: true,
+						ticks: {
+							precision: 2
+						}
+					}]
+				}
+
+			}
+		});
+
+
 	</script>
 
 
-	}
+		}
+
+				

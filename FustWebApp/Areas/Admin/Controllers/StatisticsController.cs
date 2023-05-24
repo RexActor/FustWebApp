@@ -10,6 +10,7 @@ using FustWebApp.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 using FustWebApp.Models;
 using System.Globalization;
+using System.Dynamic;
 
 namespace FustWebApp.Areas.Admin.Controllers
 {
@@ -27,30 +28,43 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 		public IActionResult Index()
 		{
-			List<Models.DataPoint> loadsStats = new List<Models.DataPoint>();
+			List<Models.StatisticsDataPoint> loadsStats = new List<Models.StatisticsDataPoint>();
 
+				var loads = applicationDbContext.Loads.Select(load => load.LoadType).Distinct().ToList();
 
-			var loads = applicationDbContext.Loads.Select(item => item.LoadType).Distinct().ToList();
-
-
-
-			foreach (var item in loads)
-			{
-				int loadCount = applicationDbContext.Loads.Where(load => load.LoadType == item).ToList().Count();
-
-				loadsStats.Add(new Models.DataPoint
+				foreach (var item in loads)
 				{
-					chartlabel = item,
-					chartvalue= loadCount
-				}) ;
-			}
+					int loadCount = applicationDbContext.Loads.Where(load => load.LoadType == item).ToList().Count();
+					loadsStats.Add(new Models.StatisticsDataPoint
+					{
+						loadType = item,
+						loadCount = loadCount,
+						
 
-
-
+					});
+				}
 
 
 			ViewBag.LoadsStats = loadsStats;
 
+
+			dynamic mytest = new ExpandoObject();
+
+			List<Models.SupplierStatistics> supplierLoads = new List<Models.SupplierStatistics>();
+			var suppliers = applicationDbContext.Suppliers.Select(supplier=>supplier.SupplierName).Distinct().ToList();
+
+
+			foreach (var item in suppliers)
+			{
+				int loadCount = applicationDbContext.Loads.Where(load=>load.LoadSupplier==item).ToList().Count();
+				supplierLoads.Add(new Models.SupplierStatistics
+				{
+					SupplierName=item,
+					loadCount = loadCount,
+				});
+			}
+
+			ViewData["SuppliersList"] = supplierLoads;
 
 
 
