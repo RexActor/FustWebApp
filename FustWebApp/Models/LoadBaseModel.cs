@@ -42,6 +42,9 @@ namespace FustWebApp.Models
 		[DisplayName("Purhcase Order")]
 		public int PONumber { get; set; } = 0;
 
+		[DisplayName("Invoice Number")]
+		public string InvoiceNumber { get; set; } = "null";
+
 		public DateTime LoadUpdatedDate { get; set; }
 		public DateTime? CreatedDate { get; set; }
 		public DateTime ReceivedDate { get; set;}

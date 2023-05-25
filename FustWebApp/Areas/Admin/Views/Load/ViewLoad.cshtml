@@ -73,6 +73,18 @@
 				</div>
 			</div>
 
+
+			<div class="row mb-3">
+				@Html.LabelFor(model=>model.InvoiceNumber,  htmlAttributes:new {@class="col-form-label col-4 "})
+				<div class="col-auto">
+					<input value="@Model.InvoiceNumber" class="form-control" readonly>
+					*only for Inbound Loads
+					@Html.ValidationMessageFor(model=>model.InvoiceNumber, "", new { @class = "text-danger" })
+				</div>
+			</div>
+
+
+
 			<div class="row mb-3">
 				@Html.LabelFor(model=>model.PONumber,  htmlAttributes:new {@class="col-form-label col-4 "})
 				<div class="col-auto">

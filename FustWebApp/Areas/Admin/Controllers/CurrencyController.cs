@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace FustWebApp.Areas.Admin.Controllers
 {
-	[Authorize(Roles = "Admin")]
+	[Authorize(Roles = "Finance")]
 	[Area("Admin")]
 	public class CurrencyController : Controller
 	{
@@ -61,6 +61,10 @@ namespace FustWebApp.Areas.Admin.Controllers
 		public async Task<IActionResult> Delete(int id)
 		{
 			var currencyToRemove = await applicationDbContext.Currency.FindAsync(id);
+			if (currencyToRemove == null)
+			{
+				throw new ArgumentException($"No Currency found with ID {id}");
+			}
 			applicationDbContext.Currency.Remove(currencyToRemove);
 			await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
 			return RedirectToAction("Index");

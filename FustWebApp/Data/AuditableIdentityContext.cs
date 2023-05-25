@@ -10,7 +10,7 @@ namespace FustWebApp.Data
     {
 
 
-        public AuditableIdentityContext(DbContextOptions options) : base(options)
+        protected AuditableIdentityContext(DbContextOptions options) : base(options)
         {
 
         }
@@ -18,7 +18,7 @@ namespace FustWebApp.Data
 
         public DbSet<FustWebApp.Models.Domain.Audit> AuditLogs { get; set; }
 
-        public virtual async Task<int> SaveChangesAsync(string userId = null)
+        public virtual async Task<int> SaveChangesAsync(string userId)
         {
             OnBeforeSaveChanges(userId);
             var result = await base.SaveChangesAsync();

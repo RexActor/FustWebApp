@@ -9,7 +9,9 @@
 }
 
 @{
+
 	IEnumerable<SupplierStatistics> suppliers = ViewData["SuppliersList"] as IEnumerable<SupplierStatistics>;
+
 }
 
 @{
@@ -22,14 +24,14 @@
 	<div class="row shadow  d-flex justify-content-center bg-secondary bg-opacity-25">
 		<div style="max-width:800px;max-height:600px;" class="mb-4 bg-white shadow mt-4">
 			<h1 class="text-sm-center">Total Loads</h1>
-			<canvas  id="inbound-chart" height="300" width="800"></canvas>
+			<canvas id="inbound-chart" height="300" width="800"></canvas>
 		</div>
 	</div>
 
 	<div class="row shadow  d-flex justify-content-center bg-secondary bg-opacity-25 mt-4">
 		<div style="max-width:800px;max-height:600px;" class=" mb-5 bg-white shadow mt-4">
 			<h1 class="text-sm-center">Loads Per Supplier</h1>
-			<canvas  id="supplier-chart" height="500" width="800"></canvas>
+			<canvas id="supplier-chart" height="500" width="800"></canvas>
 		</div>
 	</div>
 	<div class="row shadow  d-flex justify-content-center bg-secondary bg-opacity-25 mt-4">
@@ -56,7 +58,7 @@
 			@:inboundArray.push({ "@InboundconvertedList[i].loadType": "@InboundconvertedList[i].loadCount" })
 
 		}
-																																var label = ["Loads"]
+																																				var label = ["Loads"]
 
 		var barChartData = {
 			labels: label,
@@ -110,7 +112,7 @@
 
 		@foreach (SupplierStatistics supplier in suppliers)
 		{
-			
+
 			@:labelArray.push("@supplier.SupplierName")
 			@:valueArray.push("@supplier.loadCount")
 		}
@@ -119,8 +121,8 @@
 
 
 
-																						// Bar chart
-																						var barChart = new Chart(document.getElementById("supplier-chart"), {
+																										// Bar chart
+																										var barChart = new Chart(document.getElementById("supplier-chart"), {
 			type: 'bar',
 
 
@@ -155,7 +157,7 @@
 
 
 
-		
+
 		var OriginlabelArray = [];
 		var OriginvalueArray = [];
 
@@ -172,8 +174,8 @@
 
 
 
-																								// Bar chart
-																										var originChart = new Chart(document.getElementById("Origins-chart"), {
+																												// Bar chart
+																														var originChart = new Chart(document.getElementById("Origins-chart"), {
 			type: 'bar',
 
 
@@ -215,4 +217,3 @@
 
 		}
 
-				

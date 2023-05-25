@@ -13,14 +13,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-var auditConnectionString = builder.Configuration.GetConnectionString("AuditConnection");
+
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString).EnableSensitiveDataLogging(true));
 
-//builder.Services.AddDbContext<AuditableIdentityContext>(options =>
-//    options.UseSqlite(auditConnectionString).EnableSensitiveDataLogging(true));
 
 
 
@@ -43,14 +41,7 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-//Audit.Core.Configuration.AddOnCreatedAction(scope =>
-//{
-//	var ctxAccessor = scope.GetEntityFrameworkEvent().GetDbContext().GetService<IHttpContextAccessor>();
-//	var username = ctxAccessor.HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
-//	scope.Event.Environment.UserName = username;
-//	scope.SetCustomField("UserName", username);
 
-//});
 
 Audit.Core.Configuration.Setup().UseFileLogProvider(_ => _
 

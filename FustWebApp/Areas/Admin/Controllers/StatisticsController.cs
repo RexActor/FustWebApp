@@ -34,7 +34,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 				foreach (var item in loads)
 				{
-					int loadCount = applicationDbContext.Loads.Where(load => load.LoadType == item).ToList().Count();
+					int loadCount = applicationDbContext.Loads.Where(load => load.LoadType == item).ToList().Count;
 					loadsStats.Add(new Models.StatisticsDataPoint
 					{
 						loadType = item,
@@ -48,7 +48,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 			ViewBag.LoadsStats = loadsStats;
 
 
-			dynamic mytest = new ExpandoObject();
+			
 
 			List<Models.SupplierStatistics> supplierLoads = new List<Models.SupplierStatistics>();
 			var suppliers = applicationDbContext.Suppliers.Select(supplier=>supplier.SupplierName).Distinct().ToList();
@@ -56,7 +56,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 			foreach (var item in suppliers)
 			{
-				int loadCount = applicationDbContext.Loads.Where(load=>load.LoadSupplier.SupplierName==item).ToList().Count();
+				int loadCount = applicationDbContext.Loads.Where(load=>load.LoadSupplier.SupplierName==item).ToList().Count;
 				supplierLoads.Add(new Models.SupplierStatistics
 				{
 					SupplierName=item,

@@ -25,19 +25,21 @@ namespace FustWebApp.Areas.Admin.Controllers
 		}
 		public async Task<IActionResult> Index()
 		{
-			List<Loads> viewModel = new List<Loads>();
-			viewModel = await applicationDbContext.Loads.Include(item=>item.LoadSupplier).ThenInclude(item=>item.Currency).OrderBy(item => item.LoadType).ThenByDescending(item => item.LoadDate).ToListAsync();
-			List<LoadFusts> fustItemsList = new List<LoadFusts>();
+			
+			List<Loads> viewModel = await applicationDbContext.Loads.Include(item => item.LoadSupplier).ThenInclude(item => item.Currency).OrderBy(item => item.LoadType).ThenByDescending(item => item.LoadDate).ToListAsync();
+			
 
 
 
 			return View(viewModel);
 		}
 		[HttpGet]
-		public async Task<IActionResult> ViewLoads(string date)
+		public IActionResult ViewLoads(string date)
 		{
-			List<Loads> viewModel = new List<Loads>();
-			viewModel = applicationDbContext.Loads.AsEnumerable().OrderBy(item => item.LoadType).ThenByDescending(item => item.LoadDate).Where(item => item.LoadDate.ToShortDateString() == date).ToList();
+		
+
+			List<Loads> viewModel = applicationDbContext.Loads.AsEnumerable().OrderBy(item => item.LoadType).ThenByDescending(item => item.LoadDate).Where(item => item.LoadDate.ToShortDateString().Equals(date)).ToList();
+
 			return View(viewModel);
 		}
 
@@ -62,34 +64,31 @@ namespace FustWebApp.Areas.Admin.Controllers
 		[HttpPost]
 		public IActionResult AddLoad(LoadBaseModel inboundLoad, string Next)
 		{
-			var supplier = applicationDbContext.Suppliers.Include(item=>item.Currency).FirstOrDefault(item => item.SupplierName == inboundLoad.LoadSupplier.SupplierName);
 			
+
 
 			if (Next != null)
 			{
-				LoadBaseModel loadToPass = new LoadBaseModel(){
-					LoadDate=	DateTime.Now,
-					LoadSupplier=supplier
-				};
-
 				
 
 
-				return RedirectToAction("CreateLoad", new {supplier=inboundLoad.LoadSupplier.SupplierName});
+
+
+				return RedirectToAction("CreateLoad", new { supplier = inboundLoad.LoadSupplier.SupplierName });
 			}
 
 			return View();
 		}
 		[HttpGet]
 		[Authorize(Roles = "Admin,Fust")]
-		public async Task<IActionResult> CreateLoad(LoadBaseModel inboundLoad,string supplier, string date)
+		public async Task<IActionResult> CreateLoad(LoadBaseModel inboundLoad, string supplier, string date)
 		{
-			var supplierDetail = await applicationDbContext.Suppliers.Include(item=>item.Currency).FirstOrDefaultAsync(item => item.SupplierName == supplier);
+			var supplierDetail = await applicationDbContext.Suppliers.Include(item => item.Currency).FirstOrDefaultAsync(item => item.SupplierName == supplier);
 
 			if (supplierDetail != null)
 			{
 				inboundLoad.LoadSupplier = supplierDetail;
-				inboundLoad.LoadDate =DateTime.Now;
+				inboundLoad.LoadDate = DateTime.Now;
 
 				List<string> GroupsList = new List<string>();
 				List<Fust> fustItems = new List<Fust>();
@@ -130,7 +129,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 					LoadSupplier = inboundLoad.LoadSupplier,
 					LoadOrigin = supplierDetail.SupplierOrigin,
 					LoadDate = inboundLoad.LoadDate,
-
+					InvoiceNumber= inboundLoad.InvoiceNumber,
 					LoadFustItems = fustItems,
 				};
 
@@ -169,9 +168,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 			   {
 
 				   var fustTypeFound = applicationDbContext.FustTypes.FirstOrDefault(item => item.FustTypeName == fustItem.FustType.FustTypeName);
-				   //var supplier = applicationDbContext.Suppliers.Include(item => item.Currency).FirstOrDefault(item => item.SupplierName == load.LoadSupplier.SupplierName);
-
-				   //var currency = applicationDbContext.Currency.FirstOrDefault(item => item.currencyAbrevation == load.LoadSupplier.Currency.currencyAbrevation);
+				 
 
 
 				   if (fustTypeFound != null)
@@ -205,7 +202,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 					LoadFustItems = fustItems,
 					CreatedDate = DateTime.Now,
 					LoadGroup = load.LoadGroup,
-
+					InvoiceNumber = load.InvoiceNumber,
 					LoadOrigin = load.LoadOrigin,
 					PONumber = loadPo,
 					LoadSupplier = load.LoadSupplier,
@@ -226,13 +223,13 @@ namespace FustWebApp.Areas.Admin.Controllers
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> ViewLoad(int Id) => View(await applicationDbContext.Loads.Where(item => item.LoadId == Id).Include(item=>item.LoadSupplier).ThenInclude(item=>item.Currency).Include(item => item.LoadFustItems).ThenInclude(item => item.FustType).FirstOrDefaultAsync());
+		public async Task<IActionResult> ViewLoad(int Id) => View(await applicationDbContext.Loads.Where(item => item.LoadId == Id).Include(item => item.LoadSupplier).ThenInclude(item => item.Currency).Include(item => item.LoadFustItems).ThenInclude(item => item.FustType).FirstOrDefaultAsync());
 
 
 
 		[HttpGet]
 		[Authorize(Roles = "Admin,Fust")]
-		public async Task<IActionResult> EditLoad(int Id) => View(await applicationDbContext.Loads.Where(item => item.LoadId == Id).Include(item => item.LoadFustItems).ThenInclude(item => item.FustType).Include(item=>item.LoadSupplier).ThenInclude(item=>item.Currency).FirstOrDefaultAsync());
+		public async Task<IActionResult> EditLoad(int Id) => View(await applicationDbContext.Loads.Where(item => item.LoadId == Id).Include(item => item.LoadFustItems).ThenInclude(item => item.FustType).Include(item => item.LoadSupplier).ThenInclude(item => item.Currency).FirstOrDefaultAsync());
 
 
 
@@ -255,10 +252,8 @@ namespace FustWebApp.Areas.Admin.Controllers
 				applicationDbContext.Fusts.Where(item => item.FustName == fustItem.FustName).ToList().ForEach(foundFust =>
 				{
 					var fustTypeFound = applicationDbContext.FustTypes.FirstOrDefault(item => item.FustTypeName == fustItem.FustType.FustTypeName);
-					var loadFound = applicationDbContext.Loads.FirstOrDefault(item => item.LoadId == load.LoadId);
-					//var supplier = applicationDbContext.Suppliers.Include(item => item.Currency).FirstOrDefault(item => item.SupplierName == load.LoadSupplier.SupplierName);
-
-					//var currency = applicationDbContext.Currency.FirstOrDefault(item => item.currencyAbrevation == supplier.Currency.currencyAbrevation);
+					
+					
 					if (fustTypeFound != null)
 					{
 						fustItems.Add(new LoadFusts()
@@ -285,7 +280,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 				{
 					loadPo = load.PONumber;
 				}
-
+				loadToUpdate.InvoiceNumber = load.InvoiceNumber;
 				loadToUpdate.LoadId = load.LoadId;
 				loadToUpdate.PONumber = loadPo;
 				loadToUpdate.LoadSupplier = load.LoadSupplier;
@@ -300,10 +295,23 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 				foreach (var fustItem in fustItems)
 				{
-					int currentvalue = loadToUpdate.LoadFustItems.Where(item => item.FustName == fustItem.FustName).FirstOrDefault().ReceivedQty;
-					int currentStorage = loadToUpdate.LoadFustItems.Where(item => item.FustName == fustItem.FustName).FirstOrDefault().StorageQty;
+					var selectedFustItem = loadToUpdate.LoadFustItems.FirstOrDefault(item => item.FustName == fustItem.FustName);
+
+					if (selectedFustItem == null)
+					{
+						throw new ArgumentException($"Cannot find item with fustname {fustItem.FustName}");
+					}
+					int currentvalue = selectedFustItem.ReceivedQty;
+					int currentStorage = selectedFustItem.StorageQty;
+
 
 					var stockholdingToUpdate = await applicationDbContext.StockHolding.Where(item => item.StockHoldingSupplier.SupplierName == load.LoadSupplier.SupplierName).Include(item => item.StockHoldingFustItems).SingleOrDefaultAsync(item => item.StockHoldingFustItems.FustName == fustItem.FustName);
+
+					if (stockholdingToUpdate == null)
+					{
+						throw new ArgumentException($"Cannot find item with Supplier name {load.LoadSupplier.SupplierName}");
+					}
+
 
 					if (load.LoadType == "Inbound")
 					{
@@ -356,6 +364,11 @@ namespace FustWebApp.Areas.Admin.Controllers
 				loadToUpdate.LoadFustItems = fustItems;
 				applicationDbContext.Loads.Update(loadToUpdate);
 
+				if (User == null)
+				{
+					throw new ArgumentException($"");
+				}
+
 				await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
 
 			}
@@ -374,7 +387,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 		[HttpGet]
 		[Authorize(Roles = "Admin,Fust,Operations")]
-		public async Task<IActionResult> ReceiveLoad(int Id) => View(await applicationDbContext.Loads.Where(item => item.LoadId == Id).Include(item => item.LoadFustItems).ThenInclude(item => item.FustType).Include(item=>item.LoadSupplier).ThenInclude(item=>item.Currency).FirstOrDefaultAsync());
+		public async Task<IActionResult> ReceiveLoad(int Id) => View(await applicationDbContext.Loads.Where(item => item.LoadId == Id).Include(item => item.LoadFustItems).ThenInclude(item => item.FustType).Include(item => item.LoadSupplier).ThenInclude(item => item.Currency).FirstOrDefaultAsync());
 
 
 
@@ -395,10 +408,8 @@ namespace FustWebApp.Areas.Admin.Controllers
 				{
 
 					var fustTypeFound = applicationDbContext.FustTypes.FirstOrDefault(item => item.FustTypeName == fustItem.FustType.FustTypeName);
-					var loadFound = applicationDbContext.Loads.FirstOrDefault(item => item.LoadId == load.LoadId);
-					//var supplier = applicationDbContext.Suppliers.Include(item => item.Currency).FirstOrDefault(item => item.SupplierName == load.LoadSupplier.SupplierName);
 
-					//var currency = applicationDbContext.Currency.FirstOrDefault(item => item.currencyAbrevation == supplier.Currency.currencyAbrevation);
+
 					if (fustTypeFound != null)
 					{
 
@@ -444,10 +455,26 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 				foreach (var fustItem in fustItems)
 				{
-					int currentvalue = loadToUpdate.LoadFustItems.Where(item => item.FustName == fustItem.FustName).FirstOrDefault().ReceivedQty;
-					int currentStorage = loadToUpdate.LoadFustItems.Where(item => item.FustName == fustItem.FustName).FirstOrDefault().StorageQty;
+
+
+
+					var selectedFustItem = loadToUpdate.LoadFustItems.FirstOrDefault(item => item.FustName == fustItem.FustName);
+
+					if (selectedFustItem == null)
+					{
+						throw new ArgumentException($"Cannot find item with fustname {fustItem.FustName}");
+					}
+					int currentvalue = selectedFustItem.ReceivedQty;
+					int currentStorage = selectedFustItem.StorageQty;
+
 
 					var stockholdingToUpdate = await applicationDbContext.StockHolding.Where(item => item.StockHoldingSupplier.SupplierName == load.LoadSupplier.SupplierName).Include(item => item.StockHoldingFustItems).SingleOrDefaultAsync(item => item.StockHoldingFustItems.FustName == fustItem.FustName);
+
+					if (stockholdingToUpdate == null)
+					{
+						throw new ArgumentException($"Cannot find item with Supplier name {load.LoadSupplier.SupplierName}");
+					}
+
 
 					if (load.LoadType == "Inbound")
 					{
@@ -500,9 +527,9 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 				}
 				loadToUpdate.LoadFustItems = fustItems;
-				
+
 				applicationDbContext.Loads.Update(loadToUpdate);
-			
+
 				await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
 
 			}

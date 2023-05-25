@@ -18,10 +18,10 @@ namespace FustWebApp.Areas.Admin.Controllers
 	public class RoleController : Controller
 	{
 
-		private RoleManager<IdentityRole> roleManager;
-		private UserManager<IdentityUser> userManager;
+		private readonly RoleManager<IdentityRole> roleManager;
+		private readonly UserManager<IdentityUser> userManager;
 		private readonly ApplicationDbContext applicationDbContext;
-		private IPasswordHasher<IdentityUser> _passwordHasher;
+		private readonly IPasswordHasher<IdentityUser> _passwordHasher;
 
 		public RoleController(RoleManager<IdentityRole> roleMgr, UserManager<IdentityUser> userMgr, ApplicationDbContext applicationDbContext, IPasswordHasher<IdentityUser> passwordHasher)
 		{
@@ -244,7 +244,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 		[HttpPost]
 		public async Task<IActionResult> UpdateUser(string id, string email, string password)
 		{
-			IdentityResult result;
+			
 			IdentityUser user = await userManager.FindByIdAsync(id);
 
 				if (ModelState.IsValid)

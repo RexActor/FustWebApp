@@ -16,7 +16,7 @@ namespace FustWebApp.Controllers
 	{
 		private readonly ILogger<HomeController> _logger;
 		private readonly ApplicationDbContext applicationDbContext;
-		private UserManager<IdentityUser> userManager;
+		private readonly UserManager<IdentityUser> userManager;
 
 
 		public HomeController(ILogger<HomeController> logger, ApplicationDbContext applicationDbContext, UserManager<IdentityUser> userMgr)
@@ -32,9 +32,9 @@ namespace FustWebApp.Controllers
 		{
 
 			List<StockholdingViewModel> stockHoldingList = new List<StockholdingViewModel>();
-			List<Loads> InboundList = new List<Loads>();
+			
 
-			InboundList = await applicationDbContext.Loads.Include(item=>item.LoadSupplier).ThenInclude(item=>item.Currency).OrderBy(item => item.LoadDate).ToListAsync();
+			List<Loads>  InboundList = await applicationDbContext.Loads.Include(item=>item.LoadSupplier).ThenInclude(item=>item.Currency).OrderBy(item => item.LoadDate).ToListAsync();
 
 			await applicationDbContext.StockHolding.Include(item => item.StockHoldingFustItems).ThenInclude(item => item.FustType).ForEachAsync(item =>
 			{

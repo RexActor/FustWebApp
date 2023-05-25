@@ -291,6 +291,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 
 		[HttpGet]
+		[Authorize(Roles ="Finance")]
 		public async Task<IActionResult> BaseValue() => View(await applicationDbContext.StockHolding.Include(item => item.StockHoldingSupplier).ThenInclude(item => item.Currency).Include(item => item.StockHoldingFustItems).ThenInclude(item => item.FustType).ToListAsync());
 
 

@@ -30,7 +30,10 @@ namespace FustWebApp.Models
 
 		[DisplayName("Fust Items")]
 		public List<Fust> LoadFustItems { get; set; }
+		[DisplayName("Purchase Order")]
 		public int PONumber { get; set; } = 0;
+
+		public string InvoiceNumber { get; set; } = "null";
 
 		[DisplayName("Load Group")]
 		public string LoadGroup { get; set; }
