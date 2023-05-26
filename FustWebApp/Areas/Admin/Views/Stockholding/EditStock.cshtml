@@ -1,0 +1,306 @@
+﻿@model FustWebApp.Models.Domain.StockHolding;
+@using System.Globalization;
+
+@inject FustWebApp.Data.ApplicationDbContext applicationDbContext;
+
+@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+	ViewData["Title"] = "Update Stock Holding";
+	RegionInfo region = new RegionInfo(Model.StockHoldingSupplier.Currency.currencyCountryCode);
+	RegionInfo rg = new RegionInfo(RegionInfo.CurrentRegion.TwoLetterISORegionName);
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="d-flex me-5 flex-md-row-reverse">
+	<a class="btn btn-sm btn-outline-secondary" asp-action="Index" asp-area="Admin" asp-controller="Stockholding">Back</a>
+</div>
+<div class="container">
+	<div class="row">
+
+		<div class="col-md-5 mb-3">
+
+
+
+			<div class="row shadow bg-light">
+				<div class="row mb-3 mt-2 text-sm-center">
+
+					<span class="fs-3 text-sm-center">Stock Item Information</span>
+
+				</div>
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.StockholdingDate,"Date",htmlAttributes:new{@class ="col-form-label col-sm-3" })
+					<div class="col-auto">
+						<input value="@Model.StockholdingDate.Date.ToShortDateString()" disabled class="form-control" />
+					</div>
+				</div>
+
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.baseValue,"Base Value",htmlAttributes:new{@class ="col-form-label col-sm-3" })
+					<div class="col-auto">
+						<input value="@region.CurrencySymbol @Model.baseValue" disabled class="form-control" />
+					</div>
+				</div>
+
+				@if (region.CurrencySymbol != rg.CurrencySymbol)
+				{
+
+					<div class="row mb-3">
+
+						@Html.LabelFor(model=>model.baseValue,"Exc. Value",htmlAttributes:new{@class ="col-form-label col-sm-3" })
+						<div class="col-auto">
+
+
+							@{
+								var exchangeValue = Model.baseValue * Model.StockHoldingSupplier.Currency.currencyExchangeRate;
+							}
+
+
+							<input value="@rg.CurrencySymbol @exchangeValue" disabled class="form-control" />
+						</div>
+					</div>
+
+				}
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.StockHoldingFustItems.FustName,"Fust Item",htmlAttributes:new{@class ="col-form-label col-sm-3" })
+					<div class="col-auto">
+						@Html.EditorFor(model=>model.StockHoldingFustItems.FustName,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
+					</div>
+				</div>
+
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.StockHoldingFustItems.FustType.FustTypeName,"Fust Type",htmlAttributes:new{@class ="col-form-label col-sm-3" })
+					<div class="col-auto">
+						@Html.EditorFor(model=>model.StockHoldingFustItems.FustType.FustTypeName,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
+					</div>
+				</div>
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.StockHoldingQty,"Stock Holding",htmlAttributes:new{@class ="col-form-label col-sm-3" })
+					<div class="col-auto">
+						@Html.EditorFor(model=>model.StockHoldingQty,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
+					</div>
+				</div>
+
+
+
+
+
+
+
+			</div>
+
+
+			<div class="row shadow mt-3 bg-light">
+
+				<h3 class="text-sm-center mt-3">Override Stockholding</h3>
+
+
+				@using (@Html.BeginForm("EditStock", "Stockholding", HttpMethod.Post))
+				{
+					@Html.AntiForgeryToken()
+					@Html.ValidationSummary()
+					
+
+					<div class="container mt-3">
+						<div class="row">
+							<label class="col-form-label col-sm-3">New Quantity</label>
+							<div class="col-auto">
+								<input asp-for="StockHoldingQty" class="form-control" placeholder="Enter new qty" />
+							</div>
+						</div>
+
+
+						<div class="row mt-3">
+							<label class="col-form-label col-sm-3">Reason</label>
+							<div class="col-auto">
+								<textarea class="form-control" placeholder="Enter reason for adjustment"></textarea>
+								
+							</div>
+						</div>
+
+
+						<div class="row mt-3">
+							<label class="col-form-label col-sm-3">Reason</label>
+							<div class="col-auto">
+								<select class="form-select">
+									<option value="Please Select" hidden selected disabled>Please select</option>
+									@{
+										var adjustmentCodeList = applicationDbContext.Adjustments.ToList() as IEnumerable<FustWebApp.Models.Domain.AdjustmentCodes>;
+
+										foreach (var code in adjustmentCodeList)
+										{
+											<option value="@code.AdjustmentCode">@code.AdjustmentCode</option>
+										}
+
+
+									}
+
+
+
+								</select>
+							</div>
+						</div>
+
+
+
+
+					</div>
+
+
+
+					<div class="row d-flex justify-content-center">
+						<input class="btn btn-sm btn-outline-primary shadow w-25 mt-3 mb-3" type="submit" value="Update" />
+					</div>
+
+
+				}
+
+
+
+			</div>
+
+
+
+		</div>
+		<div class="col-md-1">
+		</div>
+
+
+		<div class="col-md-5 align-items-center  mb-3 w-50">
+			<div class="row shadow bg-light">
+				<div class="row mb-3 mt-2 text-sm-center">
+
+					<span class="fs-3 text-sm-center">Supplier Information</span>
+
+				</div>
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.StockHoldingSupplier.SupplierName,htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					<div class="col-auto">
+						@Html.EditorFor(model=>model.StockHoldingSupplier.SupplierName,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
+					</div>
+				</div>
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.StockHoldingSupplier.SupplierGroup,htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					<div class="col-auto">
+						@Html.EditorFor(model=>model.StockHoldingSupplier.SupplierGroup,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
+					</div>
+				</div>
+
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.StockHoldingSupplier.SupplierAddress,htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					<div class="col-auto">
+						@Html.EditorFor(model=>model.StockHoldingSupplier.SupplierAddress,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
+					</div>
+				</div>
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.StockHoldingSupplier.SupplierOrigin,htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					<div class="col-auto">
+						@Html.EditorFor(model=>model.StockHoldingSupplier.SupplierOrigin,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
+					</div>
+				</div>
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.StockHoldingSupplier.FustTypeList,htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					<div class="col-auto" style="width:500px;">
+						@Html.EditorFor(model=>model.StockHoldingSupplier.FustTypeList,new { htmlAttributes = new { @class = "form-control mw-100",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
+					</div>
+				</div>
+
+
+			</div>
+
+			<div class="row shadow mt-3 bg-light">
+
+				<div class="row mb-3 text-sm-center">
+
+					<span class="fs-3 text-sm-center">Supplier Currency Information</span>
+
+				</div>
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.currencyName,"Currency",htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					<div class="col-auto">
+						@Html.EditorFor(model=>model.StockHoldingSupplier.Currency.currencyName,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
+					</div>
+				</div>
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.currencyCountryCode,"Country",htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					<div class="col-auto">
+						@Html.EditorFor(model=>model.StockHoldingSupplier.Currency.currencyCountryCode,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
+					</div>
+				</div>
+
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.exchangeRateYear,"Exc. Year",htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					<div class="col-auto">
+						@Html.EditorFor(model=>model.StockHoldingSupplier.Currency.exchangeRateYear,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
+					</div>
+				</div>
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.currencyTargetName,"To Currency",htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					<div class="col-auto">
+						@Html.EditorFor(model=>model.StockHoldingSupplier.Currency.currencyTargetName,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
+					</div>
+				</div>
+
+				<div class="row mb-3">
+
+					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.currencyExchangeRate,"Exchange",htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					<div class="col-auto">
+						@Html.EditorFor(model=>model.StockHoldingSupplier.Currency.currencyExchangeRate,new { htmlAttributes = new { @class = "form-control mw-100",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
+					</div>
+				</div>
+
+
+
+			</div>
+
+
+
+		</div>
+
+
+
+	</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

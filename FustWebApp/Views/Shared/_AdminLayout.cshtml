@@ -12,7 +12,9 @@
 	<header>
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light  border-bottom box-shadow mb-3 header ">
 			<div class="container-fluid">
-				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Fust Application</a>
+				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+					<img class="position-relative" src="~/Pic/logo.png" height="50" />
+				</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
 						aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -86,6 +88,9 @@
 										</li>
 										<li class="nav-item ">
 											<a class="btn btn-sm btn-outline-success shadow mb-1 mt-1" asp-area="Admin" asp-controller="Stockholding" asp-action="StockCount">Stock count</a>
+										</li>
+										<li class="nav-item ">
+											<a class="btn btn-sm btn-outline-success shadow mb-1 mt-1" asp-area="Admin" asp-controller="Stockholding" asp-action="AdjustmentCodes">Manage Adj. Codes</a>
 										</li>
 
 									</ul>
@@ -193,7 +198,12 @@
 
 	<footer class="border-top footer text-muted">
 		<div class="container text-sm-center">
-			&copy; 2023 - All Rights Reserved
+
+			@{
+				var year = DateTime.Now.Year;
+			}
+
+			&copy; @year Created by Gatis Jansons. All Rights reserved
 		</div>
 	</footer>
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>

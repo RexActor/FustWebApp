@@ -17,7 +17,7 @@ namespace FustWebApp.Data
 
 	public class ApplicationDbContext : IdentityDbContext
 	{
-	
+
 
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
 			: base(options)
@@ -41,6 +41,7 @@ namespace FustWebApp.Data
 		public DbSet<LoadFusts> LoadFusts { get; set; }
 		public DbSet<StockHolding> StockHolding { get; set; }
 		public DbSet<Currency> Currency { get; set; }
+		public DbSet<AdjustmentCodes> Adjustments { get; set; }
 
 
 
@@ -95,7 +96,7 @@ namespace FustWebApp.Data
 							{
 								auditEntry.ChangedColumns.Add(propertyName);
 								auditEntry.AuditType = AuditType.Update;
-								
+
 								auditEntry.OldValues[propertyName] = databaseValues[propertyName];
 								auditEntry.NewValues[propertyName] = property.CurrentValue;
 							}

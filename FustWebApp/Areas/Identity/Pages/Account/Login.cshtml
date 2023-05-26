@@ -9,7 +9,11 @@
 <div class="container shadow bg-success bg-opacity-10 w-50 ">
 	
 	<div class="row d-flex align-items-center justify-content-center text-sm-center mt-5">
-		<h1>@ViewData["Title"]</h1>
+		<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+			<img class="position-relative" src="~/Pic/logo.png" height="150"  />
+		</a>
+		
+		@*<h1>@ViewData["Title"]</h1>*@
 		<div class="col-md-4">
 			<section>
 				<form id="account" method="post">

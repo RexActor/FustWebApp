@@ -1,0 +1,161 @@
+﻿@model FustWebApp.Models.Domain.AdjustmentCodes
+@using FustWebApp.Models.Domain;
+@inject FustWebApp.Data.ApplicationDbContext applicationDbContext;
+@{
+	ViewData["Title"] = "Adjustment Codes";
+
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+	var modelList = applicationDbContext.Adjustments.ToList();
+
+}
+
+
+
+<div class="container mw-100">
+
+	<div class="row">
+		<div class="col-md-5 ">
+			<div class="row shadow">
+
+				<h3 class="text-sm-center">Adjusment Codes</h3>
+				<div class="row overflow-scroll text-sm-center" style="scrollbar-width:thin; display:block;height:100vh;">
+					<table class="table table-hover ms-2 me-2">
+						<thead class="table-dark sticky-top">
+							<tr>
+								<th>Id</th>
+								<th>Code</th>
+								<th>Description</th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+
+							@if (!modelList.Any())
+							{
+								<tr>
+									<td colspan="4" class="text-muted fs-5 fw-bold">No Adjustment Codes</td>
+								</tr>
+							}
+							else
+							{
+
+								@foreach (var item in modelList)
+								{
+									<tr>
+										<td>@item.Id</td>
+										<td>@item.AdjustmentCode</td>
+										<td>@item.CodeDescription</td>
+										<td>
+											<a class="btn btn-sm btn-outline-primary shadow" asp-area="Admin" asp-asp-controller="Stockholding" asp-action="Update" asp-route-Id="@item.Id">Update</a>
+											<a class="btn btn-sm btn-outline-danger shadow" asp-area="Admin" asp-controller="Stockholding" asp-action="Delete" asp-route-Id="@item.Id">Delete</a>
+
+										</td>
+
+									</tr>
+
+								}
+							}
+
+						</tbody>
+
+
+					</table>
+				</div>
+			</div>
+
+
+		</div>
+
+		<div class="col-md-1" style="width:50px;">
+		</div>
+
+
+
+		<div class="col-md-5 w-50 ">
+			<div class="row shadow">
+
+
+				<h3 class="text-sm-center">Add Adjusment Code</h3>
+
+
+				<div class="row">
+
+
+
+					@using (Html.BeginForm("AddCode", "Stockholding", HttpMethod.Post))
+					{
+						@Html.AntiForgeryToken()
+						@Html.ValidationSummary(false,"",new{@class = "text-danger"})
+						<div class="container mt-3">
+
+
+							<div class="row">
+
+								<label class="col-form-label col-sm-3">Adj. Code</label>
+
+
+								<div class="col-auto">
+									<input type="text" asp-for="AdjustmentCode" class="form-control" placeholder="Enter adjustment Code" />
+									@Html.ValidationMessage("AdjusmentCode")
+								</div>
+
+
+							</div>
+
+
+
+
+							<div class="row mt-3">
+
+								<label class="col-form-label col-sm-3">Code Description</label>
+
+
+								<div class="col-auto">
+
+									<textarea asp-for="CodeDescription" placeholder="Enter code description" class="form-control"></textarea>
+								</div>
+
+
+							</div>
+
+
+
+
+							<div class="row d-flex justify-content-center mt-3 mb-3 ">
+
+								<input type="submit" class="btn btn-sm btn-outline-primary w-25" value="Save" />
+
+
+							</div>
+
+
+
+
+						</div>
+
+
+
+
+					}
+
+
+				</div>
+
+
+
+			</div>
+
+
+
+
+
+
+		</div>
+
+
+	</div>
+</div>
+
+

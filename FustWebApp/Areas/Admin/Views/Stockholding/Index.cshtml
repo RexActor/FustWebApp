@@ -18,6 +18,7 @@
 			<tr>
 				<th>Supplier Name</th>
 				<th>Base Value</th>
+				<th>Exchange Value</th>
 				<th>Stockholding</th>
 				<th>Storage Quantity</th>
 				<th></th>
@@ -43,9 +44,20 @@
 				@foreach(var subItem in modelList)
 				{
 					RegionInfo region = new RegionInfo(subItem.StockHoldingSupplier.Currency.currencyCountryCode);
+					RegionInfo rg = new RegionInfo(RegionInfo.CurrentRegion.TwoLetterISORegionName);
 					<tr class="border-top border-2 border-light border-bottom-0">
 						<td>@subItem.StockHoldingSupplier.SupplierName</td>
 						<td>@region.CurrencySymbol @subItem.baseValue</td>
+						<td>
+
+							@{
+								var exchangeValue = subItem.baseValue*subItem.StockHoldingSupplier.Currency.currencyExchangeRate;
+							}
+
+							@rg.CurrencySymbol @exchangeValue
+
+
+						</td>
 						<td>
 							@if (@subItem.StockHoldingQty != 0)
 							{
@@ -58,7 +70,7 @@
 							units</td>
 						<td>@subItem.StorageQuantity units</td>
 						<td>
-							<a class="btn btn-sm btn-outline-danger shadow" asp-action="EditStock" asp-controller="Stockholding" asp-area="Admin" asp-route-stockId="@subItem.StockHoldingFustItems.Id" asp-route-Supplier="@subItem.StockHoldingSupplier.Id">Update</a>
+							<a class="btn btn-sm btn-outline-danger shadow" asp-action="EditStock" asp-controller="Stockholding" asp-area="Admin" asp-route-stockId="@subItem.StockHoldingId" asp-route-Supplier="@subItem.StockHoldingSupplier.Id">Update</a>
 						</td>
 					</tr>
 					
