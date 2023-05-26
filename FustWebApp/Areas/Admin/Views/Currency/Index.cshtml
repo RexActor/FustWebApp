@@ -4,7 +4,10 @@
 	ViewData["Title"] = "Currency";
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
+@if (@ViewBag.Message != null)
+{
+	<div class="@ViewBag.Style  text-sm-center mb-1 py-1"><h4>@ViewBag.Message</h4></div>
+}
 
 <div class="container">
 

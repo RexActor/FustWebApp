@@ -170,19 +170,31 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 			if (Delete != null)
 			{
+
+				bool referenced = applicationDbContext.StockHolding.Any(e=>e.StockHoldingFustItems.Id==updateFustViewModel.Id);
+
+				if (referenced)
+				{
+
+					TempData["result"] = "Fail";
+					TempData["action"] = "Fust Item is linked with Stockholding. Fust Item Deletion";
+					return RedirectToAction("Index");
+				}
+
 				var fustItemToRemove = new Fust()
 				{
 					Id = updateFustViewModel.Id,
 				};
-				using (AuditScope.Create("Delete:Fust", () => updateFustViewModel))
-				{
+				
+
+
 					applicationDbContext.Fusts.Attach(fustItemToRemove);
 					applicationDbContext.Fusts.Remove(fustItemToRemove);
 					await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
 					TempData["result"] = "Success";
 					TempData["action"] = "Fust Item Deletion";
 					return RedirectToAction("Index");
-				}
+				
 			}
 
 			if (Edit != null)
@@ -292,7 +304,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 		[HttpGet]
 		[Authorize(Roles ="Finance")]
-		public async Task<IActionResult> BaseValue() => View(await applicationDbContext.StockHolding.Include(item => item.StockHoldingSupplier).ThenInclude(item => item.Currency).Include(item => item.StockHoldingFustItems).ThenInclude(item => item.FustType).ToListAsync());
+		public async Task<IActionResult> BaseValue() => View(await applicationDbContext.StockHolding.Include(item => item.StockHoldingSupplier).ThenInclude(item => item.Currency).Include(item => item.StockHoldingFustItems).ThenInclude(item => item.FustType).OrderBy(item=>item.StockHoldingSupplier.SupplierName).ToListAsync());
 
 
 

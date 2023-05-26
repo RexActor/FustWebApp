@@ -186,7 +186,7 @@
 
 				<div class="row mb-3">
 
-					@Html.LabelFor(model=>model.StockHoldingSupplier.SupplierName,htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					@Html.LabelFor(model=>model.StockHoldingSupplier.SupplierName,htmlAttributes:new{@class ="col-form-label col-sm-3" })
 					<div class="col-auto">
 						@Html.EditorFor(model=>model.StockHoldingSupplier.SupplierName,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
 					</div>
@@ -194,7 +194,7 @@
 
 				<div class="row mb-3">
 
-					@Html.LabelFor(model=>model.StockHoldingSupplier.SupplierGroup,htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					@Html.LabelFor(model=>model.StockHoldingSupplier.SupplierGroup,htmlAttributes:new{@class ="col-form-label col-sm-3" })
 					<div class="col-auto">
 						@Html.EditorFor(model=>model.StockHoldingSupplier.SupplierGroup,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
 					</div>
@@ -203,7 +203,7 @@
 
 				<div class="row mb-3">
 
-					@Html.LabelFor(model=>model.StockHoldingSupplier.SupplierAddress,htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					@Html.LabelFor(model=>model.StockHoldingSupplier.SupplierAddress,htmlAttributes:new{@class ="col-form-label col-sm-3" })
 					<div class="col-auto">
 						@Html.EditorFor(model=>model.StockHoldingSupplier.SupplierAddress,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
 					</div>
@@ -211,7 +211,7 @@
 
 				<div class="row mb-3">
 
-					@Html.LabelFor(model=>model.StockHoldingSupplier.SupplierOrigin,htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					@Html.LabelFor(model=>model.StockHoldingSupplier.SupplierOrigin,htmlAttributes:new{@class ="col-form-label col-sm-3" })
 					<div class="col-auto">
 						@Html.EditorFor(model=>model.StockHoldingSupplier.SupplierOrigin,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
 					</div>
@@ -219,15 +219,16 @@
 
 				<div class="row mb-3">
 
-					@Html.LabelFor(model=>model.StockHoldingSupplier.FustTypeList,htmlAttributes:new{@class ="col-form-label col-sm-2" })
-					<div class="col-auto" style="width:500px;">
+					@Html.LabelFor(model=>model.StockHoldingSupplier.FustTypeList,htmlAttributes:new{@class ="col-form-label col-sm-3" })
+					<div class="col-auto" style="width:450px;">
 						@Html.EditorFor(model=>model.StockHoldingSupplier.FustTypeList,new { htmlAttributes = new { @class = "form-control mw-100",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
 					</div>
 				</div>
 
 
 			</div>
-
+			
+			<!-- Region Supplier Currency Information Block -->
 			<div class="row shadow mt-3 bg-light">
 
 				<div class="row mb-3 text-sm-center">
@@ -238,7 +239,7 @@
 
 				<div class="row mb-3">
 
-					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.currencyName,"Currency",htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.currencyName,"Currency",htmlAttributes:new{@class ="col-form-label col-sm-3" })
 					<div class="col-auto">
 						@Html.EditorFor(model=>model.StockHoldingSupplier.Currency.currencyName,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
 					</div>
@@ -246,7 +247,7 @@
 
 				<div class="row mb-3">
 
-					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.currencyCountryCode,"Country",htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.currencyCountryCode,"Country",htmlAttributes:new{@class ="col-form-label col-sm-3" })
 					<div class="col-auto">
 						@Html.EditorFor(model=>model.StockHoldingSupplier.Currency.currencyCountryCode,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
 					</div>
@@ -255,7 +256,7 @@
 
 				<div class="row mb-3">
 
-					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.exchangeRateYear,"Exc. Year",htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.exchangeRateYear,"Exc. Year",htmlAttributes:new{@class ="col-form-label col-sm-3" })
 					<div class="col-auto">
 						@Html.EditorFor(model=>model.StockHoldingSupplier.Currency.exchangeRateYear,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
 					</div>
@@ -263,7 +264,7 @@
 
 				<div class="row mb-3">
 
-					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.currencyTargetName,"To Currency",htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.currencyTargetName,"To Currency",htmlAttributes:new{@class ="col-form-label col-sm-3" })
 					<div class="col-auto">
 						@Html.EditorFor(model=>model.StockHoldingSupplier.Currency.currencyTargetName,new { htmlAttributes = new { @class = "form-control",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
 					</div>
@@ -271,7 +272,7 @@
 
 				<div class="row mb-3">
 
-					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.currencyExchangeRate,"Exchange",htmlAttributes:new{@class ="col-form-label col-sm-2" })
+					@Html.LabelFor(model=>model.StockHoldingSupplier.Currency.currencyExchangeRate,"Exchange",htmlAttributes:new{@class ="col-form-label col-sm-3" })
 					<div class="col-auto">
 						@Html.EditorFor(model=>model.StockHoldingSupplier.Currency.currencyExchangeRate,new { htmlAttributes = new { @class = "form-control mw-100",@disabled="disabled", @placeholder="Enter Supplier's Name" } })
 					</div>

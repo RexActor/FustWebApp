@@ -203,7 +203,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 					FustTypeList = supplier.FustTypeList,
 					SupplierGroup = supplier.SupplierGroup,
 					Currency = currency,
-					
+
 					SupplierName = supplier.SupplierName,
 					SupplierOrigin = supplier.SupplierOrigin
 				};
@@ -263,7 +263,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 						StockHoldingFustItems = item.StockHoldingFustItems,
 						StockHoldingQty = stockHolding,
 						baseValue = item.baseValue,
-						StorageQuantity=item.StorageQuantity,
+						StorageQuantity = item.StorageQuantity,
 						StockHoldingSupplier = item.StockHoldingSupplier,
 						StockHoldingId = item.StockHoldingId
 					});
@@ -285,6 +285,23 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 			if (Delete != null)
 			{
+
+
+
+				var referenced = applicationDbContext.Loads.Any(e => e.LoadSupplier.Id == updateSupplierViewModel.Id);
+
+				if (referenced) {
+					TempData["result"] = "Fail";
+					TempData["action"] = "Supplier is linked with loads! Supplier Deletion";
+
+					return RedirectToAction("Index");
+				}
+
+
+
+
+
+
 				var supplierToRemvoe = new Supplier()
 				{
 					Id = updateSupplierViewModel.Id,

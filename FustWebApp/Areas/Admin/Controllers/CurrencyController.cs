@@ -21,7 +21,25 @@ namespace FustWebApp.Areas.Admin.Controllers
 			this.applicationDbContext = applicationDbContext;
 		}
 
-		public async Task<IActionResult> Index() => View(await applicationDbContext.Currency.ToListAsync());
+		public async Task<IActionResult> Index()
+		{
+			if (TempData["result"] != null)
+			{
+				switch (TempData["result"]?.ToString())
+				{
+					case "Success":
+						ViewBag.Message = $"{TempData["Action"]} Successfully";
+						ViewBag.Style = "alert-success";
+						break;
+					case "Fail":
+						ViewBag.Message = $"{TempData["Action"]} Failed. Please try again!";
+						ViewBag.Style = "alert-danger";
+						break;
+				}
+			}
+
+			return View(await applicationDbContext.Currency.ToListAsync());
+		} 
 
 
 		[HttpGet]
@@ -60,6 +78,18 @@ namespace FustWebApp.Areas.Admin.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Delete(int id)
 		{
+
+			bool referenced = applicationDbContext.Suppliers.Any(e=>e.Currency.currencyId == id);
+
+			if (referenced)
+			{
+				TempData["result"] = "Fail";
+				TempData["action"] = "Currency is linked with Supplier. Currency Deletion";
+				return RedirectToAction("Index");
+			}
+
+
+
 			var currencyToRemove = await applicationDbContext.Currency.FindAsync(id);
 			if (currencyToRemove == null)
 			{
