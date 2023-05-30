@@ -1,0 +1,70 @@
+﻿@model IEnumerable<FustWebApp.Models.Domain.Stockadjustments>
+
+@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+	ViewData["Title"] = "Full Adjusment List";
+
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="container mw-100 overflow-scroll shadow mt-3" style="scrollbar-width:thin;height:100vh;display:block;">
+
+	<table class="table table-hover">
+
+		<thead class="table-dark">
+			<tr>
+				<th>ID</th>
+				<th>Fust Item</th>
+				<th>Item Type</th>
+				<th>Supplier</th>
+				<th>Adjustment Code</th>
+				<th>From Quantity</th>
+				<th>To Quantity</th>
+				<th>Date</th>
+				<th></th>
+			</tr>
+		</thead>
+
+
+
+		<tbody>
+
+			@foreach (var item in Model)
+			{
+				<tr>
+
+					<td>@item.Id</td>
+					<td>@item.stockHolding.StockHoldingFustItems.FustName</td>
+					<td>@item.stockHolding.StockHoldingFustItems.FustType.FustTypeName</td>
+					<td>@item.stockHolding.StockHoldingSupplier.SupplierName</td>
+					<td>@item.AdjustmentCode.AdjustmentCode</td>
+					<td>@item.FromQuantity</td>
+					<td>@item.ToQuantity</td>
+					<td>@item.adjustmentDate</td>
+					<td>
+
+						<a class="btn btn-sm btn-outline-primary shadow" asp-area="Admin" asp-controller="Suppliers" asp-action="View" asp-route-Id="@item.stockHolding.StockHoldingSupplier.Id">Supplier Details</a>
+
+					</td>
+
+
+				</tr>
+			}
+
+
+
+		</tbody>
+
+
+
+
+	</table>
+
+
+
+
+
+</div>

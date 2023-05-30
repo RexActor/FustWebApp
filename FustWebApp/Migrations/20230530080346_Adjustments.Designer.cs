@@ -3,6 +3,7 @@ using System;
 using FustWebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FustWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230530080346_Adjustments")]
+    partial class Adjustments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.15");
@@ -33,7 +35,7 @@ namespace FustWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdjustmentCodes");
+                    b.ToTable("Adjustments");
                 });
 
             modelBuilder.Entity("FustWebApp.Models.Domain.Audit", b =>
@@ -302,40 +304,6 @@ namespace FustWebApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Origins");
-                });
-
-            modelBuilder.Entity("FustWebApp.Models.Domain.Stockadjustments", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("AdjustmentCodeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("FromQuantity")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("StockHoldingId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ToQuantity")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("adjustmentDate")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdjustmentCodeId");
-
-                    b.HasIndex("StockHoldingId");
-
-                    b.ToTable("Adjustments");
                 });
 
             modelBuilder.Entity("FustWebApp.Models.Domain.StockHolding", b =>
@@ -650,25 +618,6 @@ namespace FustWebApp.Migrations
                         .IsRequired();
 
                     b.Navigation("LoadSupplier");
-                });
-
-            modelBuilder.Entity("FustWebApp.Models.Domain.Stockadjustments", b =>
-                {
-                    b.HasOne("FustWebApp.Models.Domain.AdjustmentCodes", "AdjustmentCode")
-                        .WithMany()
-                        .HasForeignKey("AdjustmentCodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FustWebApp.Models.Domain.StockHolding", "stockHolding")
-                        .WithMany()
-                        .HasForeignKey("StockHoldingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AdjustmentCode");
-
-                    b.Navigation("stockHolding");
                 });
 
             modelBuilder.Entity("FustWebApp.Models.Domain.StockHolding", b =>

@@ -1,9 +1,11 @@
 ﻿using FustWebApp.Data;
+using FustWebApp.Migrations;
 using FustWebApp.Models;
 using FustWebApp.Models.Domain;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
 
 using System.Security.Claims;
@@ -16,6 +18,9 @@ namespace FustWebApp.Areas.Admin.Controllers
 	public class StockholdingController : Controller
 	{
 		private readonly ApplicationDbContext applicationDbContext;
+
+
+
 
 		public StockholdingController(ApplicationDbContext applicationDbContext)
 		{
@@ -34,6 +39,43 @@ namespace FustWebApp.Areas.Admin.Controllers
 			return View(model);
 		}
 
+		[HttpGet]
+		public async Task<IActionResult> Adjustments() => View(await applicationDbContext.Adjustments.Include(item=>item.AdjustmentCode).Include(item=>item.stockHolding).ThenInclude(item=>item.StockHoldingFustItems).ThenInclude(item=>item.FustType).Include(item=>item.stockHolding.StockHoldingSupplier).ThenInclude(item=>item.Currency).ToListAsync());
+
+
+
+		[HttpPost]
+		public async Task<IActionResult> EditStock(int stockId, string reason, string reasonCode, int from, int to)
+		{
+
+			var locatedStock = await applicationDbContext.StockHolding.Include(item=>item.StockHoldingSupplier).ThenInclude(item=>item.Currency).Include(item=>item.StockHoldingFustItems).ThenInclude(item=>item.FustType).FirstOrDefaultAsync(item=>item.StockHoldingId==stockId);
+			var adjusmentCode = await applicationDbContext.AdjustmentCodes.FirstOrDefaultAsync(item => item.AdjustmentCode == reasonCode);
+
+
+
+			Stockadjustments adjustment = new Stockadjustments()
+			{
+
+				stockHolding = locatedStock,
+				FromQuantity = from,
+				ToQuantity = to,
+				Reason = reason,
+				AdjustmentCode = adjusmentCode,
+				adjustmentDate = DateTime.Now,
+
+			};
+
+			locatedStock.StockHoldingQty = to;
+
+
+			applicationDbContext.StockHolding.Update(locatedStock);
+			await applicationDbContext.Adjustments.AddAsync(adjustment);
+			await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+
+			return RedirectToAction("Index");
+		}
+
 
 		[HttpGet]
 		public async Task<IActionResult> AdjustmentCodes()
@@ -49,7 +91,7 @@ namespace FustWebApp.Areas.Admin.Controllers
 			if (ModelState.IsValid)
 			{
 
-				await applicationDbContext.Adjustments.AddAsync(adjusmentCode);
+				await applicationDbContext.AdjustmentCodes.AddAsync(adjusmentCode);
 
 				await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
 			}
@@ -62,13 +104,13 @@ namespace FustWebApp.Areas.Admin.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Delete(int Id)
 		{
-			var codeToRemove = await applicationDbContext.Adjustments.FindAsync(Id);
+			var codeToRemove = await applicationDbContext.AdjustmentCodes.FindAsync(Id);
 			if (codeToRemove == null)
 			{
 				throw new ArgumentException($"Can't locate adjusment code with ID {Id}");
 			}
 
-			applicationDbContext.Adjustments.Remove(codeToRemove);
+			applicationDbContext.AdjustmentCodes.Remove(codeToRemove);
 			await applicationDbContext.SaveChangesAsync(User?.FindFirst(ClaimTypes.NameIdentifier).Value);
 
 			return RedirectToAction("AdjustmentCodes");

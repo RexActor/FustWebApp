@@ -3,6 +3,8 @@
 @using FustWebApp.Models.Domain
 @using System.Globalization;
 
+@inject FustWebApp.Data.ApplicationDbContext applicationDbContext;
+
 @{
 	var fustCheckBoxList = (List<CheckBoxModel>)ViewBag.FustTypeCheckboxes;
 	var groupCheckboxes = (List<CheckBoxModel>)ViewBag.GroupsCheckBoxes;
@@ -237,6 +239,8 @@
 }
 
 
+
+
 <div class="container mt-5 mb-3 mw-100 text-sm-center">
 	<h2>@Model.SupplierName Stockholding</h2>
 
@@ -254,6 +258,7 @@
 					<th>Currency</th>
 					<th>Base Value</th>
 					<th>Total Value</th>
+					<th>Adjusments</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -261,6 +266,10 @@
 				{
 					if (Model.FustTypeList.Contains(item.StockHoldingFustItems.FustType.FustTypeName))
 					{
+
+
+						var adjusmentCount = applicationDbContext.Adjustments.Where(e => e.stockHolding.StockHoldingId == item.StockHoldingId).Count();
+
 						var status = string.Empty;
 						RegionInfo region = new RegionInfo(item.StockHoldingSupplier.Currency.currencyCountryCode);
 						var fustItemValue = item.baseValue * item.StockHoldingQty;
@@ -290,6 +299,17 @@
 
 							<td>@region.CurrencySymbol @item.baseValue</td>
 							<td>@region.CurrencySymbol @fustItemValue</td>
+							<td>
+								@if (adjusmentCount != 0)
+								{
+									<a asp-area="Admin" asp-action="EditStock" asp-controller="Stockholding" asp-route-stockId="@item.StockHoldingId" asp-route-Supplier="@item.StockHoldingSupplier.Id" >@adjusmentCount</a>
+								}
+								else
+								{
+									@adjusmentCount
+								}
+
+							</td>
 						</tr>
 					}
 				}

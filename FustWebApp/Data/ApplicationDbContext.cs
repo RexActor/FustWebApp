@@ -1,5 +1,6 @@
 ﻿using Audit.EntityFramework;
 
+using FustWebApp.Migrations;
 using FustWebApp.Models;
 using FustWebApp.Models.Domain;
 
@@ -41,7 +42,9 @@ namespace FustWebApp.Data
 		public DbSet<LoadFusts> LoadFusts { get; set; }
 		public DbSet<StockHolding> StockHolding { get; set; }
 		public DbSet<Currency> Currency { get; set; }
-		public DbSet<AdjustmentCodes> Adjustments { get; set; }
+		public DbSet<AdjustmentCodes> AdjustmentCodes { get; set; }
+
+		public DbSet<Stockadjustments> Adjustments { get; set; }
 
 
 

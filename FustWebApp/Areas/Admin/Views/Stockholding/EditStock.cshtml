@@ -1,6 +1,6 @@
 ﻿@model FustWebApp.Models.Domain.StockHolding;
 @using System.Globalization;
-
+@using FustWebApp.Models.Domain;
 @inject FustWebApp.Data.ApplicationDbContext applicationDbContext;
 
 @*
@@ -11,6 +11,9 @@
 	RegionInfo region = new RegionInfo(Model.StockHoldingSupplier.Currency.currencyCountryCode);
 	RegionInfo rg = new RegionInfo(RegionInfo.CurrentRegion.TwoLetterISORegionName);
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+	string confirmed = "False";
+
 }
 <div class="d-flex me-5 flex-md-row-reverse">
 	<a class="btn btn-sm btn-outline-secondary" asp-action="Index" asp-area="Admin" asp-controller="Stockholding">Back</a>
@@ -109,13 +112,16 @@
 				{
 					@Html.AntiForgeryToken()
 					@Html.ValidationSummary()
-					
+
 
 					<div class="container mt-3">
 						<div class="row">
 							<label class="col-form-label col-sm-3">New Quantity</label>
 							<div class="col-auto">
-								<input asp-for="StockHoldingQty" class="form-control" placeholder="Enter new qty" />
+								<input name="stockId" value="@Model.StockHoldingId" hidden>
+								<input name="from" value="@Model.StockHoldingQty" hidden>
+								<input name="to" class="form-control" placeholder="Enter new qty" />
+
 							</div>
 						</div>
 
@@ -123,8 +129,8 @@
 						<div class="row mt-3">
 							<label class="col-form-label col-sm-3">Reason</label>
 							<div class="col-auto">
-								<textarea class="form-control" placeholder="Enter reason for adjustment"></textarea>
-								
+								<textarea name="reason" class="form-control" placeholder="Enter reason for adjustment"></textarea>
+
 							</div>
 						</div>
 
@@ -132,10 +138,10 @@
 						<div class="row mt-3">
 							<label class="col-form-label col-sm-3">Reason</label>
 							<div class="col-auto">
-								<select class="form-select">
+								<select name="reasonCode" class="form-select">
 									<option value="Please Select" hidden selected disabled>Please select</option>
 									@{
-										var adjustmentCodeList = applicationDbContext.Adjustments.ToList() as IEnumerable<FustWebApp.Models.Domain.AdjustmentCodes>;
+										var adjustmentCodeList = applicationDbContext.AdjustmentCodes.ToList() as IEnumerable<FustWebApp.Models.Domain.AdjustmentCodes>;
 
 										foreach (var code in adjustmentCodeList)
 										{
@@ -227,7 +233,7 @@
 
 
 			</div>
-			
+
 			<!-- Region Supplier Currency Information Block -->
 			<div class="row shadow mt-3 bg-light">
 
@@ -295,8 +301,60 @@
 </div>
 
 
+@{
+	IEnumerable<Stockadjustments> adjustments = applicationDbContext.Adjustments.Where(item => item.stockHolding.StockHoldingId == Model.StockHoldingId);
+}
 
 
+<div class="container mt-5">
+	<h3 class="text-sm-center mb-3">Adjustment History</h3>
+	<table class="table table-hover text-sm-center shadow">
+		<thead class="table-dark">
+			<tr>
+				<th>Adjustment Code</th>
+				<th>From Quantity</th>
+				<th>To Quantity</th>
+				<th>Reason</th>
+				<th>Adjustment Date</th>
+			</tr>
+
+		</thead>
+
+
+		<tbody>
+
+
+			@if (adjustments.Count() == 0)
+			{
+				<tr>
+					<td class="text-muted" colspan="5">No Adjusments to display</td>
+				</tr>
+			}
+			else
+			{
+				@foreach (var adjustment in adjustments)
+				{
+
+					<tr>
+
+						<td>@adjustment.AdjustmentCode.AdjustmentCode</td>
+						<td>@adjustment.FromQuantity</td>
+						<td>@adjustment.ToQuantity</td>
+						<td>@adjustment.Reason</td>
+						<td>@adjustment.adjustmentDate</td>
+					</tr>
+
+				}
+			}
+
+
+		</tbody>
+
+
+	</table>
+
+
+</div>
 
 
 
