@@ -4,13 +4,13 @@
 	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-	ViewData["Title"] = "Full Adjusment List";
+	ViewData["Title"] = "Full Adjustment List";
 
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 
-<div class="container mw-100 overflow-scroll shadow mt-3" style="scrollbar-width:thin;height:100vh;display:block;">
+<div class="container mw-100 overflow-auto shadow mt-3" style="scrollbar-width:thin;height:100vh;display:block;">
 
 	<table class="table table-hover">
 
@@ -47,7 +47,7 @@
 					<td>
 
 						<a class="btn btn-sm btn-outline-primary shadow" asp-area="Admin" asp-controller="Suppliers" asp-action="View" asp-route-Id="@item.stockHolding.StockHoldingSupplier.Id">Supplier Details</a>
-
+						<a class="btn btn-sm btn-outline-danger shadow" asp-area="Admin" asp-controller="Stockholding" asp-action="EditAdjustment" asp-route-adjustmentId="@item.Id">Edit</a>
 					</td>
 
 

@@ -1,4 +1,6 @@
-﻿using FustWebApp.Data;
+﻿
+
+using FustWebApp.Data;
 using FustWebApp.Migrations;
 using FustWebApp.Models;
 using FustWebApp.Models.Domain;
@@ -41,6 +43,16 @@ namespace FustWebApp.Areas.Admin.Controllers
 
 		[HttpGet]
 		public async Task<IActionResult> Adjustments() => View(await applicationDbContext.Adjustments.Include(item=>item.AdjustmentCode).Include(item=>item.stockHolding).ThenInclude(item=>item.StockHoldingFustItems).ThenInclude(item=>item.FustType).Include(item=>item.stockHolding.StockHoldingSupplier).ThenInclude(item=>item.Currency).ToListAsync());
+
+
+		[HttpGet]
+		public async Task<IActionResult> EditAdjustment(int adjustmentId)
+		{
+			
+
+
+			return View(await applicationDbContext.Adjustments.Include(item => item.stockHolding).ThenInclude(item => item.StockHoldingFustItems).ThenInclude(item => item.FustType).Include(item => item.stockHolding.StockHoldingSupplier).ThenInclude(item => item.Currency).FirstOrDefaultAsync(item=>item.Id==adjustmentId));
+		}
 
 
 

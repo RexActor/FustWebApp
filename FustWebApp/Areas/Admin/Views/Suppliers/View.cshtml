@@ -11,6 +11,10 @@
 	var action = string.Empty;
 	bool editSupplier = false;
 
+
+
+
+
 	@if (ViewBag.editSupplier == "true")
 	{
 		action = "Edit details for";
@@ -23,6 +27,11 @@
 	}
 	ViewData["Title"] = $"{action} {@ViewBag.SupplierName}";
 	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+@{
+	//List<Stockadjustments> adjustments = applicationDbContext.Adjustments.FirstOrDefault(item => item.stockHolding.StockHoldingSupplier.Id == Model.Id);
+	var adjustments = (List<Stockadjustments>)ViewBag.AdjustmentsList;
 
 }
 
@@ -194,7 +203,7 @@
 {
 
 	<div class="container mt-5 mb-3 mw-100 text-sm-center">
-		<h2>@Model.SupplierName Load list</h2>
+		<h2>Load list</h2>
 		<div class="row shadow overflow-auto" style="display:block;scrollbar-width:thin;height:50vh;">
 			<table class="table">
 				<thead class="table-dark text-sm-center  sticky-top">
@@ -238,11 +247,54 @@
 	</div>
 }
 
+<div class="container mt-5 mb-3 mw-100 text-sm-center">
+	<h2>Adjustments</h2>
+	<div class="row shadow overflow-auto" style="scrollbar-width:thin;height:50vh;display:block;">
+		<table class="table">
+			<thead class="table-dark sticky-top">
+				<tr>
+					<th>Adjustment Code</th>
+					<th>Fust Item</th>
+					<th>From Quantity</th>
+					<th>To Quantity</th>
+					<th>Difference</th>
+				</tr>
+			</thead>
 
+			<tbody>
+
+				@if (!adjustments.Any())
+				{
+					<tr>
+						<td colspan="5" class="text-muted">No Adjustments to display</td>
+					</tr>
+				}
+
+				else
+				{
+
+
+					@foreach (var adjustment in adjustments)
+					{
+						var adjustmentVolume = adjustment.FromQuantity - adjustment.ToQuantity;
+						<tr>
+							<td>@adjustment.AdjustmentCode.AdjustmentCode</td>
+							<td>@adjustment.stockHolding.StockHoldingFustItems.FustName</td>
+							<td>@adjustment.FromQuantity</td>
+							<td>@adjustment.ToQuantity</td>
+							<td>@adjustmentVolume</td>
+						</tr>
+					}
+				}
+			</tbody>
+		</table>
+	</div>
+
+</div>
 
 
 <div class="container mt-5 mb-3 mw-100 text-sm-center">
-	<h2>@Model.SupplierName Stockholding</h2>
+	<h2>Stockholding</h2>
 
 	<div class="row shadow overflow-auto" style="scrollbar-width:thin;display:block;height:100vh;">
 		<table class="table">
@@ -302,7 +354,7 @@
 							<td>
 								@if (adjusmentCount != 0)
 								{
-									<a asp-area="Admin" asp-action="EditStock" asp-controller="Stockholding" asp-route-stockId="@item.StockHoldingId" asp-route-Supplier="@item.StockHoldingSupplier.Id" >@adjusmentCount</a>
+									<a asp-area="Admin" asp-action="EditStock" asp-controller="Stockholding" asp-route-stockId="@item.StockHoldingId" asp-route-Supplier="@item.StockHoldingSupplier.Id">@adjusmentCount</a>
 								}
 								else
 								{

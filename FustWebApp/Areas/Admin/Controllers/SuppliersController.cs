@@ -269,9 +269,16 @@ namespace FustWebApp.Areas.Admin.Controllers
 					});
 				});
 
+
+
+				List<Stockadjustments> adjustmentList = await applicationDbContext.Adjustments.Include(item=>item.stockHolding.StockHoldingSupplier).Include(item=>item.AdjustmentCode).Where(item=>item.stockHolding.StockHoldingSupplier.Id==supplier.Id).ToListAsync(); 
+
 				ViewBag.StockHoldingList = stockHoldingList;
 				ViewBag.editSupplier = editSupplier;
 				ViewBag.SupplierLoads = supplierLoadList;
+				ViewBag.AdjustmentsList = adjustmentList;
+
+
 				return View(viewModel);
 			}
 			return RedirectToAction("Index");
