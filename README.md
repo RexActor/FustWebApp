@@ -15,6 +15,11 @@ Available operations:
 - Do adjustment in application (increase/reduce item stockholding)
 - Display Item stockholding and value
 
+## Technology Used
+- Entity Framework
+- Asp.Net
+- C#
+
 ## Deployed Site 
 - Username: Admin
 - Password: Admin123*
