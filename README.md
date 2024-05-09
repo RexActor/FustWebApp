@@ -21,7 +21,7 @@ Available operations:
 - C#
 
 ## Deployed Site 
-- Username: Admin
+- Username: Admin@mail.com
 - Password: Admin123*
 
 [Site](https://fustdemo.azurewebsites.net)
